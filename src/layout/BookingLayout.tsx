@@ -9,7 +9,7 @@ export default function BookingLayout() {
     <FullScreenStyled>
       <Layout>
         <Content>
-          <Outlet></Outlet>
+          <Outlet />
         </Content>
       </Layout>
     </FullScreenStyled>
@@ -19,4 +19,5 @@ export default function BookingLayout() {
 const FullScreenStyled = styled.div`
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 `;

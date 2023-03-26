@@ -1,5 +1,3 @@
-import React from "react";
-
-export default function Admin() {
-  return <div>Admin</div>;
-}
+export { default as AdminCoach } from "./tabs/Coach";
+export { default as AdminUser } from "./tabs/User";
+export { default as AdminDashBoard } from "./tabs/DashBoard";

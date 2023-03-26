@@ -6,11 +6,7 @@ const AdminGuard = () => {
   const { isAdmin, loading } = useSelector(userSelector);
 
   if (loading === "succeeded" && !isAdmin) return <Navigate to="/login" />;
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+  return <Outlet />;
 };
 
 export default AdminGuard;

@@ -7,11 +7,7 @@ const MemberGuard = () => {
 
   if (loading === "succeeded" && !email) return <Navigate to="/login" />;
 
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+  return <Outlet />;
 };
 
 export default MemberGuard;
