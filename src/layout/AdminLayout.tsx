@@ -38,6 +38,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 const Content = styled.div`
   min-height: calc(100vh - ${HEADER_HEIGHT});
   background-color: aliceblue;
