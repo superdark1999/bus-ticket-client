@@ -10,9 +10,9 @@ interface SelfProps {
 }
 //  https://www.flaticon.com/free-icon/bus_1166035?related_id=1165961&origin=search
 const LOGO_URL = {
-  small: "./bus64.png",
-  medium: "./bus128.png",
-  large: "./bus512.png",
+  small: "/bus64.png",
+  medium: "/bus128.png",
+  large: "/bus512.png",
 };
 
 const LOGO_BACKGROUND_DEFAULT = "#62a7ed";

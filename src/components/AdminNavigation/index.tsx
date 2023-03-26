@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Layout, Menu } from "antd";
 import {
   UserOutlined,
@@ -8,12 +8,14 @@ import {
 import styled from "styled-components";
 import LogoApp from "components/LogoApp";
 import { ItemType } from "antd/es/menu/hooks/useItems";
+import { useNavigate, useLocation } from "react-router";
+import { ROUTER_PATH } from "routes/routesConfig";
 const { Sider } = Layout;
 
 interface SelfProps {
   isExpand: boolean;
   setIsExpand: React.Dispatch<React.SetStateAction<boolean>>;
-  setTabKey: React.Dispatch<React.SetStateAction<TabKey>>;
+  // setTabKey: React.Dispatch<React.SetStateAction<TabKey>>;
 }
 
 export enum TabKey {
@@ -40,7 +42,17 @@ const menuItems: ItemType[] = [
   },
 ];
 
-const AdminNavigation = ({ isExpand, setIsExpand, setTabKey }: SelfProps) => {
+const AdminNavigation = ({ isExpand, setIsExpand }: SelfProps) => {
+  const navigate = useNavigate();
+  let location = useLocation();
+
+  useEffect(() => {
+    console.log(
+      "🚀 ~ file: index.tsx ~ line 51 ~ useEffect ~ location",
+      location
+    );
+  }, [location]);
+
   return (
     <CustomSider
       collapsible
@@ -62,7 +74,19 @@ const AdminNavigation = ({ isExpand, setIsExpand, setTabKey }: SelfProps) => {
         defaultSelectedKeys={[TabKey.COACH]}
         items={menuItems}
         onSelect={({ key }) => {
-          setTabKey(key as TabKey);
+          switch (key) {
+            case TabKey.DASHBOARD:
+              navigate(ROUTER_PATH.ADMIN_DASHBOARD);
+              break;
+            case TabKey.COACH:
+              navigate(ROUTER_PATH.ADMIN_COACH);
+              break;
+            case TabKey.USER:
+              navigate(ROUTER_PATH.ADMIN_USER);
+              break;
+            default:
+              break;
+          }
         }}
       />
     </CustomSider>
