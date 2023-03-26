@@ -2,11 +2,10 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 import { userSelector } from "state/user/reducer";
 
-const MemberGuard = () => {
-  const { email, loading } = useSelector(userSelector);
+const AdminGuard = () => {
+  const { isAdmin, loading } = useSelector(userSelector);
 
-  if (loading === "succeeded" && !email) return <Navigate to="/login" />;
-
+  if (loading === "succeeded" && !isAdmin) return <Navigate to="/login" />;
   return (
     <div>
       <Outlet />
@@ -14,4 +13,4 @@ const MemberGuard = () => {
   );
 };
 
-export default MemberGuard;
+export default AdminGuard;
