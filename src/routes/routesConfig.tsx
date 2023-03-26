@@ -1,13 +1,13 @@
-import MemberGuard from "guards/MemberGuard";
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import { RouteObject } from "./route.interface";
-import AdminLayout from "layout/AdminLayout";
 import { AdminCoach, AdminDashBoard, AdminUser } from "views/Admin";
 
+const MemberGuard = lazy(() => import("guards/MemberGuard"));
+const AdminGuard = lazy(() => import("guards/AdminGuard"));
 const BookingLayout = lazy(() => import("layout/BookingLayout"));
+const AdminLayout = lazy(() => import("layout/AdminLayout"));
 const BookingPage = lazy(() => import("views/Booking"));
-// const AdminPage = lazy(() => import("views/Admin"));
 const LoginPage = lazy(() => import("views/Login"));
 
 export enum ROUTER_PATH {
@@ -28,29 +28,34 @@ export const routesConfig: RouteObject[] = [
         element: <LoginPage />,
       },
       {
-        path: "/booking",
-        element: <BookingPage />,
-      },
-      {
         element: <MemberGuard />,
         children: [
           {
-            path: ROUTER_PATH.ADMIN,
-            element: <AdminLayout />,
-            children: [
-              {
-                path: ROUTER_PATH.ADMIN_USER,
-                element: <AdminUser />,
-              },
-              {
-                path: ROUTER_PATH.ADMIN_COACH,
-                element: <AdminCoach />,
-              },
-              {
-                path: ROUTER_PATH.ADMIN_DASHBOARD,
-                element: <AdminDashBoard />,
-              },
-            ],
+            path: "/booking",
+            element: <BookingPage />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    element: <AdminLayout />,
+    path: "/admin",
+    children: [
+      {
+        element: <AdminGuard />,
+        children: [
+          {
+            path: ROUTER_PATH.ADMIN_USER,
+            element: <AdminUser />,
+          },
+          {
+            path: ROUTER_PATH.ADMIN_COACH,
+            element: <AdminCoach />,
+          },
+          {
+            path: ROUTER_PATH.ADMIN_DASHBOARD,
+            element: <AdminDashBoard />,
           },
         ],
       },

@@ -95,6 +95,10 @@ const AdminNavigation = ({ isExpand, setIsExpand }: SelfProps) => {
 
 const CustomSider = styled(Sider)`
   box-shadow: 1px 0px 2px grey;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const LogoBox = styled.div`

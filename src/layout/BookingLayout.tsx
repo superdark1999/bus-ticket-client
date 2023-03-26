@@ -9,7 +9,7 @@ export default function BookingLayout() {
     <FullScreenStyled>
       <Layout>
         <Content>
-          <Outlet></Outlet>
+          <Outlet />
         </Content>
       </Layout>
     </FullScreenStyled>
