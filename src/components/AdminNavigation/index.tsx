@@ -10,6 +10,7 @@ import LogoApp from "components/LogoApp";
 import { ItemType } from "antd/es/menu/hooks/useItems";
 import { useNavigate, useLocation } from "react-router";
 import { ROUTER_PATH } from "routes/routesConfig";
+
 const { Sider } = Layout;
 
 interface SelfProps {
@@ -42,9 +43,9 @@ const menuItems: ItemType[] = [
   },
 ];
 
-const AdminNavigation = ({ isExpand, setIsExpand }: SelfProps) => {
+function AdminNavigation({ isExpand, setIsExpand }: SelfProps) {
   const navigate = useNavigate();
-  let location = useLocation();
+  const location = useLocation();
 
   useEffect(() => {
     console.log(
@@ -91,7 +92,7 @@ const AdminNavigation = ({ isExpand, setIsExpand }: SelfProps) => {
       />
     </CustomSider>
   );
-};
+}
 
 const CustomSider = styled(Sider)`
   box-shadow: 1px 0px 2px grey;

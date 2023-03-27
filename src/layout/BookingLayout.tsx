@@ -1,9 +1,10 @@
-import { Layout } from "antd";
-import { Outlet } from "react-router-dom";
-import styled from "styled-components";
+import React from 'react';
+import { Layout } from 'antd';
+import { Outlet } from 'react-router-dom';
+import styled from 'styled-components';
 
 export default function BookingLayout() {
-  const { Sider, Content } = Layout;
+  const { Content } = Layout;
 
   return (
     <FullScreenStyled>

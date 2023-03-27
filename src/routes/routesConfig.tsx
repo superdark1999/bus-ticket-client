@@ -1,22 +1,22 @@
-import { lazy } from "react";
-import { Navigate } from "react-router-dom";
-import { RouteObject } from "./route.interface";
-import { AdminCoach, AdminDashBoard, AdminUser } from "views/Admin";
+import React, { lazy } from 'react';
+import { Navigate } from 'react-router-dom';
+import { AdminCoach, AdminDashBoard, AdminUser } from 'views/Admin';
+import { RouteObject } from './route.interface';
 
-const MemberGuard = lazy(() => import("guards/MemberGuard"));
-const AdminGuard = lazy(() => import("guards/AdminGuard"));
-const BookingLayout = lazy(() => import("layout/BookingLayout"));
-const AdminLayout = lazy(() => import("layout/AdminLayout"));
-const BookingPage = lazy(() => import("views/Booking"));
-const LoginPage = lazy(() => import("views/Login"));
+const MemberGuard = lazy(() => import('guards/MemberGuard'));
+const AdminGuard = lazy(() => import('guards/AdminGuard'));
+const BookingLayout = lazy(() => import('layout/BookingLayout'));
+const AdminLayout = lazy(() => import('layout/AdminLayout'));
+const BookingPage = lazy(() => import('views/Booking'));
+const LoginPage = lazy(() => import('views/Login'));
 
 export enum ROUTER_PATH {
-  "LOGIN" = "/login",
-  "BOOKING" = "/booking",
-  "ADMIN" = "/admin",
-  "ADMIN_USER" = "/admin/user",
-  "ADMIN_COACH" = "/admin/coach",
-  "ADMIN_DASHBOARD" = "/admin/dashboard",
+  'LOGIN' = '/login',
+  'BOOKING' = '/booking',
+  'ADMIN' = '/admin',
+  'ADMIN_USER' = '/admin/user',
+  'ADMIN_COACH' = '/admin/coach',
+  'ADMIN_DASHBOARD' = '/admin/dashboard',
 }
 
 export const routesConfig: RouteObject[] = [
@@ -24,14 +24,14 @@ export const routesConfig: RouteObject[] = [
     element: <BookingLayout />,
     children: [
       {
-        path: "/login",
+        path: '/login',
         element: <LoginPage />,
       },
       {
         element: <MemberGuard />,
         children: [
           {
-            path: "/booking",
+            path: '/booking',
             element: <BookingPage />,
           },
         ],
@@ -40,7 +40,7 @@ export const routesConfig: RouteObject[] = [
   },
   {
     element: <AdminLayout />,
-    path: "/admin",
+    path: '/admin',
     children: [
       {
         element: <AdminGuard />,
@@ -64,7 +64,7 @@ export const routesConfig: RouteObject[] = [
 
   // always put it as the last element
   {
-    path: "*",
+    path: '*',
     element: <Navigate to="/404" />,
   },
 ];
