@@ -11,6 +11,7 @@ const BookingPage = lazy(() => import("views/Booking"));
 const LoginPage = lazy(() => import("views/auth/Login/LoginPage"));
 const RegisterPage = lazy(() => import("views/auth/Register/RegisterPage"));
 const ChangePasswordPage = lazy(() => import("views/auth/ChangePassword/ChangePasswordPage"));
+const ForgotPasswordPage = lazy(() => import("views/auth/ForgotPassword/ForgotPasswordPage"));
 
 export enum ROUTER_PATH {
   "LOGIN" = "/login",
@@ -36,6 +37,10 @@ export const routesConfig: RouteObject[] = [
       {
         path: "/change-password",
         element: <ChangePasswordPage />,
+      },
+      {
+        path: "/forgot-password",
+        element: <ForgotPasswordPage />,
       },
       {
         element: <MemberGuard />,

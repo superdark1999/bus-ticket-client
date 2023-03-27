@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { Suspense, useTransition } from "react";
 import styled from "styled-components";
-import { Form, Input, Button, Row, Col, Divider } from "antd";
+import { Form, Input, Button, Divider } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import logo from "../../../logo.svg";
 
-const LoginSpace = styled.div`
+const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -56,6 +56,15 @@ const StyledForm = styled(Form)`
   }
 `;
 
+const StyleATag = styled.button`
+  display: inline-block;
+  background-color: transparent;
+  color: #007bff;
+  border: none;
+  textdecoration: underline;
+  cursor: pointer;
+`;
+
 const SocialLoginIcons = styled.div`
   display: flex;
   justify-content: center;
@@ -71,16 +80,28 @@ const SocialButton = styled(Button)`
   background-color: lightgray;
 `;
 
-
 const LoginPage: React.FC = () => {
+  // Transition để đợi load component bất đồng bộ hoặc dữ liệu.
+  const [, startTransition] = useTransition();
   const [form] = Form.useForm();
 
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
   };
+  const navigate = useNavigate();
+  const handleRegisterClick = () => {
+    startTransition(() => {
+      navigate("/register");
+    });
+  };
+  const handleForgotClick = () => {
+    startTransition(() => {
+      navigate("/forgot-password");
+    });
+  };
 
   return (
-    <LoginSpace>
+    <Wrapper>
       <Container className="minhhere">
         <Logo>
           <LogoImage src={logo} alt="Bus Ticket" />
@@ -120,8 +141,10 @@ const LoginPage: React.FC = () => {
           </Form.Item>
 
           <div className="form-actions">
-            <Link to="/forgot-password">Quên mật khẩu</Link>
-            <Link to="/register">Đăng ký</Link>
+            <Suspense fallback={<div>Loading...</div>}>
+              <StyleATag onClick={handleForgotClick}>Quên mật khẩu</StyleATag>
+              <StyleATag onClick={handleRegisterClick}>Đăng ký</StyleATag>
+            </Suspense>
           </div>
 
           <Form.Item>
@@ -143,7 +166,7 @@ const LoginPage: React.FC = () => {
           </SocialButton>
         </SocialLoginIcons>
       </Container>
-    </LoginSpace>
+    </Wrapper>
   );
 };
 

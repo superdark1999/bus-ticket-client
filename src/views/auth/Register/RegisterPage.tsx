@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Form, Input, Button } from "antd";
 import logo from "../../../logo.svg";
 
-const RegisterSpace = styled.div`
+const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -64,7 +64,7 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <RegisterSpace>
+    <Wrapper>
       <Container>
         <Logo>
           <LogoImage src={logo} alt="Bus Ticket" />
@@ -147,7 +147,7 @@ const RegisterPage: React.FC = () => {
           </FormItem>
         </RegisterForm>
       </Container>
-    </RegisterSpace>
+    </Wrapper>
   );
 };
 

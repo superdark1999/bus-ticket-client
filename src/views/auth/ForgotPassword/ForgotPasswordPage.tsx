@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useTransition } from "react";
 import styled from "styled-components";
 import { Form, Input, Button } from "antd";
 import logo from "../../../logo.svg";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -54,13 +55,27 @@ const FormItem = styled(Form.Item)`
   margin-bottom: 22px;
 `;
 
-const RegisterButton = styled(Button)`
-  width: 100%;
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: end;
 `;
 
-const ChangePasswordPage: React.FC = () => {
+const AccessButton = styled(Button)`
+  margin: 0 20px;
+`;
+
+
+const ForgotPasswordPage: React.FC = () => {
+  const [, startTransition] = useTransition();
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
+  };
+
+  const navigate = useNavigate();
+  const handleBackClick = () => {
+    startTransition(() => {
+      navigate("/login");
+    });
   };
 
   return (
@@ -70,56 +85,35 @@ const ChangePasswordPage: React.FC = () => {
           <LogoImage src={logo} alt="Bus Ticket" />
           <LogoText>Bus ticket</LogoText>
         </Logo>
-        <Title>Đổi mật khẩu</Title>
+        <Title>Quên mật khẩu</Title>
         <RegisterForm onFinish={onFinish}>
           <FormItem
-            name="curPassword"
+            name="phone"
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập mật khẩu hiện tại của bạn!",
+                message: "Vui lòng nhập số điện thoại của bạn!",
               },
-            ]}
-          >
-            <Input.Password placeholder="Mật khẩu hiện tại" />
-          </FormItem>
-          <FormItem
-            name="newPassword"
-            rules={[{ required: true, message: "Vui lòng nhập mật khẩu mới!" }]}
-          >
-            <Input.Password placeholder="Mật khẩu mới" />
-          </FormItem>
-          <FormItem
-            name="confirm"
-            dependencies={["newPassword"]}
-            rules={[
               {
-                required: true,
-                message: "Vui lòng xác nhận mật khẩu mới của bạn!",
+                pattern: /^\d+$/,
+                message: "Số điện thoại chỉ chấp nhận nhập số!",
               },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("newPassword") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(
-                    new Error("Hai mật khẩu không khớp với nhau!")
-                  );
-                },
-              }),
             ]}
           >
-            <Input.Password placeholder="Nhập lại mật khẩu mới" />
+            <Input placeholder="Số điện thoại đã đăng ký" />
           </FormItem>
-          <FormItem>
-            <RegisterButton type="primary" htmlType="submit">
+          <ButtonWrapper>
+            <Button type="default" onClick={handleBackClick} >
+              Quay lại
+            </Button>
+            <AccessButton type="primary" htmlType="submit">
               Xác nhận
-            </RegisterButton>
-          </FormItem>
+            </AccessButton>
+          </ButtonWrapper>
         </RegisterForm>
       </Container>
     </Wrapper>
   );
 };
 
-export default ChangePasswordPage;
+export default ForgotPasswordPage;
