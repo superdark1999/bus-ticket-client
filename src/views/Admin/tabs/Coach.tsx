@@ -7,7 +7,8 @@ import {
   CloseCircleOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
-import moment from "moment";
+import dayjs from 'dayjs';
+import DisabledDatePicker from "utilis/DisabledDatePicker";
 
 interface SeflProp {};
 interface CoachRecord {
@@ -279,21 +280,29 @@ const Coach = ({}: SeflProp) => {
               <Form.Item
                 name={"from"}
                 label={"Điểm Đi"}
-                rules={[{required: true, message: "Please pick station"}]}
+                rules={[{required: true, message: "Chưa chọn điểm đi"}]}
               >
                 <Select
+                  showSearch
                   defaultValue="Điểm Đi"
                   options={stationList.map(station => ({value: station, label: station}))}
+                  filterSort={(optA, optB) =>
+                    (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
+                  }
                 />
               </Form.Item>
               <Form.Item
                 name={"to"}
                 label={"Điểm Đến"}
-                rules={[{required: true, message: "Please pick station"}]}
+                rules={[{required: true, message: "Chưa chọn điểm đến"}]}
               >
                 <Select
+                  showSearch
                   defaultValue="Điểm Đến"
                   options={stationList.map(station => ({value: station, label: station}))}
+                  filterSort={(optA, optB) =>
+                    (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
+                  }
                 />
               </Form.Item>
               <Row>
@@ -301,20 +310,29 @@ const Coach = ({}: SeflProp) => {
                   <Form.Item
                     name={"departureTime"}
                     label={"Thời Điểm Khởi Hành"}
-                    rules={[{required: true, message: "Please pick datatime slated start"}]}
+                    rules={[{required: true, message: "Chưa chọn thời điểm khởi hành"}]}
                   >
-                    <DatePicker showTime format="HH:mm DD/MM/YYYY" />
+                    <DatePicker 
+                    showTime 
+                    format="HH:mm DD/MM/YYYY"
+                    disabledDate={DisabledDatePicker.disabledDate}
+                    disabledTime={DisabledDatePicker.disabledDateTime}
+                    />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item
                     name={"bus"}
                     label={"Xe Sử Dụng"}
-                    rules={[{required: true, message: "Please pick one bus"}]}
+                    rules={[{required: true, message: "Chưa chọn xe"}]}
                   >
                     <Select
-                      defaultValue="Xe"
+                      showSearch
+                      defaultValue="Biển Số"
                       options={busList.map(bus => ({value: bus, label: bus}))}
+                      filterSort={(optA, optB) =>
+                        (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
+                      }
                     />
                   </Form.Item>
                 </Col>
