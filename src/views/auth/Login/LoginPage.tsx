@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Form, Input, Button, Row, Col, Divider } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import logo from "../../../logo.svg";
 
 const LoginSpace = styled.div`
   width: 100%;
@@ -10,12 +11,11 @@ const LoginSpace = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #FFFFFF;
+  background: #ffffff;
 `;
 
 const Container = styled.div`
   width: 500px;
-  margin: 0 auto;
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -23,10 +23,18 @@ const Container = styled.div`
 `;
 
 const Logo = styled.div`
-  text-align: left;
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const LogoImage = styled.img`
+  width: 50px;
+  height: 50px;
 `;
 
 const Title = styled.div`
@@ -55,18 +63,14 @@ const SocialLoginIcons = styled.div`
   margin-top: 20px;
 `;
 
-const GGButton = styled(Button)`
+const SocialButton = styled(Button)`
   width: 50px;
   height: 50px;
   margin-right: 10px;
   border-radius: 50%;
+  background-color: lightgray;
 `;
 
-const SMSButton = styled(Button)`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-`;
 
 const LoginPage: React.FC = () => {
   const [form] = Form.useForm();
@@ -78,7 +82,10 @@ const LoginPage: React.FC = () => {
   return (
     <LoginSpace>
       <Container className="minhhere">
-        <Logo>Bus Ticket</Logo>
+        <Logo>
+          <LogoImage src={logo} alt="Bus Ticket" />
+          Bus ticket
+        </Logo>
         <Title>Đăng nhập</Title>
         <StyledForm
           form={form}
@@ -105,7 +112,7 @@ const LoginPage: React.FC = () => {
             name="password"
             rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
           >
-            <Input
+            <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
               placeholder="Mật khẩu"
@@ -127,13 +134,13 @@ const LoginPage: React.FC = () => {
         <Divider plain>Hoặc đăng nhập với</Divider>
 
         <SocialLoginIcons>
-          <GGButton type="default" shape="circle">
+          <SocialButton type="default" shape="circle">
             GG
-          </GGButton>
+          </SocialButton>
           &nbsp;&nbsp;
-          <SMSButton type="default" shape="circle">
+          <SocialButton type="default" shape="circle">
             SMS
-          </SMSButton>
+          </SocialButton>
         </SocialLoginIcons>
       </Container>
     </LoginSpace>

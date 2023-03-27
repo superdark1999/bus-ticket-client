@@ -8,7 +8,8 @@ const AdminGuard = lazy(() => import("guards/AdminGuard"));
 const BookingLayout = lazy(() => import("layout/BookingLayout"));
 const AdminLayout = lazy(() => import("layout/AdminLayout"));
 const BookingPage = lazy(() => import("views/Booking"));
-const LoginPage = lazy(() => import("views/Login"));
+const LoginPage = lazy(() => import("views/auth/Login/LoginPage"));
+const RegisterPage = lazy(() => import("views/auth/Register/RegisterPage"));
 
 export enum ROUTER_PATH {
   "LOGIN" = "/login",
@@ -26,6 +27,10 @@ export const routesConfig: RouteObject[] = [
       {
         path: "/login",
         element: <LoginPage />,
+      },
+      {
+        path: "/register",
+        element: <RegisterPage />,
       },
       {
         element: <MemberGuard />,
