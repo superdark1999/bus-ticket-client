@@ -41,12 +41,12 @@ const Title = styled.div`
   text-align: center;
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 `;
 
 const StyledForm = styled(Form)`
   .ant-form-item {
-    margin-bottom: 10px;
+    margin-bottom: 22px;
   }
 
   .form-actions {

@@ -58,7 +58,7 @@ const RegisterButton = styled(Button)`
   width: 100%;
 `;
 
-const RegisterPage: React.FC = () => {
+const ChangePasswordPage: React.FC = () => {
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
   };
@@ -70,57 +70,36 @@ const RegisterPage: React.FC = () => {
           <LogoImage src={logo} alt="Bus Ticket" />
           <LogoText>Bus ticket</LogoText>
         </Logo>
-        <Title>Đăng ký người dùng mới</Title>
+        <Title>Đổi mật khẩu</Title>
         <RegisterForm onFinish={onFinish}>
           <FormItem
-            name="email"
+            name="curPassword"
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập địa chỉ email của bạn!",
-              },
-              {
-                type: "email",
-                message: "Địa chỉ email phải có dạng 'abc@gmail.com'!",
+                message: "Vui lòng nhập mật khẩu hiện tại của bạn!",
               },
             ]}
           >
-            <Input placeholder="Email" />
+            <Input.Password placeholder="Mật khẩu hiện tại" />
           </FormItem>
           <FormItem
-            name="phone"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập số điện thoại của bạn!",
-              },
-              {
-                pattern: /^\d+$/,
-                message: "Số điện thoại chỉ chấp nhận nhập số!",
-              },
-            ]}
+            name="newPassword"
+            rules={[{ required: true, message: "Vui lòng nhập mật khẩu mới!" }]}
           >
-            <Input placeholder="Số điện thoại" />
-          </FormItem>
-          <FormItem
-            name="password"
-            rules={[
-              { required: true, message: "Vui lòng nhập mật khẩu của bạn!" },
-            ]}
-          >
-            <Input.Password placeholder="Mật khẩu" />
+            <Input.Password placeholder="Mật khẩu mới" />
           </FormItem>
           <FormItem
             name="confirm"
-            dependencies={["password"]}
+            dependencies={["newPassword"]}
             rules={[
               {
                 required: true,
-                message: "Vui lòng xác nhận mật khẩu của bạn!",
+                message: "Vui lòng xác nhận mật khẩu mới của bạn!",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
+                  if (!value || getFieldValue("newPassword") === value) {
                     return Promise.resolve();
                   }
                   return Promise.reject(
@@ -130,19 +109,11 @@ const RegisterPage: React.FC = () => {
               }),
             ]}
           >
-            <Input.Password placeholder="Nhập lại mật khẩu" />
-          </FormItem>
-          <FormItem
-            name="name"
-            rules={[
-              { required: true, message: "Vui lòng nhập họ và tên của bạn!" },
-            ]}
-          >
-            <Input placeholder="Họ và tên" />
+            <Input.Password placeholder="Nhập lại mật khẩu mới" />
           </FormItem>
           <FormItem>
             <RegisterButton type="primary" htmlType="submit">
-              Đăng ký
+              Xác nhận
             </RegisterButton>
           </FormItem>
         </RegisterForm>
@@ -151,4 +122,4 @@ const RegisterPage: React.FC = () => {
   );
 };
 
-export default RegisterPage;
+export default ChangePasswordPage;
