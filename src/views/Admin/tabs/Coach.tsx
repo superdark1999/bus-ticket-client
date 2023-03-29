@@ -269,7 +269,14 @@ const Coach = ({}: SeflProp) => {
           <Button type="primary" onClick={showModal}>
             Thêm Chuyến Xe
           </Button>
-          <Modal title="Thêm Chuyến Xe" open={isAddingCoachOpen} onOk={handleOk} onCancel={handleCancel}>
+          <Modal 
+          title="Thêm Chuyến Xe" 
+          okText="Thêm"
+          cancelText="Hủy"
+          open={isAddingCoachOpen} 
+          onOk={handleOk} 
+          onCancel={handleCancel}
+          >
             <Form
               form={form}
               layout="vertical"
@@ -313,7 +320,8 @@ const Coach = ({}: SeflProp) => {
                     rules={[{required: true, message: "Chưa chọn thời điểm khởi hành"}]}
                   >
                     <DatePicker 
-                    showTime 
+                    showTime = {{hideDisabledOptions: true}}
+                    showNow = {false}
                     format="HH:mm DD/MM/YYYY"
                     disabledDate={DisabledDatePicker.disabledDate}
                     disabledTime={DisabledDatePicker.disabledDateTime}
