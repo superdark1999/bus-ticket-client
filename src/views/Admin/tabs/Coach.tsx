@@ -8,7 +8,6 @@ import {
   SyncOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import DisabledDatePicker from "utilis/DisabledDatePicker";
 
 interface SeflProp {};
 interface CoachRecord {
@@ -323,8 +322,8 @@ const Coach = ({}: SeflProp) => {
                     showTime = {{hideDisabledOptions: true}}
                     showNow = {false}
                     format="HH:mm DD/MM/YYYY"
-                    disabledDate={DisabledDatePicker.disabledDate}
-                    disabledTime={DisabledDatePicker.disabledDateTime}
+                    disabledDate={(date) => date <= dayjs().startOf("day")}
+                    minuteStep={5}
                     />
                   </Form.Item>
                 </Col>
