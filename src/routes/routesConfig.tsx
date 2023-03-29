@@ -54,11 +54,11 @@ export const routesConfig: RouteObject[] = [
     ],
   },
   {
-    element: <AdminLayout />,
-    path: "/admin",
+    element: <AdminGuard />,
     children: [
       {
-        element: <AdminGuard />,
+        element: <AdminLayout />,
+        path: "/admin",
         children: [
           {
             path: ROUTER_PATH.ADMIN_USER,
