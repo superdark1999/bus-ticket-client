@@ -1,8 +1,10 @@
-import React, { useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import styled from "styled-components";
 import { Form, Input, Button } from "antd";
 import logo from "../../../logo.svg";
-import { useNavigate } from "react-router-dom";
+import VerifyCodeForm from "./components/ConfirmComponent";
+import FormPhoneNumber from "./components/PhoneNumberComponent";
+import NewPassword from "./components/NewPasswordComponent";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -47,36 +49,31 @@ const Title = styled.div`
   margin-bottom: 30px;
 `;
 
-const RegisterForm = styled(Form)`
-  width: 100%;
-`;
-
-const FormItem = styled(Form.Item)`
-  margin-bottom: 22px;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: end;
-`;
-
-const AccessButton = styled(Button)`
-  margin: 0 20px;
-`;
-
 
 const ForgotPasswordPage: React.FC = () => {
-  const [, startTransition] = useTransition();
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
-  };
+  const [isPhoneNumber, setPhoneNumber] = useState(true);
+  const [isConfirmCode,setConfirmCode] = useState(false);
+  const [isNewPassword, setNewPassword] = useState(false);
 
-  const navigate = useNavigate();
-  const handleBackClick = () => {
-    startTransition(() => {
-      navigate("/login");
-    });
-  };
+
+  // const [, startTransition] = useTransition();
+  // const onFinish = (values: any) => {
+  //   if (isConfirmCode) {
+  //     // TODO: Check confirmation code with API
+
+  //     return(<VerifyCodeForm phoneNumber="123"></VerifyCodeForm>)
+  //   }
+  //   console.log("Received values of form: ", values);
+  // };
+
+  // const navigate = useNavigate();
+  // const handleBackClick = () => {
+  //   startTransition(() => {
+  //     navigate("/login");
+  //   });
+  // };
+
+
 
   return (
     <Wrapper>
@@ -86,7 +83,18 @@ const ForgotPasswordPage: React.FC = () => {
           <LogoText>Bus ticket</LogoText>
         </Logo>
         <Title>Quên mật khẩu</Title>
-        <RegisterForm onFinish={onFinish}>
+        { isPhoneNumber ? <FormPhoneNumber setPhoneNumber={setPhoneNumber} setConfirmCode={setConfirmCode} />
+        : isConfirmCode ? <VerifyCodeForm phoneNumber="123" setConfirmCode={setConfirmCode} setNewPassword={setNewPassword}/> 
+        : isNewPassword && <NewPassword />}
+      </Container>
+    </Wrapper>
+  );
+};
+
+export default ForgotPasswordPage;
+
+
+{/* <RegisterForm onFinish={onFinish}>
           <FormItem
             name="phone"
             rules={[
@@ -110,10 +118,4 @@ const ForgotPasswordPage: React.FC = () => {
               Xác nhận
             </AccessButton>
           </ButtonWrapper>
-        </RegisterForm>
-      </Container>
-    </Wrapper>
-  );
-};
-
-export default ForgotPasswordPage;
+        </RegisterForm> */}

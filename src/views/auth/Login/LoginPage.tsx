@@ -52,7 +52,7 @@ const StyledForm = styled(Form)`
   .form-actions {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
+    margin: 10px 0;
   }
 `;
 
@@ -61,8 +61,10 @@ const StyleATag = styled.button`
   background-color: transparent;
   color: #007bff;
   border: none;
-  textdecoration: underline;
   cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const SocialLoginIcons = styled.div`
