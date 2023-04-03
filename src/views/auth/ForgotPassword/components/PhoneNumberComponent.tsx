@@ -1,8 +1,7 @@
-import React, { useState, useTransition } from "react";
-import styled from "styled-components";
-import { Form, Input, Button } from "antd";
-import { useNavigate } from "react-router-dom";
-
+import React, { useTransition } from 'react';
+import styled from 'styled-components';
+import { Form, Input, Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = styled(Form)`
   width: 100%;
@@ -19,21 +18,17 @@ const ButtonWrapper = styled.div`
   gap: 10px;
 `;
 
-interface prop {
+interface Prop {
   setPhoneNumber: (value: boolean) => void;
   setConfirmCode: (value: boolean) => void;
 }
 
-
 // TODO: Gọi API để kiểm tra số điện thoại hợp lệ, gửi số điện thoại cho confirmComponent
-const FormPhoneNumber: React.FC<prop> = ({
-  setPhoneNumber,
-  setConfirmCode,
-}) => {
+const FormPhoneNumber: React.FC<Prop> = ({ setPhoneNumber, setConfirmCode }) => {
   const [, startTransition] = useTransition();
 
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+    console.log('Received values of form: ', values);
     setPhoneNumber(false);
     setConfirmCode(true);
   };
@@ -41,7 +36,7 @@ const FormPhoneNumber: React.FC<prop> = ({
   const navigate = useNavigate();
   const handleBackClick = () => {
     startTransition(() => {
-      navigate("/login");
+      navigate('/login');
     });
   };
 
@@ -52,11 +47,11 @@ const FormPhoneNumber: React.FC<prop> = ({
         rules={[
           {
             required: true,
-            message: "Vui lòng nhập số điện thoại của bạn!",
+            message: 'Vui lòng nhập số điện thoại của bạn!',
           },
           {
             pattern: /^\d+$/,
-            message: "Số điện thoại chỉ chấp nhận nhập số!",
+            message: 'Số điện thoại chỉ chấp nhận nhập số!',
           },
         ]}
       >
@@ -66,10 +61,7 @@ const FormPhoneNumber: React.FC<prop> = ({
         <Button type="default" onClick={handleBackClick}>
           Quay lại
         </Button>
-        <Button
-          type="primary"
-          htmlType="submit"
-        >
+        <Button type="primary" htmlType="submit">
           Xác nhận
         </Button>
       </ButtonWrapper>

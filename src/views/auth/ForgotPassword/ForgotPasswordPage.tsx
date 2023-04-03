@@ -1,10 +1,9 @@
-import React, { useState, useTransition } from "react";
-import styled from "styled-components";
-import { Form, Input, Button } from "antd";
-import logo from "../../../logo.svg";
-import VerifyCodeForm from "./components/ConfirmComponent";
-import FormPhoneNumber from "./components/PhoneNumberComponent";
-import NewPassword from "./components/NewPasswordComponent";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import logo from '../../../logo.svg';
+import VerifyCodeForm from './components/ConfirmComponent';
+import FormPhoneNumber from './components/PhoneNumberComponent';
+import NewPassword from './components/NewPasswordComponent';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -49,12 +48,10 @@ const Title = styled.div`
   margin-bottom: 30px;
 `;
 
-
 const ForgotPasswordPage: React.FC = () => {
   const [isPhoneNumber, setPhoneNumber] = useState(true);
-  const [isConfirmCode,setConfirmCode] = useState(false);
+  const [isConfirmCode, setConfirmCode] = useState(false);
   const [isNewPassword, setNewPassword] = useState(false);
-
 
   // const [, startTransition] = useTransition();
   // const onFinish = (values: any) => {
@@ -73,8 +70,6 @@ const ForgotPasswordPage: React.FC = () => {
   //   });
   // };
 
-
-
   return (
     <Wrapper>
       <Container>
@@ -83,9 +78,13 @@ const ForgotPasswordPage: React.FC = () => {
           <LogoText>Bus ticket</LogoText>
         </Logo>
         <Title>Quên mật khẩu</Title>
-        { isPhoneNumber ? <FormPhoneNumber setPhoneNumber={setPhoneNumber} setConfirmCode={setConfirmCode} />
-        : isConfirmCode ? <VerifyCodeForm phoneNumber="123" setConfirmCode={setConfirmCode} setNewPassword={setNewPassword}/> 
-        : isNewPassword && <NewPassword />}
+        {isPhoneNumber ? (
+          <FormPhoneNumber setPhoneNumber={setPhoneNumber} setConfirmCode={setConfirmCode} />
+        ) : isConfirmCode ? (
+          <VerifyCodeForm phoneNumber="123" setConfirmCode={setConfirmCode} setNewPassword={setNewPassword} />
+        ) : (
+          isNewPassword && <NewPassword />
+        )}
       </Container>
     </Wrapper>
   );
@@ -93,8 +92,8 @@ const ForgotPasswordPage: React.FC = () => {
 
 export default ForgotPasswordPage;
 
-
-{/* <RegisterForm onFinish={onFinish}>
+{
+  /* <RegisterForm onFinish={onFinish}>
           <FormItem
             name="phone"
             rules={[
@@ -118,4 +117,5 @@ export default ForgotPasswordPage;
               Xác nhận
             </AccessButton>
           </ButtonWrapper>
-        </RegisterForm> */}
+        </RegisterForm> */
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import useUserHook from 'hooks/useUserHook';
+// import useUserHook from 'hooks/useUserHook';
 import { BrowserRouter } from 'react-router-dom';
 import Router from 'routes';
 import './App.css';
@@ -15,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
-  const { loading, email } = useUserHook();
+  // const { loading, email } = useUserHook();
   // console.log("email: ", email);
   // console.log("loading: ", loading);
 

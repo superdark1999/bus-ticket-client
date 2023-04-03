@@ -27,5 +27,8 @@ module.exports = {
     'no-param-reassign': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'react/function-component-definition': 'off',
+    'no-nested-ternary': 'off',
+    'react/jsx-props-no-spreading': 'off',
   },
 };

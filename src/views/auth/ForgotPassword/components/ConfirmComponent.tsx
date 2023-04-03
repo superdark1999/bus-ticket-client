@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Input, Button, Form, notification } from "antd";
+import React from 'react';
+import styled from 'styled-components';
+import { Input, Button, Form, notification } from 'antd';
 import type { NotificationPlacement } from 'antd/es/notification/interface';
 
 const Text = styled.p`
@@ -28,14 +28,8 @@ interface Props {
   setNewPassword: (value: boolean) => void;
 }
 
-
 // TODO: Gọi API để kiểm tra mã xác nhận chính xác
-const VerifyCodeForm: React.FC<Props> = ({
-  phoneNumber,
-  setConfirmCode,
-  setNewPassword,
-}) => {
-
+const VerifyCodeForm: React.FC<Props> = ({ setConfirmCode, setNewPassword }) => {
   // TODO: cần kiểm tra thời gian gửi lại sau này.
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (placement: NotificationPlacement) => {
@@ -47,46 +41,41 @@ const VerifyCodeForm: React.FC<Props> = ({
   };
 
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+    console.log('Received values of form: ', values);
     setConfirmCode(false);
     setNewPassword(true);
   };
 
-
   return (
     <>
-    {contextHolder}
-    <RegisterForm onFinish={onFinish}>
-      <Text>
-        Chúng tôi vừa gửi mã xác nhận tới số điện thoại của quý khách.
-      </Text>
-      <FormItem
-        name="confirmCode"
-        rules={[
-          {
-            required: true,
-            message: "Vui lòng nhập mã xác nhận!",
-          },
-        ]}
-      >
-        <Input placeholder="Mã xác nhận" />
-      </FormItem>
-      <ButtonWrapper>
-     
-        <Button type="link" onClick={() => openNotification('bottomRight')}>
-          Gửi lại
-        </Button>
-        <Button type="primary" htmlType="submit">
-          Xác nhận
-        </Button>
-      </ButtonWrapper>
-    </RegisterForm>
+      {contextHolder}
+      <RegisterForm onFinish={onFinish}>
+        <Text>Chúng tôi vừa gửi mã xác nhận tới số điện thoại của quý khách.</Text>
+        <FormItem
+          name="confirmCode"
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng nhập mã xác nhận!',
+            },
+          ]}
+        >
+          <Input placeholder="Mã xác nhận" />
+        </FormItem>
+        <ButtonWrapper>
+          <Button type="link" onClick={() => openNotification('bottomRight')}>
+            Gửi lại
+          </Button>
+          <Button type="primary" htmlType="submit">
+            Xác nhận
+          </Button>
+        </ButtonWrapper>
+      </RegisterForm>
     </>
   );
 };
 
 export default VerifyCodeForm;
-
 
 // import React, { useMemo } from 'react';
 // import {

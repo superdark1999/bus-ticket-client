@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Table, Tag, Row, Col, Button, Modal, Form, Input, Select, DatePicker } from 'antd';
+import { Table, Tag, Row, Col, Button, Modal, Form, Select, DatePicker } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -16,7 +16,7 @@ interface CoachRecord {
 }
 
 // Call api to get data later, now mock it
-let coachListMock: CoachRecord[] = [
+const coachListMock: CoachRecord[] = [
   {
     id: 1,
     from: 'Sài Gòn',
@@ -191,7 +191,7 @@ const Coach = ({}: SeflProp) => {
     console.log(values);
 
     // Fake call api
-    let newCoach = {
+    const newCoach = {
       id: coachList.length + 1,
       from: values.from,
       to: values.to,
@@ -203,7 +203,7 @@ const Coach = ({}: SeflProp) => {
 
     console.log(form.getFieldValue('departureTime'));
 
-    let newCoachList = [newCoach, ...coachList];
+    const newCoachList = [newCoach, ...coachList];
 
     // Update data/ui
     setCoachList(newCoachList);
@@ -246,7 +246,7 @@ const Coach = ({}: SeflProp) => {
       dataIndex: 'status',
       key: 'id',
       render: (_, { status }) => {
-        let tagStyle =
+        const tagStyle =
           status.toLowerCase() === 'đang chờ'
             ? { color: 'default', icon: <ClockCircleOutlined /> }
             : status.toLowerCase() === 'đang chạy'
@@ -263,7 +263,7 @@ const Coach = ({}: SeflProp) => {
   return (
     <Row style={{ overflow: 'auto' }}>
       <Col span={24}>
-        <Row justify={'end'}>
+        <Row justify="end">
           <Button type="primary" onClick={showModal}>
             Thêm Chuyến Xe
           </Button>
@@ -282,7 +282,7 @@ const Coach = ({}: SeflProp) => {
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
             >
-              <Form.Item name={'from'} label={'Điểm Đi'} rules={[{ required: true, message: 'Chưa chọn điểm đi' }]}>
+              <Form.Item name="from" label="Điểm Đi" rules={[{ required: true, message: 'Chưa chọn điểm đi' }]}>
                 <Select
                   showSearch
                   defaultValue="Điểm Đi"
@@ -292,7 +292,7 @@ const Coach = ({}: SeflProp) => {
                   }
                 />
               </Form.Item>
-              <Form.Item name={'to'} label={'Điểm Đến'} rules={[{ required: true, message: 'Chưa chọn điểm đến' }]}>
+              <Form.Item name="to" label="Điểm Đến" rules={[{ required: true, message: 'Chưa chọn điểm đến' }]}>
                 <Select
                   showSearch
                   defaultValue="Điểm Đến"
@@ -305,8 +305,8 @@ const Coach = ({}: SeflProp) => {
               <Row>
                 <Col span={12}>
                   <Form.Item
-                    name={'departureTime'}
-                    label={'Thời Điểm Khởi Hành'}
+                    name="departureTime"
+                    label="Thời Điểm Khởi Hành"
                     rules={[{ required: true, message: 'Chưa chọn thời điểm khởi hành' }]}
                   >
                     <DatePicker
@@ -319,7 +319,7 @@ const Coach = ({}: SeflProp) => {
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item name={'bus'} label={'Xe Sử Dụng'} rules={[{ required: true, message: 'Chưa chọn xe' }]}>
+                  <Form.Item name="bus" label="Xe Sử Dụng" rules={[{ required: true, message: 'Chưa chọn xe' }]}>
                     <Select
                       showSearch
                       defaultValue="Biển Số"
