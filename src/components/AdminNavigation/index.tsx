@@ -22,6 +22,7 @@ export enum TabKey {
   "DASHBOARD" = "DASHBOARD",
   "USER" = "USER",
   "COACH" = "COACH",
+  "ASSETS" = "ASSETS",
 }
 
 const menuItems: ItemType[] = [
@@ -39,6 +40,11 @@ const menuItems: ItemType[] = [
     key: TabKey.COACH,
     icon: <CarOutlined />,
     label: "Xe",
+  },
+  {
+    key: TabKey.ASSETS,
+    icon: <CarOutlined />,
+    label: "Tài sản",
   },
 ];
 
@@ -83,6 +89,9 @@ const AdminNavigation = ({ isExpand, setIsExpand }: SelfProps) => {
               break;
             case TabKey.USER:
               navigate(ROUTER_PATH.ADMIN_USER);
+              break;
+            case TabKey.ASSETS:
+              navigate(ROUTER_PATH.ADMIN_ASSETS);
               break;
             default:
               break;
