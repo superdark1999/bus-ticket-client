@@ -8,7 +8,10 @@ const AdminGuard = lazy(() => import('guards/AdminGuard'));
 const BookingLayout = lazy(() => import('layout/BookingLayout'));
 const AdminLayout = lazy(() => import('layout/AdminLayout'));
 const BookingPage = lazy(() => import('views/Booking'));
-const LoginPage = lazy(() => import('views/Login'));
+const LoginPage = lazy(() => import('views/auth/Login/LoginPage'));
+const RegisterPage = lazy(() => import('views/auth/Register/RegisterPage'));
+const ChangePasswordPage = lazy(() => import('views/auth/ChangePassword/ChangePasswordPage'));
+const ForgotPasswordPage = lazy(() => import('views/auth/ForgotPassword/ForgotPasswordPage'));
 
 export enum ROUTER_PATH {
   'LOGIN' = '/login',
@@ -28,6 +31,18 @@ export const routesConfig: RouteObject[] = [
         element: <LoginPage />,
       },
       {
+        path: '/register',
+        element: <RegisterPage />,
+      },
+      {
+        path: '/change-password',
+        element: <ChangePasswordPage />,
+      },
+      {
+        path: '/forgot-password',
+        element: <ForgotPasswordPage />,
+      },
+      {
         element: <MemberGuard />,
         children: [
           {
@@ -39,11 +54,11 @@ export const routesConfig: RouteObject[] = [
     ],
   },
   {
-    element: <AdminLayout />,
-    path: '/admin',
+    element: <AdminGuard />,
     children: [
       {
-        element: <AdminGuard />,
+        element: <AdminLayout />,
+        path: '/admin',
         children: [
           {
             path: ROUTER_PATH.ADMIN_USER,

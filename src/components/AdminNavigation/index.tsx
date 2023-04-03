@@ -72,7 +72,7 @@ function AdminNavigation({ isExpand, setIsExpand }: SelfProps) {
         theme="light"
         mode="inline"
         multiple={false}
-        defaultSelectedKeys={[TabKey.COACH]}
+        defaultSelectedKeys={[]}
         items={menuItems}
         onSelect={({ key }) => {
           switch (key) {
