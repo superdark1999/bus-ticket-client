@@ -7,14 +7,12 @@ import {
   Modal,
   Form,
   Select,
-  DatePicker,
   Input,
   Tooltip,
   Popconfirm,
   message,
 } from "antd";
-import { ColumnsType } from "antd/es/table";
-import dayjs from "dayjs";
+import { ColumnsType, TableProps } from "antd/es/table";
 import { v4 as uuidv4 } from "uuid";
 import { EditFilled, DeleteFilled } from "@ant-design/icons";
 import styled from "styled-components";
@@ -114,9 +112,14 @@ const delay = async (ms: number = 500) =>
   });
 
 const Coach = ({}: SeflProp) => {
-  const [isAddingCoachOpen, setIsAddingCoachOpen] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modalType, setModalType] = useState<"create" | "edit">("create");
   const [coachList, setCoachList] = useState<ICoach[]>([]);
   const [tableStatus, setTableStatus] = useState<"loading" | "none">("none");
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [highlightType, setHighlightType] = useState<"update" | "delete">(
+    "update"
+  );
   // Get data after mount
   useEffect(() => {
     // Call api to get coach list, do later
@@ -132,7 +135,7 @@ const Coach = ({}: SeflProp) => {
 
   // Handle adding coach dialog
   const showModal = () => {
-    setIsAddingCoachOpen(true);
+    setIsOpenModal(true);
   };
 
   const handleOk = () => {
@@ -140,34 +143,69 @@ const Coach = ({}: SeflProp) => {
   };
 
   const handleCancel = () => {
-    setIsAddingCoachOpen(false);
+    setIsOpenModal(false);
   };
 
   // Handle form
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
+  const onFinish = async (values: any, type: "create" | "edit") => {
     // Call api to add one schedule bus
-    console.log(values);
-
+    console.log("🚀 ~ file: Assets.tsx ~ line 152 ~ onFinish ~ values", values);
+    const { capacity, model, registrationNumber } = values;
+    const id = values.id || uuidv4();
     // Fake call api
-    let newCoach = {
-      id: coachList.length + 1,
-      from: values.from,
-      to: values.to,
-      departureTime: values.departureTime.format("HH:mm DD/MM/YYYY"),
-      passengerAmount: 0,
-      licensePlate: values.bus,
-      status: "Đang Chờ",
+    const newCoach: ICoach = {
+      id,
+      capacity,
+      model,
+      registrationNumber,
     };
+    try {
+      const api =
+        type === "create"
+          ? coachApi.createCoach(newCoach)
+          : coachApi.updateCoach(id, { capacity, model, registrationNumber });
 
-    console.log(form.getFieldValue("departureTime"));
+      setTableStatus("loading");
+      // const res = await api;
+      await delay(500);
 
-    let newCoachList = [newCoach, ...coachList];
+      let newCoachList: ICoach[] = [];
 
-    // Update data/ui
-    // setCoachList(newCoachList);
-    setIsAddingCoachOpen(false);
+      console.log(
+        "🚀 ~ file: Assets.tsx ~ line 175 ~ onFinish ~ newCoach",
+        newCoach
+      );
+      if (type === "create") newCoachList = [...coachList, newCoach];
+      else
+        newCoachList = coachList.map((coach) => {
+          if (coach.id !== newCoach.id) return coach;
+          else
+            return {
+              ...newCoach,
+              id: coach.id,
+            };
+        });
+
+      console.log(
+        "🚀 ~ file: Assets.tsx ~ line 187 ~ onFinish ~ newCoachList",
+        newCoachList
+      );
+      // Update data/ui
+      setCoachList(newCoachList);
+
+      message.success(
+        type === "create"
+          ? "Thêm dữ liệu thành công!"
+          : "Chỉnh sửa dữ liệu thành công!"
+      );
+    } catch (error) {
+      message.error("Có lỗi xảy ra, vui lòng thử lại!");
+    }
+    highlightRows([newCoach.id], "update");
+    setTableStatus("none");
+    setIsOpenModal(false);
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -176,6 +214,7 @@ const Coach = ({}: SeflProp) => {
 
   const handleDeleteCoach = async (coach: ICoach) => {
     setTableStatus("loading");
+    highlightRows([coach.id], "delete");
     try {
       await coachApi.deleteCoach(coach.id);
       message.success(
@@ -191,6 +230,20 @@ const Coach = ({}: SeflProp) => {
       message.error(`Có lỗi xảy ra, vui lòng thử lại!`);
     } finally {
       setTableStatus("none");
+    }
+  };
+
+  const highlightRows = (
+    rowKeys: string[],
+    type: "update" | "delete",
+    timeDelay: number | "none" = 5000
+  ) => {
+    setSelectedRowKeys(rowKeys);
+    setHighlightType(type);
+    if (timeDelay !== "none") {
+      setTimeout(() => {
+        setSelectedRowKeys([]);
+      }, timeDelay);
     }
   };
 
@@ -213,12 +266,19 @@ const Coach = ({}: SeflProp) => {
       key: "id",
     },
     {
-      title: "Chỉnh sửa",
+      title: "Thao tác",
       render: (_, coach) => {
         return (
           <ButtonGroup>
             <Tooltip title="Chỉnh sửa" placement="bottom">
-              <Button type="link">
+              <Button
+                type="link"
+                onClick={() => {
+                  setModalType("edit");
+                  form.setFieldsValue(coach);
+                  setIsOpenModal(true);
+                }}
+              >
                 <EditFilled style={{ fontSize: 20, color: "#FFC107" }} />
               </Button>
             </Tooltip>
@@ -248,24 +308,35 @@ const Coach = ({}: SeflProp) => {
     <Row style={{ overflow: "auto" }}>
       <Col span={24}>
         <Row justify={"end"}>
-          <Button type="primary" onClick={showModal}>
+          <Button
+            type="primary"
+            onClick={() => {
+              setModalType("create");
+              setIsOpenModal(true);
+            }}
+          >
             Thêm Xe
           </Button>
           <Modal
-            title="Thêm Xe"
-            okText="Thêm"
+            title={modalType === "edit" ? "Chỉnh sửa xe" : "Thêm Xe"}
+            okText={modalType === "edit" ? "Lưu" : "Thêm"}
             cancelText="Hủy"
-            open={isAddingCoachOpen}
+            open={isOpenModal}
             onOk={handleOk}
             onCancel={handleCancel}
+            afterClose={() => {
+              if (modalType === "edit") form.resetFields();
+              setTableStatus("none");
+            }}
           >
             <Form
               form={form}
               layout="vertical"
               initialValues={{ remember: true }}
-              onFinish={onFinish}
+              onFinish={(values) => onFinish(values, modalType)}
               onFinishFailed={onFinishFailed}
             >
+              <Form.Item name={"id"} label={"coachId"} hidden></Form.Item>
               <Form.Item
                 name={"model"}
                 label={"Loại xe"}
@@ -308,10 +379,15 @@ const Coach = ({}: SeflProp) => {
         </Row>
         <Row>
           <Col span={24}>
-            <Table
+            <CustomAntdTable
               dataSource={coachList}
               columns={columns}
               loading={tableStatus === "loading"}
+              rowClassName={(coach: ICoach) =>
+                selectedRowKeys.includes(coach.id)
+                  ? `highlight_${highlightType}`
+                  : ""
+              }
             />
           </Col>
         </Row>
@@ -321,5 +397,15 @@ const Coach = ({}: SeflProp) => {
 };
 const ButtonGroup = styled.div`
   display: inline-flex;
+`;
+const CustomAntdTable: React.FC<TableProps<any>> = styled(Table)`
+  .highlight {
+    &_update {
+      background-color: #91caff69;
+    }
+    &_delete {
+      background-color: #ff000045;
+    }
+  }
 `;
 export default Coach;
