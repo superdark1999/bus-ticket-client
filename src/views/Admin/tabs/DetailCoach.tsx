@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Button, DatePicker, Form, Input, Select } from "antd";
+import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
 import dayjs from "dayjs";
+import Table, { ColumnsType } from "antd/es/table";
 
 const Container = styled.div`
   margin-top: 1rem;
@@ -39,6 +40,13 @@ const Separator = styled.hr`
   margin: 1rem 0;
 `;
 
+const ButtonRow = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
+`;
+
 interface CoachDetailsProps {
   coachId: string;
 }
@@ -55,6 +63,14 @@ interface CoachDetail {
   ticketPrice: number;
 }
 
+interface InfoCustomer {
+  id: number;
+  chairNo: string;
+  phone: string;
+  name: string;
+  note: string;
+}
+
 //Mock data
 const stationList = [
   "Sài Gòn",
@@ -66,6 +82,50 @@ const stationList = [
 ];
 const statusList = ["Đang Chờ", "Đang Chạy", "Đã Hủy", "Hoàn Thành"];
 const licensePlate = "74F1-12345";
+const customerList = [
+  {
+    id: 1,
+    chairNo: "B6",
+    phone: "0987654321",
+    name: "Nguyễn Văn A",
+    note: "Vui lòng trung chuyển tại trường KHTN",
+  },
+  {
+    id: 2,
+    chairNo: "B6",
+    phone: "0987654321",
+    name: "Nguyễn Văn A",
+    note: "Vui lòng trung chuyển tại trường KHTN",
+  },
+  {
+    id: 3,
+    chairNo: "B6",
+    phone: "0987654321",
+    name: "Nguyễn Văn A",
+    note: "Vui lòng trung chuyển tại trường KHTN",
+  },
+  {
+    id: 4,
+    chairNo: "B6",
+    phone: "0987654321",
+    name: "Nguyễn Văn A",
+    note: "Vui lòng trung chuyển tại trường KHTN",
+  },
+  {
+    id: 5,
+    chairNo: "B6",
+    phone: "0987654321",
+    name: "Nguyễn Văn A",
+    note: "Vui lòng trung chuyển tại trường KHTN",
+  },
+  {
+    id: 6,
+    chairNo: "B6",
+    phone: "0987654321",
+    name: "Nguyễn Văn A",
+    note: "Vui lòng trung chuyển tại trường KHTN",
+  },
+];
 
 const CoachDetails = ({ coachId }: CoachDetailsProps) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -80,6 +140,8 @@ const CoachDetails = ({ coachId }: CoachDetailsProps) => {
     passengerAmount: 0,
     ticketPrice: 0,
   });
+
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   // Handle form
   const [form] = Form.useForm();
@@ -135,7 +197,35 @@ const CoachDetails = ({ coachId }: CoachDetailsProps) => {
     // }
   };
 
-  console.log(coachDetail);
+  // Handle modal table
+  const columns: ColumnsType<InfoCustomer> = [
+    {
+      title: "Thứ tự",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Số ghế",
+      dataIndex: "chairNo",
+      key: "id",
+    },
+    {
+      title: "Tên hành khách",
+      dataIndex: "name",
+      key: "id",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phone",
+      key: "id",
+    },
+    {
+      title: "Ghi chú",
+      dataIndex: "note",
+      key: "id",
+    },
+  ];
+
   return (
     <Container>
       <Form
@@ -246,6 +336,29 @@ const CoachDetails = ({ coachId }: CoachDetailsProps) => {
           <TotalAmount>Tổng số tiền: {totalAmount}</TotalAmount>
         </FormContainer>
       </Form>
+      <ButtonRow>
+        <Button type="default" onClick={() => setIsOpenModal(true)}>
+          Danh sách hành khách
+        </Button>
+      </ButtonRow>
+      <Modal
+        title={
+          licensePlate +
+          " - " +
+          coachDetail.from +
+          " - " +
+          coachDetail.to +
+          " - " +
+          coachDetail.departureTime.format("HH:mm DD/MM/YYYY")
+        }
+        open={isOpenModal}
+        onCancel={() => setIsOpenModal(false)}
+        onOk={() => setIsOpenModal(false)}
+        width={"80%"}
+        footer={null}
+      >
+        <Table dataSource={customerList} columns={columns} />
+      </Modal>
     </Container>
   );
 };
