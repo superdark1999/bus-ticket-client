@@ -264,7 +264,11 @@ const CoachDetails = ({ coachId }: CoachDetailsProps) => {
         <Separator />
 
         <FormContainer>
-          <FormItem label="Điểm đi:" name="from">
+          <FormItem
+            label="Điểm đi:"
+            name="from"
+            rules={[{ required: true, message: "Chưa chọn điểm đi" }]}
+          >
             <Select
               showSearch
               defaultValue="Điểm Đi"
@@ -280,7 +284,11 @@ const CoachDetails = ({ coachId }: CoachDetailsProps) => {
               disabled={!isEditing}
             />
           </FormItem>
-          <FormItem label="Điểm đến:" name="to">
+          <FormItem
+            label="Điểm đến:"
+            name="to"
+            rules={[{ required: true, message: "Chưa chọn điểm đến" }]}
+          >
             <Select
               showSearch
               defaultValue="Điểm Đến"
@@ -296,7 +304,13 @@ const CoachDetails = ({ coachId }: CoachDetailsProps) => {
               disabled={!isEditing}
             />
           </FormItem>
-          <FormItem label="Thời gian xuất phát:" name="departureTime">
+          <FormItem
+            label="Thời gian xuất phát:"
+            name="departureTime"
+            rules={[
+              { required: true, message: "Chưa chọn thời điểm khởi hành" },
+            ]}
+          >
             <DatePicker
               showTime={{ hideDisabledOptions: true }}
               showNow={false}
@@ -313,10 +327,14 @@ const CoachDetails = ({ coachId }: CoachDetailsProps) => {
           <FormItem label="Độ dài quãng đường:" name="distance">
             <Input disabled={!isEditing} />
           </FormItem>
-          <FormItem label="Trạng thái:" name="status">
+          <FormItem
+            label="Trạng thái:"
+            name="status"
+            rules={[{ required: true, message: "Chưa chọn trạng thái " }]}
+          >
             <Select
               showSearch
-              defaultValue="Điểm Đến"
+              defaultValue=""
               options={statusList.map((status) => ({
                 value: status,
                 label: status,
