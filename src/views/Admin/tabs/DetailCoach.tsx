@@ -226,6 +226,8 @@ const CoachDetails = ({ coachId }: CoachDetailsProps) => {
     },
   ];
 
+  console.log("thongere", licensePlate);
+
   return (
     <Container>
       <Form
@@ -341,15 +343,24 @@ const CoachDetails = ({ coachId }: CoachDetailsProps) => {
           Danh sách hành khách
         </Button>
       </ButtonRow>
+
       <Modal
         title={
-          licensePlate +
-          " - " +
-          coachDetail.from +
-          " - " +
-          coachDetail.to +
-          " - " +
-          coachDetail.departureTime.format("HH:mm DD/MM/YYYY")
+          typeof coachDetail.departureTime.format === "function"
+            ? licensePlate +
+              " - " +
+              coachDetail.from +
+              " - " +
+              coachDetail.to +
+              " - " +
+              coachDetail.departureTime.format("HH:mm DD/MM/YYYY")
+            : licensePlate +
+              " - " +
+              coachDetail.from +
+              " - " +
+              coachDetail.to +
+              " - " +
+              ""
         }
         open={isOpenModal}
         onCancel={() => setIsOpenModal(false)}
