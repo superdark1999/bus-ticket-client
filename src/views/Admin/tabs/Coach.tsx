@@ -1,27 +1,40 @@
-import React, {useState, useEffect} from "react";
-import { Typography, Table, Tag, Row, Col, Button, Modal, Form, Input, Select, DatePicker} from "antd";
+import React, { useState, useEffect } from "react";
+import {
+  Typography,
+  Table,
+  Tag,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Select,
+  DatePicker,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
   SyncOutlined,
-} from '@ant-design/icons';
-import dayjs from 'dayjs';
+} from "@ant-design/icons";
+import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
-interface SeflProp {};
+interface SeflProp {}
 interface CoachRecord {
-  id: number,
-  from: string,
-  to: string,
-  departureTime: any,
-  licensePlate: string,
-  passengerAmount: number,
-  status: string
+  id: number;
+  from: string;
+  to: string;
+  departureTime: any;
+  licensePlate: string;
+  passengerAmount: number;
+  status: string;
 }
 
 // Call api to get data later, now mock it
-let coachListMock : CoachRecord[] = [
+let coachListMock: CoachRecord[] = [
   {
     id: 1,
     from: "Sài Gòn",
@@ -29,7 +42,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Đang Chờ"
+    status: "Đang Chờ",
   },
   {
     id: 2,
@@ -38,7 +51,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Đang Chạy"
+    status: "Đang Chạy",
   },
   {
     id: 3,
@@ -47,7 +60,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Hoàn Thành"
+    status: "Hoàn Thành",
   },
   {
     id: 4,
@@ -56,7 +69,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Đã Hủy"
+    status: "Đã Hủy",
   },
   {
     id: 5,
@@ -65,7 +78,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Đang chờ"
+    status: "Đang chờ",
   },
   {
     id: 6,
@@ -74,7 +87,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Đang Chờ"
+    status: "Đang Chờ",
   },
   {
     id: 7,
@@ -83,7 +96,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Đang Chờ"
+    status: "Đang Chờ",
   },
   {
     id: 8,
@@ -92,7 +105,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Đang Chạy"
+    status: "Đang Chạy",
   },
   {
     id: 9,
@@ -101,7 +114,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Đang Chờ"
+    status: "Đang Chờ",
   },
   {
     id: 10,
@@ -110,7 +123,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Hoàn Thành"
+    status: "Hoàn Thành",
   },
   {
     id: 11,
@@ -119,7 +132,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Hoàn Thành"
+    status: "Hoàn Thành",
   },
   {
     id: 12,
@@ -128,7 +141,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Hoàn Thành"
+    status: "Hoàn Thành",
   },
   {
     id: 13,
@@ -137,7 +150,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Hoàn Thành"
+    status: "Hoàn Thành",
   },
   {
     id: 14,
@@ -146,7 +159,7 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Hoàn Thành"
+    status: "Hoàn Thành",
   },
   {
     id: 15,
@@ -155,25 +168,39 @@ let coachListMock : CoachRecord[] = [
     departureTime: "00:00 01/01/2023",
     licensePlate: "74F1-12345",
     passengerAmount: 40,
-    status: "Hoàn Thành"
+    status: "Hoàn Thành",
   },
-]
+];
 
-const stationList =  ["Sài Gòn", "Quảng Trị", "Bình Dương", "Đồng Nai", "Vùng Tàu", "Long An"];
-const busList = ["74F1-12345", "74F1-12345", "74F1-12345", "74F1-12345", "74F1-12345"];
+const stationList = [
+  "Sài Gòn",
+  "Quảng Trị",
+  "Bình Dương",
+  "Đồng Nai",
+  "Vùng Tàu",
+  "Long An",
+];
+const busList = [
+  "74F1-12345",
+  "74F1-12345",
+  "74F1-12345",
+  "74F1-12345",
+  "74F1-12345",
+];
 
 const Coach = ({}: SeflProp) => {
+  const navigate = useNavigate();
   const [isAddingCoachOpen, setIsAddingCoachOpen] = useState(false);
   const [coachList, setCoachList] = useState<CoachRecord[]>([]);
 
   // Get data after mount
-  useEffect(()=>{
+  useEffect(() => {
     // Call api to get coach list, do later
-    console.log('get coach list from api');
+    console.log("get coach list from api");
 
     // Got data successfully
     setCoachList(coachListMock);
-  }, [])
+  }, []);
 
   // Handle adding coach dialog
   const showModal = () => {
@@ -197,16 +224,16 @@ const Coach = ({}: SeflProp) => {
 
     // Fake call api
     let newCoach = {
-      id: coachList.length + 1, 
-      from: values.from, 
-      to: values.to, 
+      id: coachList.length + 1,
+      from: values.from,
+      to: values.to,
       departureTime: values.departureTime.format("HH:mm DD/MM/YYYY"),
       passengerAmount: 0,
       licensePlate: values.bus,
-      status: "Đang Chờ"
-    }
+      status: "Đang Chờ",
+    };
 
-    console.log(form.getFieldValue('departureTime'))
+    console.log(form.getFieldValue("departureTime"));
 
     let newCoachList = [newCoach, ...coachList];
 
@@ -216,65 +243,69 @@ const Coach = ({}: SeflProp) => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
 
   // Handle table component
   const columns: ColumnsType<CoachRecord> = [
     {
-      title: 'Điểm Đi',
-      dataIndex: 'from',
-      key: 'id',
+      title: "Điểm Đi",
+      dataIndex: "from",
+      key: "id",
     },
     {
-      title: 'Điểm Đến',
-      dataIndex: 'to',
-      key: 'id',
+      title: "Điểm Đến",
+      dataIndex: "to",
+      key: "id",
     },
     {
-      title: 'Khởi Hành',
-      dataIndex: 'departureTime',
-      key: 'id',
+      title: "Khởi Hành",
+      dataIndex: "departureTime",
+      key: "id",
     },
     {
-      title: 'Biển Số',
-      dataIndex: 'licensePlate',
-      key: 'id',
-    },{
-      title: 'Số Lượng Khách',
-      dataIndex: 'passengerAmount',
-      key: 'id',
+      title: "Biển Số",
+      dataIndex: "licensePlate",
+      key: "id",
     },
     {
-      title: 'Trạng Thái',
-      dataIndex: 'status',
-      key: 'id',
-      render: ((_, {status}) => {
-        
-        let tagStyle = status.toLowerCase() === "đang chờ" ? {color: "default", icon: <ClockCircleOutlined/>}
-                  : (status.toLowerCase() === "đang chạy" ? {color: "processing", icon: <SyncOutlined/>}
-                  : (status.toLowerCase() === "hoàn thành" ? {color: "success", icon: <CheckCircleOutlined/>}
-                  : {color: "error", icon: <CloseCircleOutlined/>}));
+      title: "Số Lượng Khách",
+      dataIndex: "passengerAmount",
+      key: "id",
+    },
+    {
+      title: "Trạng Thái",
+      dataIndex: "status",
+      key: "id",
+      render: (_, { status }) => {
+        let tagStyle =
+          status.toLowerCase() === "đang chờ"
+            ? { color: "default", icon: <ClockCircleOutlined /> }
+            : status.toLowerCase() === "đang chạy"
+            ? { color: "processing", icon: <SyncOutlined /> }
+            : status.toLowerCase() === "hoàn thành"
+            ? { color: "success", icon: <CheckCircleOutlined /> }
+            : { color: "error", icon: <CloseCircleOutlined /> };
 
-        return (<Tag {...tagStyle}>{status}</Tag>);
-      })
+        return <Tag {...tagStyle}>{status}</Tag>;
+      },
     },
   ];
 
   return (
-    <Row style={{overflow: 'auto'}}>
+    <Row style={{ overflow: "auto" }}>
       <Col span={24}>
-        <Row justify={'end'}>
+        <Row justify={"end"}>
           <Button type="primary" onClick={showModal}>
             Thêm Chuyến Xe
           </Button>
-          <Modal 
-          title="Thêm Chuyến Xe" 
-          okText="Thêm"
-          cancelText="Hủy"
-          open={isAddingCoachOpen} 
-          onOk={handleOk} 
-          onCancel={handleCancel}
+          <Modal
+            title="Thêm Chuyến Xe"
+            okText="Thêm"
+            cancelText="Hủy"
+            open={isAddingCoachOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
           >
             <Form
               form={form}
@@ -286,28 +317,38 @@ const Coach = ({}: SeflProp) => {
               <Form.Item
                 name={"from"}
                 label={"Điểm Đi"}
-                rules={[{required: true, message: "Chưa chọn điểm đi"}]}
+                rules={[{ required: true, message: "Chưa chọn điểm đi" }]}
               >
                 <Select
                   showSearch
                   defaultValue="Điểm Đi"
-                  options={stationList.map(station => ({value: station, label: station}))}
+                  options={stationList.map((station) => ({
+                    value: station,
+                    label: station,
+                  }))}
                   filterSort={(optA, optB) =>
-                    (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
+                    (optA?.label ?? "")
+                      .toLowerCase()
+                      .localeCompare((optB?.label ?? "").toLowerCase())
                   }
                 />
               </Form.Item>
               <Form.Item
                 name={"to"}
                 label={"Điểm Đến"}
-                rules={[{required: true, message: "Chưa chọn điểm đến"}]}
+                rules={[{ required: true, message: "Chưa chọn điểm đến" }]}
               >
                 <Select
                   showSearch
                   defaultValue="Điểm Đến"
-                  options={stationList.map(station => ({value: station, label: station}))}
+                  options={stationList.map((station) => ({
+                    value: station,
+                    label: station,
+                  }))}
                   filterSort={(optA, optB) =>
-                    (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
+                    (optA?.label ?? "")
+                      .toLowerCase()
+                      .localeCompare((optB?.label ?? "").toLowerCase())
                   }
                 />
               </Form.Item>
@@ -316,14 +357,19 @@ const Coach = ({}: SeflProp) => {
                   <Form.Item
                     name={"departureTime"}
                     label={"Thời Điểm Khởi Hành"}
-                    rules={[{required: true, message: "Chưa chọn thời điểm khởi hành"}]}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Chưa chọn thời điểm khởi hành",
+                      },
+                    ]}
                   >
-                    <DatePicker 
-                    showTime = {{hideDisabledOptions: true}}
-                    showNow = {false}
-                    format="HH:mm DD/MM/YYYY"
-                    disabledDate={(date) => date <= dayjs().startOf("day")}
-                    minuteStep={5}
+                    <DatePicker
+                      showTime={{ hideDisabledOptions: true }}
+                      showNow={false}
+                      format="HH:mm DD/MM/YYYY"
+                      disabledDate={(date) => date <= dayjs().startOf("day")}
+                      minuteStep={5}
                     />
                   </Form.Item>
                 </Col>
@@ -331,14 +377,19 @@ const Coach = ({}: SeflProp) => {
                   <Form.Item
                     name={"bus"}
                     label={"Xe Sử Dụng"}
-                    rules={[{required: true, message: "Chưa chọn xe"}]}
+                    rules={[{ required: true, message: "Chưa chọn xe" }]}
                   >
                     <Select
                       showSearch
                       defaultValue="Biển Số"
-                      options={busList.map(bus => ({value: bus, label: bus}))}
+                      options={busList.map((bus) => ({
+                        value: bus,
+                        label: bus,
+                      }))}
                       filterSort={(optA, optB) =>
-                        (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
+                        (optA?.label ?? "")
+                          .toLowerCase()
+                          .localeCompare((optB?.label ?? "").toLowerCase())
                       }
                     />
                   </Form.Item>
@@ -349,7 +400,20 @@ const Coach = ({}: SeflProp) => {
         </Row>
         <Row>
           <Col span={24}>
-            <Table dataSource={coachList} columns={columns}/>
+            <Table
+              dataSource={coachList}
+              columns={columns.map((col) => ({
+                ...col,
+                onCell: (record: CoachRecord) => ({
+                  onClick: () => {
+                    console.log("dòng 409:");
+                    navigate(`/admin/coach/${record.id}`);
+                    console.log("dòng 4011:");
+                  },
+                }),
+              }))}
+              rowKey="id"
+            />
           </Col>
         </Row>
       </Col>

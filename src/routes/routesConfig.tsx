@@ -1,7 +1,12 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import { RouteObject } from "./route.interface";
-import { AdminCoach, AdminDashBoard, AdminUser } from "views/Admin";
+import {
+  AdminCoach,
+  AdminDashBoard,
+  AdminUser,
+  AdminDetailCoach,
+} from "views/Admin";
 
 const MemberGuard = lazy(() => import("guards/MemberGuard"));
 const AdminGuard = lazy(() => import("guards/AdminGuard"));
@@ -10,8 +15,12 @@ const AdminLayout = lazy(() => import("layout/AdminLayout"));
 const BookingPage = lazy(() => import("views/Booking"));
 const LoginPage = lazy(() => import("views/auth/Login/LoginPage"));
 const RegisterPage = lazy(() => import("views/auth/Register/RegisterPage"));
-const ChangePasswordPage = lazy(() => import("views/auth/ChangePassword/ChangePasswordPage"));
-const ForgotPasswordPage = lazy(() => import("views/auth/ForgotPassword/ForgotPasswordPage"));
+const ChangePasswordPage = lazy(
+  () => import("views/auth/ChangePassword/ChangePasswordPage")
+);
+const ForgotPasswordPage = lazy(
+  () => import("views/auth/ForgotPassword/ForgotPasswordPage")
+);
 
 export enum ROUTER_PATH {
   "LOGIN" = "/login",
@@ -67,6 +76,10 @@ export const routesConfig: RouteObject[] = [
           {
             path: ROUTER_PATH.ADMIN_COACH,
             element: <AdminCoach />,
+          },
+          {
+            path: `${ROUTER_PATH.ADMIN_COACH}/:id`,
+            element: <AdminDetailCoach coachId="id" />,
           },
           {
             path: ROUTER_PATH.ADMIN_DASHBOARD,
