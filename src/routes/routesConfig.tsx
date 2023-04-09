@@ -5,6 +5,7 @@ import {
   AdminAssets,
   AdminCoach,
   AdminDashBoard,
+  AdminTrips,
   AdminUser,
 } from "views/Admin";
 
@@ -30,6 +31,7 @@ export enum ROUTER_PATH {
   "ADMIN_COACH" = "/admin/coach",
   "ADMIN_DASHBOARD" = "/admin/dashboard",
   "ADMIN_ASSETS" = "/admin/assets",
+  "ADMIN_TRIPS" = "/admin/trips",
 }
 
 export const routesConfig: RouteObject[] = [
@@ -85,6 +87,10 @@ export const routesConfig: RouteObject[] = [
           {
             path: ROUTER_PATH.ADMIN_ASSETS,
             element: <AdminAssets />,
+          },
+          {
+            path: ROUTER_PATH.ADMIN_TRIPS,
+            element: <AdminTrips />,
           },
         ],
       },

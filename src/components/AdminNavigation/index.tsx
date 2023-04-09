@@ -10,7 +10,26 @@ import LogoApp from "components/LogoApp";
 import { ItemType } from "antd/es/menu/hooks/useItems";
 import { useNavigate, useLocation } from "react-router";
 import { ROUTER_PATH } from "routes/routesConfig";
+import { ICON_URL } from "utils/constant";
 const { Sider } = Layout;
+
+const CustomSider = styled(Sider)`
+  box-shadow: 1px 0px 2px grey;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const LogoBox = styled.div`
+  margin: 8px 16px;
+  height: 60px;
+`;
+
+const CustomIcon = styled.img`
+  width: 16px;
+  height: 16px;
+`;
 
 interface SelfProps {
   isExpand: boolean;
@@ -23,6 +42,7 @@ export enum TabKey {
   "USER" = "USER",
   "COACH" = "COACH",
   "ASSETS" = "ASSETS",
+  "TRIPS" = "TRIPS",
 }
 
 const menuItems: ItemType[] = [
@@ -36,15 +56,20 @@ const menuItems: ItemType[] = [
     icon: <UserOutlined />,
     label: "Người dùng",
   },
-  {
-    key: TabKey.COACH,
-    icon: <CarOutlined />,
-    label: "Xe",
-  },
+  // {
+  //   key: TabKey.COACH,
+  //   icon: <CarOutlined />,
+  //   label: "Xe",
+  // },
   {
     key: TabKey.ASSETS,
     icon: <CarOutlined />,
     label: "Tài sản",
+  },
+  {
+    key: TabKey.TRIPS,
+    icon: <CustomIcon alt="" src={ICON_URL.nav.routes} />,
+    label: "Tuyến đường",
   },
 ];
 
@@ -93,6 +118,9 @@ const AdminNavigation = ({ isExpand, setIsExpand }: SelfProps) => {
             case TabKey.ASSETS:
               navigate(ROUTER_PATH.ADMIN_ASSETS);
               break;
+            case TabKey.TRIPS:
+              navigate(ROUTER_PATH.ADMIN_TRIPS);
+              break;
             default:
               break;
           }
@@ -101,18 +129,5 @@ const AdminNavigation = ({ isExpand, setIsExpand }: SelfProps) => {
     </CustomSider>
   );
 };
-
-const CustomSider = styled(Sider)`
-  box-shadow: 1px 0px 2px grey;
-  display: flex;
-  height: 100vh;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const LogoBox = styled.div`
-  margin: 8px 16px;
-  height: 60px;
-`;
 
 export default AdminNavigation;
