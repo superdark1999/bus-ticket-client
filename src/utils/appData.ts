@@ -1,25 +1,22 @@
 import $ from "jquery";
 
-export interface IWardsLocation {
+export interface ILocation {
   Id: string;
   Name: string;
+  [key: string]: any;
 }
-export interface IDistrictLocation {
-  Id: string;
-  Name: string;
+export interface IWardsLocation extends ILocation {}
+export interface IDistrictLocation extends ILocation {
   Wards: IWardsLocation[];
 }
 
-export interface ICityLocation {
-  Id: string;
-  Name: string;
+export interface ICityLocation extends ILocation {
   Districts: IDistrictLocation[];
 }
 
 export const getLocationData = async (): Promise<ICityLocation[]> => {
   const promise = new Promise<ICityLocation[]>((res) => {
     $.getJSON("/data/location.json", (data: any) => {
-      console.log("🚀 ~ file: appData.ts ~ line 8 ~ data ~ data", data);
       res(data);
     });
   });
