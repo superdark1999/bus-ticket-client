@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { DatePicker, Space } from "antd";
+import type { RangePickerProps } from "antd/es/date-picker";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import {
   LaptopOutlined,
   NotificationOutlined,
@@ -7,7 +11,6 @@ import {
 import {
   Button,
   Cascader,
-  DatePicker,
   Form,
   Image,
   Input,
@@ -21,11 +24,73 @@ import {
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { NavLink } from "react-router-dom";
 
+dayjs.extend(customParseFormat);
+
+const { RangePicker } = DatePicker;
+
+const range = (start: number, end: number) => {
+  const result = [];
+  for (let i = start; i < end; i++) {
+    result.push(i);
+  }
+  return result;
+};
+
+// eslint-disable-next-line arrow-body-style
+const disabledDate: RangePickerProps["disabledDate"] = (current) => {
+  // Can not select days before today and today
+  return current && current < dayjs().endOf("day");
+};
+
+const disabledDateTime = () => ({
+  disabledHours: () => range(0, 24).splice(4, 20),
+  disabledMinutes: () => range(30, 60),
+  disabledSeconds: () => [55, 56],
+});
+
+const disabledRangeTime: RangePickerProps["disabledTime"] = (_, type) => {
+  if (type === "start") {
+    return {
+      disabledHours: () => range(0, 60).splice(4, 20),
+      disabledMinutes: () => range(30, 60),
+      disabledSeconds: () => [55, 56],
+    };
+  }
+  return {
+    disabledHours: () => range(0, 60).splice(20, 4),
+    disabledMinutes: () => range(0, 31),
+    disabledSeconds: () => [55, 56],
+  };
+};
+
+const onFinish = (values: any) => {
+  console.log("Received values:", values);
+};
+
+const onFinishFailed = (errorInfo: any) => {
+  console.log("Failed:", errorInfo);
+
+  
+};
+
+const validateMessages = {
+  required: '${label} is required!',
+  types: {
+    origin: '${label} is not a valid email!',
+    destination: '${label} is not a valid number!',
+    date: '${label} is not a valid number!',
+    quantity: '${label} is not a valid number!',
+
+  },
+  
+};
+
+
 const { Header, Content, Footer, Sider } = Layout;
 
 const items1: MenuProps["items"] = ["HOME", "LOGIN", "REGISTER"].map((key) => ({
   key,
-  label: ` ${key}`,
+  label: `${key}`,
 }));
 
 type SizeType = Parameters<typeof Form>[0]["size"];
@@ -37,7 +102,7 @@ const items2: MenuProps["items"] = [
   const key = String(index + 1);
 
   return {
-    key: `sub${key}`,
+    key: `sub_${key}`,
     icon: React.createElement(icon),
     label: `subnav ${key}`,
 
@@ -52,6 +117,11 @@ const items2: MenuProps["items"] = [
 });
 
 const Booking: React.FC = () => {
+  const onFinish = (values: any) => {
+    console.log("Received values of form: ", values);
+  };
+
+
   const [componentSize, setComponentSize] = useState<SizeType | "default">(
     "default"
   );
@@ -64,9 +134,13 @@ const Booking: React.FC = () => {
   } = theme.useToken();
 
   return (
-    <Layout style={{
-      // position: "relative"
-    }}>
+    <Layout
+      style={
+        {
+          // position: "relative"
+        }
+      }
+    >
       <Header className="header">
         <div className="logo" />
         <Menu
@@ -88,41 +162,60 @@ const Booking: React.FC = () => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           layout="horizontal"
-          initialValues={{ size: componentSize }}
+          initialValues={{ remember: true }}
           onValuesChange={onFormLayoutChange}
           size={componentSize as SizeType}
           style={{ maxWidth: 600 }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          validateMessages={validateMessages}
         >
-          <Form.Item label="Nơi đi">
+          <Form.Item
+            label="Nơi đi"
+            name="origin"
+            rules={[{ required: true, message: "Vui lòng điền thông tin!" }]}
+          >
             <Select
               style={{
                 marginLeft: "50px",
               }}
             >
-              <Select.Option value="1">HÀ NỘI</Select.Option>
-              <Select.Option value="2">HỒ CHÍ MINH</Select.Option>
-              <Select.Option value="3">ĐÀ NẴNG</Select.Option>
-              <Select.Option value="4">VINH</Select.Option>
+              <Select.Option value="hanoi">HÀ NỘI</Select.Option>
+              <Select.Option value="hochiminh">HỒ CHÍ MINH</Select.Option>
+              <Select.Option value="danang">ĐÀ NẴNG</Select.Option>
+              <Select.Option value="vinh">VINH</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item label="Nơi đến">
+          <Form.Item
+            label="Nơi đến"
+            name="destination"
+            rules={[{ required: true, message: "Vui lòng điền thông tin!" }]}
+          >
             <Select
               style={{
                 marginLeft: "50px",
               }}
             >
-              <Select.Option value="1">HÀ NỘI</Select.Option>
-              <Select.Option value="2">HỒ CHÍ MINH</Select.Option>
-              <Select.Option value="3">ĐÀ NẴNG</Select.Option>
-              <Select.Option value="4">VINH</Select.Option>
+              <Select.Option value="hanoi">HÀ NỘI</Select.Option>
+              <Select.Option value="hochiminh">HỒ CHÍ MINH</Select.Option>
+              <Select.Option value="danang">ĐÀ NẴNG</Select.Option>
+              <Select.Option value="vinh">VINH</Select.Option>
             </Select>
           </Form.Item>
 
-          <Form.Item label="Ngày">
+          <Form.Item
+            label="Ngày"
+            name="date"
+            rules={[{ required: true, message: "Vui lòng điền thông tin!" }]}
+          >
             <DatePicker
               style={{
                 marginLeft: "50px",
               }}
+              format="YYYY-MM-DD "
+              disabledDate={disabledDate}
+              disabledTime={disabledDateTime}
+              // showTime={{ defaultValue: dayjs("00:00:00", "HH:mm:ss") }}
             />
           </Form.Item>
           <Form.Item
@@ -130,6 +223,8 @@ const Booking: React.FC = () => {
             style={{
               width: "500px",
             }}
+            name="quantity"
+            rules={[{ required: true, message: "Vui lòng điền thông tin!" }]}
           >
             <InputNumber
               style={{
@@ -137,21 +232,40 @@ const Booking: React.FC = () => {
               }}
             />
           </Form.Item>
-          <NavLink to={"/"}>
-
-          <Form.Item>
-            <Button style={{
-                marginLeft: "200px", backgroundColor: "orange", 
-              }}>TÌM KIẾM</Button>
-          </Form.Item>
-          </NavLink>
+          
+            <Form.Item>
+              <Button
+                style={{
+                  marginLeft: "200px",
+                  backgroundColor: "orange",
+                }}
+                type="primary" 
+                htmlType="submit"
+              >
+                TÌM KIẾM
+              </Button>
+            </Form.Item>
+         
         </Form>
       </Content>
-      <Footer style={{ textAlign: 'center', position: "absolute", bottom: 0, backgroundColor: "black", width: "100%", right: "0", color:"white", left: "0" }}><div>Ant Design ©2023 Created by Ant UED</div>
-      {/* <img src="https://cdn-icons-png.flaticon.com/512/4565/4565023.png" alt=""  style={{ width: "100px", height: "100px"}} /> */}
+      <Footer
+        style={{
+          textAlign: "center",
+          position: "absolute",
+          bottom: 0,
+          backgroundColor: "black",
+          width: "100%",
+          right: "0",
+          color: "white",
+          left: "0",
+        }}
+      >
+        <div>Ant Design ©2023 Created by Ant UED</div>
+        {/* <img src="https://cdn-icons-png.flaticon.com/512/4565/4565023.png" alt=""  style={{ width: "100px", height: "100px"}} /> */}
       </Footer>
     </Layout>
   );
 };
 
 export default Booking;
+
