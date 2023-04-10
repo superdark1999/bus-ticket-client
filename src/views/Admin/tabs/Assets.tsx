@@ -28,7 +28,7 @@ const CoachModelLabel = {
   [ICoachModel.GIUONG_NAM]: "Giường nằm",
   [ICoachModel.PHONG_NAM]: "Phòng nằm",
 };
-interface ICoach {
+export interface ICoach {
   id: string;
   model: ICoachModel;
   capacity: number; // số ghế

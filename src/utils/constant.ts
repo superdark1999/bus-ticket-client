@@ -6,5 +6,6 @@ export const ICON_URL = {
   },
   nav: {
     routes: "/icon/trip.svg",
+    tripRoutes: "/icon/trip-routes.svg",
   },
 };

@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import { RouteObject } from "./route.interface";
 import {
   AdminAssets,
-  AdminCoach,
+  AdminTripRoute,
   AdminDashBoard,
   AdminTrips,
   AdminUser,
@@ -33,6 +33,7 @@ export enum ROUTER_PATH {
   "ADMIN_DASHBOARD" = "/admin/dashboard",
   "ADMIN_ASSETS" = "/admin/assets",
   "ADMIN_TRIPS" = "/admin/trips",
+  "ADMIN_TRIP_ROUTES" = "/admin/trip-routes",
 }
 
 export const routesConfig: RouteObject[] = [
@@ -78,8 +79,8 @@ export const routesConfig: RouteObject[] = [
             element: <AdminUser />,
           },
           {
-            path: ROUTER_PATH.ADMIN_COACH,
-            element: <AdminCoach />,
+            path: ROUTER_PATH.ADMIN_TRIP_ROUTES,
+            element: <AdminTripRoute />,
           },
           {
             path: ROUTER_PATH.ADMIN_DASHBOARD,

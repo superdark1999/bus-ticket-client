@@ -22,7 +22,7 @@ import SelectLocation, {
 import moment from "moment";
 
 interface SeflProp {}
-interface ITrip {
+export interface ITrip {
   id: string;
   origin: string;
   destination: string; // số ghế

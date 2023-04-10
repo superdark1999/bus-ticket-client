@@ -27,8 +27,17 @@ const LogoBox = styled.div`
 `;
 
 const CustomIcon = styled.img`
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
+`;
+
+const CustomMenu = styled(Menu)`
+  svg,
+  img {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
 `;
 
 interface SelfProps {
@@ -43,6 +52,7 @@ export enum TabKey {
   "COACH" = "COACH",
   "ASSETS" = "ASSETS",
   "TRIPS" = "TRIPS",
+  "TRIP_ROUTES" = "TRIP_ROUTES",
 }
 
 const menuItems: ItemType[] = [
@@ -56,11 +66,6 @@ const menuItems: ItemType[] = [
     icon: <UserOutlined />,
     label: "Người dùng",
   },
-  // {
-  //   key: TabKey.COACH,
-  //   icon: <CarOutlined />,
-  //   label: "Xe",
-  // },
   {
     key: TabKey.ASSETS,
     icon: <CarOutlined />,
@@ -70,6 +75,11 @@ const menuItems: ItemType[] = [
     key: TabKey.TRIPS,
     icon: <CustomIcon alt="" src={ICON_URL.nav.routes} />,
     label: "Tuyến đường",
+  },
+  {
+    key: TabKey.TRIP_ROUTES,
+    icon: <CustomIcon alt="" src={ICON_URL.nav.tripRoutes} />,
+    label: "Chuyến xe",
   },
 ];
 
@@ -98,7 +108,7 @@ const AdminNavigation = ({ isExpand, setIsExpand }: SelfProps) => {
         />
       </LogoBox>
 
-      <Menu
+      <CustomMenu
         theme="light"
         mode="inline"
         multiple={false}
@@ -109,8 +119,8 @@ const AdminNavigation = ({ isExpand, setIsExpand }: SelfProps) => {
             case TabKey.DASHBOARD:
               navigate(ROUTER_PATH.ADMIN_DASHBOARD);
               break;
-            case TabKey.COACH:
-              navigate(ROUTER_PATH.ADMIN_COACH);
+            case TabKey.TRIP_ROUTES:
+              navigate(ROUTER_PATH.ADMIN_TRIP_ROUTES);
               break;
             case TabKey.USER:
               navigate(ROUTER_PATH.ADMIN_USER);
