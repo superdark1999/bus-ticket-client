@@ -8,6 +8,7 @@ import {
   AdminTrips,
   AdminUser,
 } from "views/Admin";
+import ErrorPage, { ErrorStatus } from "views/ErrorPage";
 
 const MemberGuard = lazy(() => import("guards/MemberGuard"));
 const AdminGuard = lazy(() => import("guards/AdminGuard"));
@@ -96,7 +97,14 @@ export const routesConfig: RouteObject[] = [
       },
     ],
   },
-
+  {
+    element: <ErrorPage status={ErrorStatus.NOT_FOUND} />,
+    path: "/404",
+  },
+  {
+    element: <ErrorPage status={ErrorStatus.AUTHORIZED} />,
+    path: "/403",
+  },
   // always put it as the last element
   {
     path: "*",
