@@ -146,7 +146,7 @@ const Routes = ({}: SeflProp) => {
     console.log("🚀 ~ file: Assets.tsx ~ line 152 ~ onFinish ~ values", values);
     const { price, destination, origin } = values;
     const duration = values.duration.format("HH:mm");
-    const id = values.id || uuidv4();
+    const id = values?.id || uuidv4();
     // Fake call api
     const newTrip: ITrip = {
       id,
@@ -283,8 +283,9 @@ const Routes = ({}: SeflProp) => {
                     "🚀 ~ file: Trip.tsx ~ line 294 ~ Routes ~ trip",
                     trip
                   );
-                  const { price, duration, origin, destination } = trip;
+                  const { price, duration, origin, destination, id } = trip;
                   form.setFieldsValue({
+                    id,
                     price,
                     duration: moment(duration, "HH:mm"),
                     origin,
