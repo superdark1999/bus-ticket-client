@@ -16,7 +16,7 @@ const convertTimePickerValue = (duration: number): string => {
   const { hour, minute } = getTime(duration);
   const hourPrefix = hour < 10 ? "0" : "";
   const minutePrefix = minute < 10 ? "0" : "";
-  //HH:mm
+  // HH:mm
   const result = `${hourPrefix}${hour}:${minutePrefix}${minute}`;
   console.log(
     "🚀 ~ file: common.ts ~ line 21 ~ convertTimePickerValue ~ result",

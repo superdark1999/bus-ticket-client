@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
-import dayjs from "dayjs";
-import Table, { ColumnsType } from "antd/es/table";
+import { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Button, DatePicker, Form, Input, Modal, Select } from 'antd';
+import dayjs from 'dayjs';
+import Table, { ColumnsType } from 'antd/es/table';
 
 const Container = styled.div`
   margin-top: 1rem;
@@ -71,59 +71,52 @@ interface InfoCustomer {
   note: string;
 }
 
-//Mock data
-const stationList = [
-  "Sài Gòn",
-  "Quảng Trị",
-  "Bình Dương",
-  "Đồng Nai",
-  "Vùng Tàu",
-  "Long An",
-];
-const statusList = ["Đang Chờ", "Đang Chạy", "Đã Hủy", "Hoàn Thành"];
-const licensePlate = "74F1-12345";
+// Mock data
+const stationList = ['Sài Gòn', 'Quảng Trị', 'Bình Dương', 'Đồng Nai', 'Vùng Tàu', 'Long An'];
+const statusList = ['Đang Chờ', 'Đang Chạy', 'Đã Hủy', 'Hoàn Thành'];
+const licensePlate = '74F1-12345';
 const customerList = [
   {
     id: 1,
-    chairNo: "B6",
-    phone: "0987654321",
-    name: "Nguyễn Văn A",
-    note: "Vui lòng trung chuyển tại trường KHTN",
+    chairNo: 'B6',
+    phone: '0987654321',
+    name: 'Nguyễn Văn A',
+    note: 'Vui lòng trung chuyển tại trường KHTN',
   },
   {
     id: 2,
-    chairNo: "B6",
-    phone: "0987654321",
-    name: "Nguyễn Văn A",
-    note: "Vui lòng trung chuyển tại trường KHTN",
+    chairNo: 'B6',
+    phone: '0987654321',
+    name: 'Nguyễn Văn A',
+    note: 'Vui lòng trung chuyển tại trường KHTN',
   },
   {
     id: 3,
-    chairNo: "B6",
-    phone: "0987654321",
-    name: "Nguyễn Văn A",
-    note: "Vui lòng trung chuyển tại trường KHTN",
+    chairNo: 'B6',
+    phone: '0987654321',
+    name: 'Nguyễn Văn A',
+    note: 'Vui lòng trung chuyển tại trường KHTN',
   },
   {
     id: 4,
-    chairNo: "B6",
-    phone: "0987654321",
-    name: "Nguyễn Văn A",
-    note: "Vui lòng trung chuyển tại trường KHTN",
+    chairNo: 'B6',
+    phone: '0987654321',
+    name: 'Nguyễn Văn A',
+    note: 'Vui lòng trung chuyển tại trường KHTN',
   },
   {
     id: 5,
-    chairNo: "B6",
-    phone: "0987654321",
-    name: "Nguyễn Văn A",
-    note: "Vui lòng trung chuyển tại trường KHTN",
+    chairNo: 'B6',
+    phone: '0987654321',
+    name: 'Nguyễn Văn A',
+    note: 'Vui lòng trung chuyển tại trường KHTN',
   },
   {
     id: 6,
-    chairNo: "B6",
-    phone: "0987654321",
-    name: "Nguyễn Văn A",
-    note: "Vui lòng trung chuyển tại trường KHTN",
+    chairNo: 'B6',
+    phone: '0987654321',
+    name: 'Nguyễn Văn A',
+    note: 'Vui lòng trung chuyển tại trường KHTN',
   },
 ];
 
@@ -131,12 +124,12 @@ const TripRouteDetail = ({ coachId }: CoachDetailsProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
   const [coachDetail, setCoachDetail] = useState<CoachDetail>({
-    from: "",
-    to: "",
-    departureTime: "",
-    estimatedTime: "",
-    distance: "",
-    status: "",
+    from: '',
+    to: '',
+    departureTime: '',
+    estimatedTime: '',
+    distance: '',
+    status: '',
     passengerAmount: 0,
     ticketPrice: 0,
   });
@@ -147,7 +140,7 @@ const TripRouteDetail = ({ coachId }: CoachDetailsProps) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    //TODO: call API to get coach detail from ID
+    // TODO: call API to get coach detail from ID
   }, []);
 
   // Calculate totalAmount
@@ -200,33 +193,33 @@ const TripRouteDetail = ({ coachId }: CoachDetailsProps) => {
   // Handle modal table
   const columns: ColumnsType<InfoCustomer> = [
     {
-      title: "Thứ tự",
-      dataIndex: "id",
-      key: "id",
+      title: 'Thứ tự',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
-      title: "Số ghế",
-      dataIndex: "chairNo",
-      key: "id",
+      title: 'Số ghế',
+      dataIndex: 'chairNo',
+      key: 'id',
     },
     {
-      title: "Tên hành khách",
-      dataIndex: "name",
-      key: "id",
+      title: 'Tên hành khách',
+      dataIndex: 'name',
+      key: 'id',
     },
     {
-      title: "Số điện thoại",
-      dataIndex: "phone",
-      key: "id",
+      title: 'Số điện thoại',
+      dataIndex: 'phone',
+      key: 'id',
     },
     {
-      title: "Ghi chú",
-      dataIndex: "note",
-      key: "id",
+      title: 'Ghi chú',
+      dataIndex: 'note',
+      key: 'id',
     },
   ];
 
-  console.log("thongere", licensePlate);
+  console.log('thongere', licensePlate);
 
   return (
     <Container>
@@ -264,11 +257,7 @@ const TripRouteDetail = ({ coachId }: CoachDetailsProps) => {
         <Separator />
 
         <FormContainer>
-          <FormItem
-            label="Điểm đi:"
-            name="from"
-            rules={[{ required: true, message: "Chưa chọn điểm đi" }]}
-          >
+          <FormItem label="Điểm đi:" name="from" rules={[{ required: true, message: 'Chưa chọn điểm đi' }]}>
             <Select
               showSearch
               defaultValue="Điểm Đi"
@@ -277,18 +266,12 @@ const TripRouteDetail = ({ coachId }: CoachDetailsProps) => {
                 label: station,
               }))}
               filterSort={(optA, optB) =>
-                (optA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optB?.label ?? "").toLowerCase())
+                (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
               }
               disabled={!isEditing}
             />
           </FormItem>
-          <FormItem
-            label="Điểm đến:"
-            name="to"
-            rules={[{ required: true, message: "Chưa chọn điểm đến" }]}
-          >
+          <FormItem label="Điểm đến:" name="to" rules={[{ required: true, message: 'Chưa chọn điểm đến' }]}>
             <Select
               showSearch
               defaultValue="Điểm Đến"
@@ -297,9 +280,7 @@ const TripRouteDetail = ({ coachId }: CoachDetailsProps) => {
                 label: station,
               }))}
               filterSort={(optA, optB) =>
-                (optA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optB?.label ?? "").toLowerCase())
+                (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
               }
               disabled={!isEditing}
             />
@@ -307,17 +288,15 @@ const TripRouteDetail = ({ coachId }: CoachDetailsProps) => {
           <FormItem
             label="Thời gian xuất phát:"
             name="departureTime"
-            rules={[
-              { required: true, message: "Chưa chọn thời điểm khởi hành" },
-            ]}
+            rules={[{ required: true, message: 'Chưa chọn thời điểm khởi hành' }]}
           >
             <DatePicker
               showTime={{ hideDisabledOptions: true }}
               showNow={false}
               format="HH:mm DD/MM/YYYY"
-              disabledDate={(date) => date <= dayjs().startOf("day")}
-              minuteStep={5}
-              style={{ width: "100%" }}
+              disabledDate={(date) => date <= dayjs().startOf('day')}
+              minuteStep={5 as any}
+              style={{ width: '100%' }}
               disabled={!isEditing}
             />
           </FormItem>
@@ -327,11 +306,7 @@ const TripRouteDetail = ({ coachId }: CoachDetailsProps) => {
           <FormItem label="Độ dài quãng đường:" name="distance">
             <Input disabled={!isEditing} />
           </FormItem>
-          <FormItem
-            label="Trạng thái:"
-            name="status"
-            rules={[{ required: true, message: "Chưa chọn trạng thái " }]}
-          >
+          <FormItem label="Trạng thái:" name="status" rules={[{ required: true, message: 'Chưa chọn trạng thái ' }]}>
             <Select
               showSearch
               defaultValue=""
@@ -340,9 +315,7 @@ const TripRouteDetail = ({ coachId }: CoachDetailsProps) => {
                 label: status,
               }))}
               filterSort={(optA, optB) =>
-                (optA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optB?.label ?? "").toLowerCase())
+                (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
               }
               disabled={!isEditing}
             />
@@ -364,26 +337,20 @@ const TripRouteDetail = ({ coachId }: CoachDetailsProps) => {
 
       <Modal
         title={
-          typeof coachDetail.departureTime.format === "function"
-            ? licensePlate +
-              " - " +
-              coachDetail.from +
-              " - " +
-              coachDetail.to +
-              " - " +
-              coachDetail.departureTime.format("HH:mm DD/MM/YYYY")
-            : licensePlate +
-              " - " +
-              coachDetail.from +
-              " - " +
-              coachDetail.to +
-              " - " +
-              ""
+          typeof coachDetail.departureTime.format === 'function'
+            ? `${licensePlate 
+              } - ${ 
+              coachDetail.from 
+              } - ${ 
+              coachDetail.to 
+              } - ${ 
+              coachDetail.departureTime.format('HH:mm DD/MM/YYYY')}`
+            : `${licensePlate  } - ${  coachDetail.from  } - ${  coachDetail.to  } - ` + ``
         }
         open={isOpenModal}
         onCancel={() => setIsOpenModal(false)}
         onOk={() => setIsOpenModal(false)}
-        width={"80%"}
+        width="80%"
         footer={null}
       >
         <Table dataSource={customerList} columns={columns} />

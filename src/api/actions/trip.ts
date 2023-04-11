@@ -1,6 +1,7 @@
-import axiosAdmin from "api/apiAdmin";
-import { createPageOption } from "api/utils/common";
-import { ITrip } from "views/Admin/tabs/Trip";
+import axiosAdmin from 'api/apiAdmin';
+import { createPageOption } from 'api/utils/common';
+import { ITrip } from 'views/Admin/tabs/Trip';
+
 const { axiosAdminTrip } = axiosAdmin;
 
 // router.get("/", tripController.list);
@@ -27,16 +28,15 @@ const ERROR_DATA: TripListResult = {
 const getListTrip = async (
   page: number,
   pageSize: number,
-  sortBy?: string
+  // sortBy?: string
 ): Promise<TripListResult> => {
   try {
-    const response = await axiosAdminTrip.get("/", {
-      params: createPageOption(page, pageSize, "creatAt"),
+    const response = await axiosAdminTrip.get('/', {
+      params: createPageOption(page, pageSize, 'creatAt'),
     });
-    console.log("🚀 ~ file: trip.ts ~ line 36 ~ response", response);
     return response.data;
   } catch (error) {
-    console.log("getListTrip error", error);
+    console.log('getListTrip error', error);
   }
   return { ...ERROR_DATA };
 };
@@ -44,44 +44,40 @@ const getListTrip = async (
 const createTrip = async (data: ITrip): Promise<ITrip> => {
   const { destination, duration, origin, price } = data;
   try {
-    const response = await axiosAdminTrip.post("/", {
+    const response = await axiosAdminTrip.post('/', {
       destination,
       duration,
       origin,
       price,
     });
-    console.log("🚀 ~ file: trip.ts ~ line 70 ~ createTrip ", response);
+    console.log('🚀 ~ file: trip.ts ~ line 70 ~ createTrip ', response);
     return response.data;
   } catch (error) {
-    console.log("🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error", error);
+    console.log('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
   }
-  throw new Error("Create failed!");
+  throw new Error('Create failed!');
 };
 
-const updateTrip = async (
-  id: string,
-  dataUpdate: { [key: string]: any }
-): Promise<ITrip> => {
+const updateTrip = async (id: string, dataUpdate: { [key: string]: any }): Promise<ITrip> => {
   try {
     const response = await axiosAdminTrip.put(`/${id}`, dataUpdate);
-    console.log("🚀 ~ file: trip.ts ~ line 70 ~ updateTrip ", response);
+    console.log('🚀 ~ file: trip.ts ~ line 70 ~ updateTrip ', response);
     return response.data;
   } catch (error) {
-    console.log("🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error", error);
+    console.log('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
   }
-  throw new Error("Update failed!");
+  throw new Error('Update failed!');
 };
 
 const deleteTrip = async (id: string): Promise<string> => {
   try {
     const response = await axiosAdminTrip.delete(`/${id}`);
-    console.log(
-      "🚀 ~ file: trip.ts ~ line 56 ~ deleteTrip ~ response",
-      response
-    );
+    console.log('🚀 ~ file: trip.ts ~ line 56 ~ deleteTrip ~ response', response);
     return response.data;
-  } catch (error) {}
-  return "Delete failed!";
+  } catch (error) {
+    console.error('🚀 ~ file: trip.ts ~ line 78 ~ deleteTrip ~ error', error);
+  }
+  return 'Delete failed!';
 };
 
 const adminTripApi = {

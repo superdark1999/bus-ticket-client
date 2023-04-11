@@ -10,14 +10,12 @@ axios.interceptors.request.use(async (config) => {
 });
 
 axiosClient.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  function (error) {
-    let res = error.response;
-    if (res.status == 401) {
-    }
-    console.error("error");
+  (response) => response,
+  (error) => {
+    const res = error.response;
+    // if (res.status == 401) {
+    // }
+    console.error(res);
     return Promise.reject(error);
   }
 );

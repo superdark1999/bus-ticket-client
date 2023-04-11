@@ -4,6 +4,7 @@ import AdminNavigation from "components/AdminNavigation";
 import AdminHeader, { HEADER_HEIGHT } from "components/AdminHeader";
 import { Outlet } from "react-router";
 import { Layout } from "antd";
+
 const MENU_LEFT_WIDTH = "200px";
 
 export default function AdminLayout() {

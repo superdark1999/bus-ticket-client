@@ -1,9 +1,10 @@
-import { useUserHook } from "hooks/useUserHook";
-import { BrowserRouter } from "react-router-dom";
-import Router from "routes";
-import "./App.css";
+import React from 'react';
+// import useUserHook from 'hooks/useUserHook';
+import { BrowserRouter } from 'react-router-dom';
+import Router from 'routes';
+import './App.css';
 
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -14,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
-  const { loading, email } = useUserHook();
+  // const { loading, email } = useUserHook();
   // console.log("email: ", email);
   // console.log("loading: ", loading);
 
