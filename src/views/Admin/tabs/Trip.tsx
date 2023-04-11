@@ -12,96 +12,37 @@ import {
   InputNumber,
   TimePicker,
 } from "antd";
-import { ColumnsType, TableProps } from "antd/es/table";
-import { v4 as uuidv4 } from "uuid";
+import { ColumnsType, TablePaginationConfig, TableProps } from "antd/es/table";
+import { v4 as uuidv4, v4 } from "uuid";
 import { EditFilled, DeleteFilled } from "@ant-design/icons";
 import styled from "styled-components";
 import SelectLocation, {
   getFormValuesFromData,
 } from "components/SelectLocation";
 import moment from "moment";
+import adminTripApi from "api/actions/trip";
+import { FilterValue } from "antd/es/table/interface";
+import { durationCommon } from "utils/common";
 
 interface SeflProp {}
-interface ITrip {
+export interface ITrip {
   id: string;
   origin: string;
-  destination: string; // số ghế
-  duration: string; // biển số xe
+  destination: string;
+  duration: number;
   price: number;
+  createdAt?: string;
+  updateAt?: string;
 }
 
-const updateTrip = async (
-  id: string,
-  dataUpdate: { [key: string]: any }
-): Promise<{ [key: string]: any }> => {
-  return new Promise((res) => {
-    setTimeout(() => {
-      res({});
-    }, 200);
-  });
-};
+interface TableParams {
+  pagination?: TablePaginationConfig;
+  sortField?: string;
+  sortOrder?: string;
+  filters?: Record<string, FilterValue>;
+}
 
-const getListTrip = async (
-  startAt: number = 0,
-  maxResults = 100
-): Promise<ITrip[]> => {
-  const listtrip: ITrip[] = [
-    {
-      id: "ba0018dd-46ab-493d-a8a5-8867253cf96e",
-      destination: "Thành phố Đà Lạt - Tỉnh Lâm Đồng",
-      duration: "07:50",
-      origin: "Thành phố Hồ Chí Minh",
-      price: 500000,
-    },
-    {
-      id: "d317a26d-ed31-49c0-b444-5da8eaca51ee",
-      destination: "Thành phố Nha Trang - Tỉnh Khánh Hòa",
-      duration: "12:20",
-      origin: "Huyện Hóc Môn - Thành phố Hồ Chí Minh",
-      price: 600000,
-    },
-    {
-      id: "cd463b61-8f84-4033-a332-d2bc526f052a",
-      destination: "Thành phố Kon Tum - Tỉnh Kon Tum",
-      duration: "16:30",
-      origin: "Huyện Hóc Môn - Thành phố Hồ Chí Minh",
-      price: 750000,
-    },
-  ];
-  await delay(500);
-  return listtrip;
-};
-
-const deleteTrip = async (id: string): Promise<string> => {
-  await delay(500);
-  return new Promise((res) => {
-    res("Delete success!");
-  });
-};
-
-const createTrip = async (data: ITrip): Promise<ITrip> => {
-  // const { destination,duration,origin,price } = data;
-  return new Promise((res) => {
-    res({
-      ...data,
-      id: uuidv4(),
-    });
-  });
-};
-
-const tripApi = {
-  updateTrip,
-  getListTrip,
-  deleteTrip,
-  createTrip,
-};
-
-const delay = async (ms: number = 500) =>
-  new Promise<void>((res) => {
-    setTimeout(() => {
-      res();
-    }, ms);
-  });
+const PAGE_SIZE = 10;
 
 const Routes = ({}: SeflProp) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -112,6 +53,28 @@ const Routes = ({}: SeflProp) => {
   const [highlightType, setHighlightType] = useState<"update" | "delete">(
     "update"
   );
+  const [refreshKey, setRefreshKey] = useState<string>(v4());
+  const [tableParams, setTableParams] = useState<TableParams>({
+    pagination: {
+      current: 1,
+      pageSize: PAGE_SIZE,
+    },
+  });
+
+  const fetchData = async (page: number, pageSize: number = PAGE_SIZE) => {
+    adminTripApi.getListTrip(page, pageSize).then((res) => {
+      const { results, totalResults } = res;
+      setTripList(results);
+      setTableParams({
+        ...tableParams,
+        pagination: {
+          ...tableParams.pagination,
+          total: totalResults,
+        },
+      });
+    });
+  };
+
   // Get data after mount
   useEffect(() => {
     // Call api to get trip list, do later
@@ -119,11 +82,14 @@ const Routes = ({}: SeflProp) => {
 
     // Got data successfully
     setTableStatus("loading");
-    getListTrip(0, 100).then((data) => {
-      setTripList(data);
+    fetchData(0, PAGE_SIZE).finally(() => {
       setTableStatus("none");
     });
   }, []);
+
+  useEffect(() => {
+    fetchData(tableParams.pagination?.current || 1);
+  }, [JSON.stringify(tableParams), refreshKey]);
 
   // Handle adding trip dialog
   const showModal = () => {
@@ -143,53 +109,34 @@ const Routes = ({}: SeflProp) => {
 
   const onFinish = async (values: any, type: "create" | "edit") => {
     // Call api to add one schedule bus
-    console.log("🚀 ~ file: Assets.tsx ~ line 152 ~ onFinish ~ values", values);
     const { price, destination, origin } = values;
-    const duration = values.duration.format("HH:mm");
-    const id = values.id || uuidv4();
+    const durationStr: string = values.duration?.format("HH:mm");
+    const [hourStr, minuteStr] = durationStr.split(":");
+    const duration = parseInt(hourStr, 10) * 60 + parseInt(minuteStr, 10);
+    const id = values?.id || uuidv4();
     // Fake call api
-    const newTrip: ITrip = {
+    let newTrip: ITrip = {
       id,
       destination,
       duration,
       origin,
       price,
     };
-    console.log("🚀 ~ file: Trip.tsx ~ line 172 ~ onFinish ~ newTrip", newTrip);
     try {
       const api =
         type === "create"
-          ? tripApi.createTrip(newTrip)
-          : tripApi.updateTrip(id, { destination, duration, origin, price });
+          ? adminTripApi.createTrip(newTrip)
+          : adminTripApi.updateTrip(id, {
+              destination,
+              duration,
+              origin,
+              price,
+            });
 
       setTableStatus("loading");
-      // const res = await api;
-      await delay(500);
-
-      let newtripList: ITrip[] = [];
-
-      console.log(
-        "🚀 ~ file: Assets.tsx ~ line 175 ~ onFinish ~ newTrip",
-        newTrip
-      );
-      if (type === "create") newtripList = [...tripList, newTrip];
-      else
-        newtripList = tripList.map((trip) => {
-          if (trip.id !== newTrip.id) return trip;
-          else
-            return {
-              ...newTrip,
-              id: trip.id,
-            };
-        });
-
-      console.log(
-        "🚀 ~ file: Assets.tsx ~ line 187 ~ onFinish ~ newtripList",
-        newtripList
-      );
-      // Update data/ui
-      setTripList(newtripList);
-
+      const res = await api;
+      console.log("🚀 ~ file: Trip.tsx ~ line 138 ~ onFinish ~ res", res);
+      if (type === "create") newTrip.id = res?.id || newTrip.id;
       message.success(
         type === "create"
           ? "Thêm dữ liệu thành công!"
@@ -199,7 +146,8 @@ const Routes = ({}: SeflProp) => {
       message.error("Có lỗi xảy ra, vui lòng thử lại!");
     }
     highlightRows([newTrip.id], "update");
-    setTableStatus("none");
+    // setTableStatus("none");
+    setRefreshKey(v4());
     setIsOpenModal(false);
   };
 
@@ -211,17 +159,14 @@ const Routes = ({}: SeflProp) => {
     setTableStatus("loading");
     highlightRows([trip.id], "delete");
     try {
-      await tripApi.deleteTrip(trip.id);
-      message.success(`Xóa thành công!`);
-      const newtripList = tripList.filter((item) => item.id !== trip.id);
-      setTripList(newtripList);
+      await adminTripApi.deleteTrip(trip.id);
+      setTimeout(() => {
+        message.success(`Xóa thành công!`);
+        setRefreshKey(v4());
+        setTableStatus("none");
+      }, 2000);
     } catch (error) {
-      console.log(
-        "🚀 ~ file: Assets.tsx ~ line 185 ~ handleDeleteTrip ~ error",
-        error
-      );
       message.error(`Có lỗi xảy ra, vui lòng thử lại!`);
-    } finally {
       setTableStatus("none");
     }
   };
@@ -240,13 +185,40 @@ const Routes = ({}: SeflProp) => {
     }
   };
 
+  const handleTableChange = (
+    pagination: any,
+    filters: any
+    // sorter: SorterResult<any>
+  ) => {
+    setTableParams({
+      pagination,
+      filters,
+      // ...sorter,
+    });
+
+    // `dataSource` is useless since `pageSize` changed
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setTripList([]);
+    }
+  };
+
   // Handle table component
   const columns: ColumnsType<ITrip> = [
+    {
+      title: "STT",
+      key: "id",
+      align: "center",
+      render: (_, __, index) => (
+        <>
+          {((tableParams.pagination?.current || 1) - 1) * PAGE_SIZE + index + 1}
+          {/* {__.id} */}
+        </>
+      ),
+    },
     {
       title: "Điểm đi",
       dataIndex: "origin",
       key: "id",
-      // render: (_, trip) => <>{tripModelLabel[trip.model]}</>,
     },
     {
       title: "Điểm đến",
@@ -257,11 +229,8 @@ const Routes = ({}: SeflProp) => {
       title: "Thời gian di chuyển",
       dataIndex: "duration",
       key: "id",
-      render: (_, { duration }) => {
-        const [hour, minute] = duration.split(":");
-        const minuteMessage = minute !== "00" ? ` ${minute} phút` : "";
-        return <>{`${hour} giờ${minuteMessage}`}</>;
-      },
+      render: (_, { duration }) =>
+        durationCommon.convertDurationToString(duration),
     },
     {
       title: "Giá vé",
@@ -271,6 +240,7 @@ const Routes = ({}: SeflProp) => {
     },
     {
       title: "Thao tác",
+      align: "center",
       render: (_, trip) => {
         return (
           <ButtonGroup>
@@ -283,10 +253,14 @@ const Routes = ({}: SeflProp) => {
                     "🚀 ~ file: Trip.tsx ~ line 294 ~ Routes ~ trip",
                     trip
                   );
-                  const { price, duration, origin, destination } = trip;
+                  const { price, duration, origin, destination, id } = trip;
                   form.setFieldsValue({
+                    id,
                     price,
-                    duration: moment(duration, "HH:mm"),
+                    duration: moment(
+                      durationCommon.convertTimePickerValue(duration),
+                      "HH:mm"
+                    ),
                     origin,
                     destination,
                     ...getFormValuesFromData("origin", origin),
@@ -416,7 +390,16 @@ const Routes = ({}: SeflProp) => {
           <Col span={24}>
             <CustomAntdTable
               dataSource={tripList}
+              pagination={tableParams.pagination}
               columns={columns}
+              onChange={(
+                tableConfig: TablePaginationConfig,
+                filter: Record<string, FilterValue | null>
+                // sorter: SorterResult<any>
+                // extra: any
+              ) => {
+                handleTableChange(tableConfig, filter);
+              }}
               loading={tableStatus === "loading"}
               rowClassName={(trip: ITrip) =>
                 selectedRowKeys.includes(trip.id)
@@ -432,14 +415,34 @@ const Routes = ({}: SeflProp) => {
 };
 const ButtonGroup = styled.div`
   display: inline-flex;
+  button {
+    padding: 4px 8px;
+  }
 `;
 const CustomAntdTable: React.FC<TableProps<any>> = styled(Table)`
   .highlight {
     &_update {
       background-color: #91caff69;
     }
+
+    @keyframes analogue {
+      0% {
+        opacity: 1;
+        height: 44px;
+        clip-path: inset(0px 0px 0px 0px);
+      }
+      100% {
+        height: 0px;
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
     &_delete {
       background-color: #ff000045;
+      animation: analogue ease 1.5s;
+      height: 0px;
+      width: 0px;
+      opacity: 0;
     }
   }
 `;

@@ -3,11 +3,12 @@ import { Navigate } from "react-router-dom";
 import { RouteObject } from "./route.interface";
 import {
   AdminAssets,
-  AdminCoach,
+  AdminTripRoute,
   AdminDashBoard,
   AdminTrips,
   AdminUser,
 } from "views/Admin";
+import ErrorPage, { ErrorStatus } from "views/ErrorPage";
 
 const MemberGuard = lazy(() => import("guards/MemberGuard"));
 const AdminGuard = lazy(() => import("guards/AdminGuard"));
@@ -32,6 +33,7 @@ export enum ROUTER_PATH {
   "ADMIN_DASHBOARD" = "/admin/dashboard",
   "ADMIN_ASSETS" = "/admin/assets",
   "ADMIN_TRIPS" = "/admin/trips",
+  "ADMIN_TRIP_ROUTES" = "/admin/trip-routes",
 }
 
 export const routesConfig: RouteObject[] = [
@@ -77,8 +79,8 @@ export const routesConfig: RouteObject[] = [
             element: <AdminUser />,
           },
           {
-            path: ROUTER_PATH.ADMIN_COACH,
-            element: <AdminCoach />,
+            path: ROUTER_PATH.ADMIN_TRIP_ROUTES,
+            element: <AdminTripRoute />,
           },
           {
             path: ROUTER_PATH.ADMIN_DASHBOARD,
@@ -96,7 +98,14 @@ export const routesConfig: RouteObject[] = [
       },
     ],
   },
-
+  {
+    element: <ErrorPage status={ErrorStatus.NOT_FOUND} />,
+    path: "/404",
+  },
+  {
+    element: <ErrorPage status={ErrorStatus.AUTHORIZED} />,
+    path: "/403",
+  },
   // always put it as the last element
   {
     path: "*",

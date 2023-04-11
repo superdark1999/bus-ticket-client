@@ -28,7 +28,7 @@ const CoachModelLabel = {
   [ICoachModel.GIUONG_NAM]: "Giường nằm",
   [ICoachModel.PHONG_NAM]: "Phòng nằm",
 };
-interface ICoach {
+export interface ICoach {
   id: string;
   model: ICoachModel;
   capacity: number; // số ghế
@@ -397,6 +397,9 @@ const Coach = ({}: SeflProp) => {
 };
 const ButtonGroup = styled.div`
   display: inline-flex;
+  button {
+    padding: 4px 8px;
+  }
 `;
 const CustomAntdTable: React.FC<TableProps<any>> = styled(Table)`
   .highlight {
