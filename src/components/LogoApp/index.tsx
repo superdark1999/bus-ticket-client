@@ -14,6 +14,9 @@ const LOGO_URL = {
   small: "/bus64.png",
   medium: "/bus128.png",
   large: "/bus512.png",
+  nav: {
+    routes: "/icon/routes.svg",
+  },
 };
 
 const LOGO_BACKGROUND_DEFAULT = "#62a7ed";

@@ -10,8 +10,35 @@ import LogoApp from "components/LogoApp";
 import { ItemType } from "antd/es/menu/hooks/useItems";
 import { useNavigate, useLocation } from "react-router";
 import { ROUTER_PATH } from "routes/routesConfig";
-
+import { ICON_URL } from "utils/constant";
 const { Sider } = Layout;
+
+const CustomSider = styled(Sider)`
+  box-shadow: 1px 0px 2px grey;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const LogoBox = styled.div`
+  margin: 8px 16px;
+  height: 60px;
+`;
+
+const CustomIcon = styled.img`
+  width: 20px;
+  height: 20px;
+`;
+
+const CustomMenu = styled(Menu)`
+  svg,
+  img {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+`;
 
 interface SelfProps {
   isExpand: boolean;
@@ -23,6 +50,9 @@ export enum TabKey {
   "DASHBOARD" = "DASHBOARD",
   "USER" = "USER",
   "COACH" = "COACH",
+  "ASSETS" = "ASSETS",
+  "TRIPS" = "TRIPS",
+  "TRIP_ROUTES" = "TRIP_ROUTES",
 }
 
 const menuItems: ItemType[] = [
@@ -37,9 +67,19 @@ const menuItems: ItemType[] = [
     label: "Người dùng",
   },
   {
-    key: TabKey.COACH,
+    key: TabKey.ASSETS,
     icon: <CarOutlined />,
-    label: "Xe",
+    label: "Tài sản",
+  },
+  {
+    key: TabKey.TRIPS,
+    icon: <CustomIcon alt="" src={ICON_URL.nav.routes} />,
+    label: "Tuyến đường",
+  },
+  {
+    key: TabKey.TRIP_ROUTES,
+    icon: <CustomIcon alt="" src={ICON_URL.nav.tripRoutes} />,
+    label: "Chuyến xe",
   },
 ];
 
@@ -68,7 +108,7 @@ function AdminNavigation({ isExpand, setIsExpand }: SelfProps) {
         />
       </LogoBox>
 
-      <Menu
+      <CustomMenu
         theme="light"
         mode="inline"
         multiple={false}
@@ -79,11 +119,17 @@ function AdminNavigation({ isExpand, setIsExpand }: SelfProps) {
             case TabKey.DASHBOARD:
               navigate(ROUTER_PATH.ADMIN_DASHBOARD);
               break;
-            case TabKey.COACH:
-              navigate(ROUTER_PATH.ADMIN_COACH);
+            case TabKey.TRIP_ROUTES:
+              navigate(ROUTER_PATH.ADMIN_TRIP_ROUTES);
               break;
             case TabKey.USER:
               navigate(ROUTER_PATH.ADMIN_USER);
+              break;
+            case TabKey.ASSETS:
+              navigate(ROUTER_PATH.ADMIN_ASSETS);
+              break;
+            case TabKey.TRIPS:
+              navigate(ROUTER_PATH.ADMIN_TRIPS);
               break;
             default:
               break;
@@ -93,18 +139,5 @@ function AdminNavigation({ isExpand, setIsExpand }: SelfProps) {
     </CustomSider>
   );
 }
-
-const CustomSider = styled(Sider)`
-  box-shadow: 1px 0px 2px grey;
-  display: flex;
-  height: 100vh;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const LogoBox = styled.div`
-  margin: 8px 16px;
-  height: 60px;
-`;
 
 export default AdminNavigation;
