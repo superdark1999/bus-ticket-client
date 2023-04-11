@@ -1,30 +1,15 @@
-import React, { useState, useEffect } from "react";
-import {
-  Table,
-  Row,
-  Col,
-  Button,
-  Modal,
-  Form,
-  Tooltip,
-  Popconfirm,
-  message,
-  InputNumber,
-  TimePicker,
-} from "antd";
-import { ColumnsType, TablePaginationConfig, TableProps } from "antd/es/table";
-import { v4 as uuidv4, v4 } from "uuid";
-import { EditFilled, DeleteFilled } from "@ant-design/icons";
-import styled from "styled-components";
-import SelectLocation, {
-  getFormValuesFromData,
-} from "components/SelectLocation";
-import moment from "moment";
-import adminTripApi from "api/actions/trip";
-import { FilterValue } from "antd/es/table/interface";
-import { durationCommon } from "utils/common";
+import React, { useState, useEffect } from 'react';
+import { Table, Row, Col, Button, Modal, Form, Tooltip, Popconfirm, message, InputNumber, TimePicker } from 'antd';
+import { ColumnsType, TablePaginationConfig, TableProps } from 'antd/es/table';
+import { v4 as uuidv4, v4 } from 'uuid';
+import { EditFilled, DeleteFilled } from '@ant-design/icons';
+import styled from 'styled-components';
+import SelectLocation, { getFormValuesFromData } from 'components/SelectLocation';
+import moment from 'moment';
+import adminTripApi from 'api/actions/trip';
+import { FilterValue } from 'antd/es/table/interface';
+import { durationCommon } from 'utils/common';
 
-interface SeflProp {}
 export interface ITrip {
   id: string;
   origin: string;
@@ -44,15 +29,13 @@ interface TableParams {
 
 const PAGE_SIZE = 10;
 
-const Routes = ({}: SeflProp) => {
+const Routes = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalType, setModalType] = useState<"create" | "edit">("create");
+  const [modalType, setModalType] = useState<'create' | 'edit'>('create');
   const [tripList, setTripList] = useState<ITrip[]>([]);
-  const [tableStatus, setTableStatus] = useState<"loading" | "none">("none");
+  const [tableStatus, setTableStatus] = useState<'loading' | 'none'>('none');
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-  const [highlightType, setHighlightType] = useState<"update" | "delete">(
-    "update"
-  );
+  const [highlightType, setHighlightType] = useState<'update' | 'delete'>('update');
   const [refreshKey, setRefreshKey] = useState<string>(v4());
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
@@ -78,23 +61,18 @@ const Routes = ({}: SeflProp) => {
   // Get data after mount
   useEffect(() => {
     // Call api to get trip list, do later
-    console.log("get trip list from api");
+    console.log('get trip list from api');
 
     // Got data successfully
-    setTableStatus("loading");
+    setTableStatus('loading');
     fetchData(0, PAGE_SIZE).finally(() => {
-      setTableStatus("none");
+      setTableStatus('none');
     });
   }, []);
 
   useEffect(() => {
     fetchData(tableParams.pagination?.current || 1);
   }, [JSON.stringify(tableParams), refreshKey]);
-
-  // Handle adding trip dialog
-  const showModal = () => {
-    setIsOpenModal(true);
-  };
 
   const handleOk = () => {
     form.submit();
@@ -107,15 +85,15 @@ const Routes = ({}: SeflProp) => {
   // Handle form
   const [form] = Form.useForm();
 
-  const onFinish = async (values: any, type: "create" | "edit") => {
+  const onFinish = async (values: any, type: 'create' | 'edit') => {
     // Call api to add one schedule bus
     const { price, destination, origin } = values;
-    const durationStr: string = values.duration?.format("HH:mm");
-    const [hourStr, minuteStr] = durationStr.split(":");
+    const durationStr: string = values.duration?.format('HH:mm');
+    const [hourStr, minuteStr] = durationStr.split(':');
     const duration = parseInt(hourStr, 10) * 60 + parseInt(minuteStr, 10);
     const id = values?.id || uuidv4();
     // Fake call api
-    let newTrip: ITrip = {
+    const newTrip: ITrip = {
       id,
       destination,
       duration,
@@ -124,7 +102,7 @@ const Routes = ({}: SeflProp) => {
     };
     try {
       const api =
-        type === "create"
+        type === 'create'
           ? adminTripApi.createTrip(newTrip)
           : adminTripApi.updateTrip(id, {
               destination,
@@ -133,52 +111,44 @@ const Routes = ({}: SeflProp) => {
               price,
             });
 
-      setTableStatus("loading");
+      setTableStatus('loading');
       const res = await api;
-      console.log("🚀 ~ file: Trip.tsx ~ line 138 ~ onFinish ~ res", res);
-      if (type === "create") newTrip.id = res?.id || newTrip.id;
-      message.success(
-        type === "create"
-          ? "Thêm dữ liệu thành công!"
-          : "Chỉnh sửa dữ liệu thành công!"
-      );
+      console.log('🚀 ~ file: Trip.tsx ~ line 138 ~ onFinish ~ res', res);
+      if (type === 'create') newTrip.id = res?.id || newTrip.id;
+      message.success(type === 'create' ? 'Thêm dữ liệu thành công!' : 'Chỉnh sửa dữ liệu thành công!');
     } catch (error) {
-      message.error("Có lỗi xảy ra, vui lòng thử lại!");
+      message.error('Có lỗi xảy ra, vui lòng thử lại!');
     }
-    highlightRows([newTrip.id], "update");
+    highlightRows([newTrip.id], 'update');
     // setTableStatus("none");
     setRefreshKey(v4());
     setIsOpenModal(false);
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
 
   const handleDeleteTrip = async (trip: ITrip) => {
-    setTableStatus("loading");
-    highlightRows([trip.id], "delete");
+    setTableStatus('loading');
+    highlightRows([trip.id], 'delete');
     try {
       await adminTripApi.deleteTrip(trip.id);
       setTimeout(() => {
         message.success(`Xóa thành công!`);
         setRefreshKey(v4());
-        setTableStatus("none");
+        setTableStatus('none');
       }, 2000);
     } catch (error) {
       message.error(`Có lỗi xảy ra, vui lòng thử lại!`);
-      setTableStatus("none");
+      setTableStatus('none');
     }
   };
 
-  const highlightRows = (
-    rowKeys: string[],
-    type: "update" | "delete",
-    timeDelay: number | "none" = 5000
-  ) => {
+  const highlightRows = (rowKeys: string[], type: 'update' | 'delete', timeDelay: number | 'none' = 5000) => {
     setSelectedRowKeys(rowKeys);
     setHighlightType(type);
-    if (timeDelay !== "none") {
+    if (timeDelay !== 'none') {
       setTimeout(() => {
         setSelectedRowKeys([]);
       }, timeDelay);
@@ -187,7 +157,7 @@ const Routes = ({}: SeflProp) => {
 
   const handleTableChange = (
     pagination: any,
-    filters: any
+    filters: any,
     // sorter: SorterResult<any>
   ) => {
     setTableParams({
@@ -205,9 +175,9 @@ const Routes = ({}: SeflProp) => {
   // Handle table component
   const columns: ColumnsType<ITrip> = [
     {
-      title: "STT",
-      key: "id",
-      align: "center",
+      title: 'STT',
+      key: 'id',
+      align: 'center',
       render: (_, __, index) => (
         <>
           {((tableParams.pagination?.current || 1) - 1) * PAGE_SIZE + index + 1}
@@ -216,111 +186,98 @@ const Routes = ({}: SeflProp) => {
       ),
     },
     {
-      title: "Điểm đi",
-      dataIndex: "origin",
-      key: "id",
+      title: 'Điểm đi',
+      dataIndex: 'origin',
+      key: 'id',
     },
     {
-      title: "Điểm đến",
-      dataIndex: "destination",
-      key: "id",
+      title: 'Điểm đến',
+      dataIndex: 'destination',
+      key: 'id',
     },
     {
-      title: "Thời gian di chuyển",
-      dataIndex: "duration",
-      key: "id",
-      render: (_, { duration }) =>
-        durationCommon.convertDurationToString(duration),
+      title: 'Thời gian di chuyển',
+      dataIndex: 'duration',
+      key: 'id',
+      render: (_, { duration }) => durationCommon.convertDurationToString(duration),
     },
     {
-      title: "Giá vé",
-      dataIndex: "price",
-      key: "id",
-      render: (_, { price }) => <>{`${price.toLocaleString("vn")} VND`}</>,
+      title: 'Giá vé',
+      dataIndex: 'price',
+      key: 'id',
+      render: (_, { price }) => `${price.toLocaleString('vn')} VND`,
     },
     {
-      title: "Thao tác",
-      align: "center",
-      render: (_, trip) => {
-        return (
-          <ButtonGroup>
-            <Tooltip title="Chỉnh sửa" placement="bottom">
-              <Button
-                type="link"
-                onClick={() => {
-                  setModalType("edit");
-                  console.log(
-                    "🚀 ~ file: Trip.tsx ~ line 294 ~ Routes ~ trip",
-                    trip
-                  );
-                  const { price, duration, origin, destination, id } = trip;
-                  form.setFieldsValue({
-                    id,
-                    price,
-                    duration: moment(
-                      durationCommon.convertTimePickerValue(duration),
-                      "HH:mm"
-                    ),
-                    origin,
-                    destination,
-                    ...getFormValuesFromData("origin", origin),
-                    ...getFormValuesFromData("destination", destination),
-                  });
-                  setIsOpenModal(true);
-                }}
-              >
-                <EditFilled style={{ fontSize: 20, color: "#FFC107" }} />
+      title: 'Thao tác',
+      align: 'center',
+      render: (_, trip) => (
+        <ButtonGroup>
+          <Tooltip title="Chỉnh sửa" placement="bottom">
+            <Button
+              type="link"
+              onClick={() => {
+                setModalType('edit');
+                console.log('🚀 ~ file: Trip.tsx ~ line 294 ~ Routes ~ trip', trip);
+                const { price, duration, origin, destination, id } = trip;
+                form.setFieldsValue({
+                  id,
+                  price,
+                  duration: moment(durationCommon.convertTimePickerValue(duration), 'HH:mm'),
+                  origin,
+                  destination,
+                  ...getFormValuesFromData('origin', origin),
+                  ...getFormValuesFromData('destination', destination),
+                });
+                setIsOpenModal(true);
+              }}
+            >
+              <EditFilled style={{ fontSize: 20, color: '#FFC107' }} />
+            </Button>
+          </Tooltip>
+
+          <Popconfirm
+            placement="top"
+            title="Bạn có chắc muốn xóa chuyến xe không?"
+            // description={`Biển số: ${trip.registrationNumber}`}
+            onConfirm={() => handleDeleteTrip(trip)}
+            okText="Xóa dữ liệu"
+            okType="danger"
+            cancelText="Hủy thao tác"
+          >
+            <Tooltip title="Xóa" placement="bottom">
+              <Button type="link">
+                <DeleteFilled style={{ fontSize: 20, color: '#e34724' }} />
               </Button>
             </Tooltip>
-
-            <Popconfirm
-              placement="top"
-              title="Bạn có chắc muốn xóa chuyến xe không?"
-              // description={`Biển số: ${trip.registrationNumber}`}
-              onConfirm={() => handleDeleteTrip(trip)}
-              okText="Xóa dữ liệu"
-              okType="danger"
-              cancelText="Hủy thao tác"
-            >
-              <Tooltip title="Xóa" placement="bottom">
-                <Button type="link">
-                  <DeleteFilled style={{ fontSize: 20, color: "#e34724" }} />
-                </Button>
-              </Tooltip>
-            </Popconfirm>
-          </ButtonGroup>
-        );
-      },
+          </Popconfirm>
+        </ButtonGroup>
+      ),
     },
   ];
 
   return (
-    <Row style={{ overflow: "auto" }}>
+    <Row style={{ overflow: 'auto' }}>
       <Col span={24}>
-        <Row justify={"end"}>
+        <Row justify="end">
           <Button
             type="primary"
             onClick={() => {
-              setModalType("create");
+              setModalType('create');
               setIsOpenModal(true);
             }}
           >
             Thêm Tuyến Đường
           </Button>
           <Modal
-            title={
-              modalType === "edit"
-                ? "Chỉnh sửa tuyến đường"
-                : "Thêm tuyến đường"
-            }
-            okText={modalType === "edit" ? "Lưu" : "Thêm"}
+            title={modalType === 'edit' ? 'Chỉnh sửa tuyến đường' : 'Thêm tuyến đường'}
+            okText={modalType === 'edit' ? 'Lưu' : 'Thêm'}
             cancelText="Hủy"
             open={isOpenModal}
             onOk={handleOk}
             onCancel={handleCancel}
             afterClose={() => {
-              if (modalType === "edit") form.resetFields();
-              setTableStatus("none");
+              if (modalType === 'edit') form.resetFields();
+              setTableStatus('none');
             }}
             width={800}
             destroyOnClose
@@ -334,19 +291,15 @@ const Routes = ({}: SeflProp) => {
             >
               {isOpenModal && (
                 <>
-                  <Form.Item name={"id"} label={"tripId"} hidden></Form.Item>
+                  <Form.Item name="id" label="tripId" hidden />
                   <SelectLocation
-                    formItemProp={{ name: "origin", label: "Điểm đi" }}
-                    onDataChange={(location) =>
-                      form.setFieldValue("origin", location)
-                    }
+                    formItemProp={{ name: 'origin', label: 'Điểm đi' }}
+                    onDataChange={(location) => form.setFieldValue('origin', location)}
                     form={form}
                   />
                   <SelectLocation
-                    formItemProp={{ name: "destination", label: "Đích đến" }}
-                    onDataChange={(location) =>
-                      form.setFieldValue("destination", location)
-                    }
+                    formItemProp={{ name: 'destination', label: 'Đích đến' }}
+                    onDataChange={(location) => form.setFieldValue('destination', location)}
                     form={form}
                   />
 
@@ -355,9 +308,9 @@ const Routes = ({}: SeflProp) => {
                     label="Thời gian di chuyển"
                     rules={[
                       {
-                        type: "object" as const,
+                        type: 'object' as const,
                         required: true,
-                        message: "Vui lòng tính toán thời gian di chuyển!",
+                        message: 'Vui lòng tính toán thời gian di chuyển!',
                       },
                     ]}
                   >
@@ -375,11 +328,11 @@ const Routes = ({}: SeflProp) => {
                     rules={[
                       {
                         required: true,
-                        message: "Chưa nhập giá vé!",
+                        message: 'Chưa nhập giá vé!',
                       },
                     ]}
                   >
-                    <InputNumber placeholder="VND"></InputNumber>
+                    <InputNumber placeholder="VND" />
                   </Form.Item>
                 </>
               )}
@@ -389,23 +342,20 @@ const Routes = ({}: SeflProp) => {
         <Row>
           <Col span={24}>
             <CustomAntdTable
+              key={refreshKey}
               dataSource={tripList}
               pagination={tableParams.pagination}
               columns={columns}
               onChange={(
                 tableConfig: TablePaginationConfig,
-                filter: Record<string, FilterValue | null>
+                filter: Record<string, FilterValue | null>,
                 // sorter: SorterResult<any>
                 // extra: any
               ) => {
                 handleTableChange(tableConfig, filter);
               }}
-              loading={tableStatus === "loading"}
-              rowClassName={(trip: ITrip) =>
-                selectedRowKeys.includes(trip.id)
-                  ? `highlight_${highlightType}`
-                  : ""
-              }
+              loading={tableStatus === 'loading'}
+              rowClassName={(trip: ITrip) => (selectedRowKeys.includes(trip.id) ? `highlight_${highlightType}` : '')}
             />
           </Col>
         </Row>

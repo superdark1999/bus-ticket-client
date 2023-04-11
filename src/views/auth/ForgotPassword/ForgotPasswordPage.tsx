@@ -53,23 +53,6 @@ const ForgotPasswordPage: React.FC = () => {
   const [isConfirmCode, setConfirmCode] = useState(false);
   const [isNewPassword, setNewPassword] = useState(false);
 
-  // const [, startTransition] = useTransition();
-  // const onFinish = (values: any) => {
-  //   if (isConfirmCode) {
-  //     // TODO: Check confirmation code with API
-
-  //     return(<VerifyCodeForm phoneNumber="123"></VerifyCodeForm>)
-  //   }
-  //   console.log("Received values of form: ", values);
-  // };
-
-  // const navigate = useNavigate();
-  // const handleBackClick = () => {
-  //   startTransition(() => {
-  //     navigate("/login");
-  //   });
-  // };
-
   return (
     <Wrapper>
       <Container>
@@ -81,7 +64,7 @@ const ForgotPasswordPage: React.FC = () => {
         {isPhoneNumber ? (
           <FormPhoneNumber setPhoneNumber={setPhoneNumber} setConfirmCode={setConfirmCode} />
         ) : isConfirmCode ? (
-          <VerifyCodeForm phoneNumber="123" setConfirmCode={setConfirmCode} setNewPassword={setNewPassword} />
+          <VerifyCodeForm setConfirmCode={setConfirmCode} setNewPassword={setNewPassword} />
         ) : (
           isNewPassword && <NewPassword />
         )}
@@ -91,31 +74,3 @@ const ForgotPasswordPage: React.FC = () => {
 };
 
 export default ForgotPasswordPage;
-
-{
-  /* <RegisterForm onFinish={onFinish}>
-          <FormItem
-            name="phone"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập số điện thoại của bạn!",
-              },
-              {
-                pattern: /^\d+$/,
-                message: "Số điện thoại chỉ chấp nhận nhập số!",
-              },
-            ]}
-          >
-            <Input placeholder="Số điện thoại đã đăng ký" />
-          </FormItem>
-          <ButtonWrapper>
-            <Button type="default" onClick={handleBackClick} >
-              Quay lại
-            </Button>
-            <AccessButton type="primary" htmlType="submit">
-              Xác nhận
-            </AccessButton>
-          </ButtonWrapper>
-        </RegisterForm> */
-}

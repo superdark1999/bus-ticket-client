@@ -1,16 +1,13 @@
-import React, { useEffect } from "react";
-import { Layout, Menu } from "antd";
-import {
-  UserOutlined,
-  CarOutlined,
-  DashboardOutlined,
-} from "@ant-design/icons";
-import styled from "styled-components";
-import LogoApp from "components/LogoApp";
-import { ItemType } from "antd/es/menu/hooks/useItems";
-import { useNavigate, useLocation } from "react-router";
-import { ROUTER_PATH } from "routes/routesConfig";
-import { ICON_URL } from "utils/constant";
+import React, { useEffect } from 'react';
+import { Layout, Menu } from 'antd';
+import { UserOutlined, CarOutlined, DashboardOutlined } from '@ant-design/icons';
+import styled from 'styled-components';
+import LogoApp from 'components/LogoApp';
+import { ItemType } from 'antd/es/menu/hooks/useItems';
+import { useNavigate, useLocation } from 'react-router';
+import { ROUTER_PATH } from 'routes/routesConfig';
+import { ICON_URL } from 'utils/constant';
+
 const { Sider } = Layout;
 
 const CustomSider = styled(Sider)`
@@ -47,39 +44,39 @@ interface SelfProps {
 }
 
 export enum TabKey {
-  "DASHBOARD" = "DASHBOARD",
-  "USER" = "USER",
-  "COACH" = "COACH",
-  "ASSETS" = "ASSETS",
-  "TRIPS" = "TRIPS",
-  "TRIP_ROUTES" = "TRIP_ROUTES",
+  'DASHBOARD' = 'DASHBOARD',
+  'USER' = 'USER',
+  'COACH' = 'COACH',
+  'ASSETS' = 'ASSETS',
+  'TRIPS' = 'TRIPS',
+  'TRIP_ROUTES' = 'TRIP_ROUTES',
 }
 
 const menuItems: ItemType[] = [
   {
     key: TabKey.DASHBOARD,
     icon: <DashboardOutlined />,
-    label: "Tổng quan",
+    label: 'Tổng quan',
   },
   {
     key: TabKey.USER,
     icon: <UserOutlined />,
-    label: "Người dùng",
+    label: 'Người dùng',
   },
   {
     key: TabKey.ASSETS,
     icon: <CarOutlined />,
-    label: "Tài sản",
+    label: 'Tài sản',
   },
   {
     key: TabKey.TRIPS,
     icon: <CustomIcon alt="" src={ICON_URL.nav.routes} />,
-    label: "Tuyến đường",
+    label: 'Tuyến đường',
   },
   {
     key: TabKey.TRIP_ROUTES,
     icon: <CustomIcon alt="" src={ICON_URL.nav.tripRoutes} />,
-    label: "Chuyến xe",
+    label: 'Chuyến xe',
   },
 ];
 
@@ -88,24 +85,13 @@ function AdminNavigation({ isExpand, setIsExpand }: SelfProps) {
   const location = useLocation();
 
   useEffect(() => {
-    console.log(
-      "🚀 ~ file: index.tsx ~ line 51 ~ useEffect ~ location",
-      location
-    );
+    console.log('🚀 ~ file: index.tsx ~ line 51 ~ useEffect ~ location', location);
   }, [location]);
 
   return (
-    <CustomSider
-      collapsible
-      collapsed={!isExpand}
-      onCollapse={(value) => setIsExpand(!value)}
-      theme="light"
-    >
+    <CustomSider collapsible collapsed={!isExpand} onCollapse={(value) => setIsExpand(!value)} theme="light">
       <LogoBox>
-        <LogoApp
-          showLabel={isExpand}
-          backgroundColor={isExpand ? undefined : "transparent"}
-        />
+        <LogoApp showLabel={isExpand} backgroundColor={isExpand ? undefined : 'transparent'} />
       </LogoBox>
 
       <CustomMenu

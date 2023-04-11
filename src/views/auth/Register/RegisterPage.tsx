@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import { Form, Input, Button } from "antd";
-import logo from "../../../logo.svg";
+import React from 'react';
+import styled from 'styled-components';
+import { Form, Input, Button } from 'antd';
+import logo from '../../../logo.svg';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -60,7 +60,7 @@ const RegisterButton = styled(Button)`
 
 const RegisterPage: React.FC = () => {
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+    console.log('Received values of form: ', values);
   };
 
   return (
@@ -77,10 +77,10 @@ const RegisterPage: React.FC = () => {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập địa chỉ email của bạn!",
+                message: 'Vui lòng nhập địa chỉ email của bạn!',
               },
               {
-                type: "email",
+                type: 'email',
                 message: "Địa chỉ email phải có dạng 'abc@gmail.com'!",
               },
             ]}
@@ -92,52 +92,40 @@ const RegisterPage: React.FC = () => {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập số điện thoại của bạn!",
+                message: 'Vui lòng nhập số điện thoại của bạn!',
               },
               {
                 pattern: /^\d+$/,
-                message: "Số điện thoại chỉ chấp nhận nhập số!",
+                message: 'Số điện thoại chỉ chấp nhận nhập số!',
               },
             ]}
           >
             <Input placeholder="Số điện thoại" />
           </FormItem>
-          <FormItem
-            name="password"
-            rules={[
-              { required: true, message: "Vui lòng nhập mật khẩu của bạn!" },
-            ]}
-          >
+          <FormItem name="password" rules={[{ required: true, message: 'Vui lòng nhập mật khẩu của bạn!' }]}>
             <Input.Password placeholder="Mật khẩu" />
           </FormItem>
           <FormItem
             name="confirm"
-            dependencies={["password"]}
+            dependencies={['password']}
             rules={[
               {
                 required: true,
-                message: "Vui lòng xác nhận mật khẩu của bạn!",
+                message: 'Vui lòng xác nhận mật khẩu của bạn!',
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
+                  if (!value || getFieldValue('password') === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(
-                    new Error("Hai mật khẩu không khớp với nhau!")
-                  );
+                  return Promise.reject(new Error('Hai mật khẩu không khớp với nhau!'));
                 },
               }),
             ]}
           >
             <Input.Password placeholder="Nhập lại mật khẩu" />
           </FormItem>
-          <FormItem
-            name="name"
-            rules={[
-              { required: true, message: "Vui lòng nhập họ và tên của bạn!" },
-            ]}
-          >
+          <FormItem name="name" rules={[{ required: true, message: 'Vui lòng nhập họ và tên của bạn!' }]}>
             <Input placeholder="Họ và tên" />
           </FormItem>
           <FormItem>

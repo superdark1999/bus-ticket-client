@@ -23,7 +23,7 @@ const FormItem = styled(Form.Item)`
 `;
 
 interface Props {
-  phoneNumber: string;
+  // phoneNumber: string;
   setConfirmCode: (value: boolean) => void;
   setNewPassword: (value: boolean) => void;
 }
