@@ -28,6 +28,16 @@ const FullScreen = styled.div`
   overflow: hidden;
   display: inline-flex;
   position: relative;
+  .ant-table-cell {
+    padding: 6px 8px !important;
+    height: 44px;
+  }
+
+  .ant-table-wrapper {
+    .ant-spin-container {
+      opacity: 1;
+    }
+  }
 `;
 
 const Container = styled.div`
@@ -40,9 +50,10 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
-  min-height: calc(100vh - ${HEADER_HEIGHT});
+  height: calc(100vh - ${HEADER_HEIGHT});
   background-color: aliceblue;
   display: flex;
   flex-direction: column;
   padding: 5vh;
+  overflow: auto;
 `;

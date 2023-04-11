@@ -397,6 +397,9 @@ const Coach = ({}: SeflProp) => {
 };
 const ButtonGroup = styled.div`
   display: inline-flex;
+  button {
+    padding: 4px 8px;
+  }
 `;
 const CustomAntdTable: React.FC<TableProps<any>> = styled(Table)`
   .highlight {
