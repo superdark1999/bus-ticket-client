@@ -8,7 +8,8 @@ const MemberGuard = lazy(() => import('guards/MemberGuard'));
 const AdminGuard = lazy(() => import('guards/AdminGuard'));
 const BookingLayout = lazy(() => import('layout/BookingLayout'));
 const AdminLayout = lazy(() => import('layout/AdminLayout'));
-const BookingPage = lazy(() => import('views/Booking'));
+const HomePage = lazy(() => import('views/Booking/HomePage'));
+const BookingPage = lazy(() => import('views/Booking/BookingPage'));
 const LoginPage = lazy(() => import('views/auth/Login/LoginPage'));
 const RegisterPage = lazy(() => import('views/auth/Register/RegisterPage'));
 const ChangePasswordPage = lazy(() => import('views/auth/ChangePassword/ChangePasswordPage'));
@@ -50,6 +51,10 @@ export const routesConfig: RouteObject[] = [
       {
         element: <MemberGuard />,
         children: [
+          {
+            path: '/',
+            element: <HomePage/>,
+          },
           {
             path: '/booking',
             element: <BookingPage />,
