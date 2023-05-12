@@ -53,6 +53,49 @@ const SloganStyle = styled.div`
       }
     }
   }
+
+
+  @media screen and (min-width: 570px) {
+    .sectionContainer {
+      .infoDiv {
+        .textDiv {
+          margin-top: 2rem;
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    .sectionContainer {
+      .infoDiv {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-top: 5rem;
+
+        .textDiv {
+          margin-top: 0rem;
+          grid-template-columns: repeat(1, 1fr);
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: 1332px) {
+    .sectionContainer {
+      .infoDiv {
+        gap: 1rem;
+
+        .textDiv {
+          .singleInfo {
+            p {
+              max-width: 500px;
+            }
+          }
+        }
+      }
+    }
+  }
 `;
 
 const Slogan = () => (
@@ -60,7 +103,7 @@ const Slogan = () => (
     <div className="sectionContainer">
       <div className="titleDiv">
         <small>travel support</small>
-        <h2>Plane with confident</h2>
+        <h2>Travel with confident</h2>
         <p>Find help with booking</p>
       </div>
 
@@ -68,25 +111,25 @@ const Slogan = () => (
         <div className="textDiv grid">
           <div className="singleInfo">
             <span className="number">01</span>
-            <h4>Travel to Dubai</h4>
-            <p>Find help with booking</p>
+            <h4>Hơn 20 triệu lượt khách</h4>
+            <p>Bus Line phục vụ hơn 20 triệu lượt khách/bình quân 1 năm trên toàn quốc</p>
           </div>
 
           <div className="singleInfo">
             <span className="number colorOne">02</span>
-            <h4>Travel to HongKong</h4>
-            <p>Find help with booking</p>
+            <h4>Hơn 250 phòng vé, phòng hàng</h4>
+            <p>Bus Line có hơn 250 phòng vé, trạm trung chuyển, bến xe,... trên toàn hệ thống</p>
           </div>
 
           <div className="singleInfo">
             <span className="number colorTwo">03</span>
-            <h4>Travel to Vietnam</h4>
-            <p>Find help with booking</p>
+            <h4>Hơn 1600 chuyến mỗi ngày</h4>
+            <p>Bus Line phục vụ hơn 1600 chuyến xe đường dài và liên tỉnh mỗi ngày</p>
           </div>
         </div>
 
         <div className="imgDiv">
-          <img src="/bus_driver.jpg" alt="" />
+          <img src="/peopleOnBus.jpg" alt="" />
         </div>
       </div>
     </div>

@@ -94,6 +94,91 @@ const NavBar = styled.div`
     padding: 0.5rem 1rem;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   }
+
+
+  @media screen and (min-width: 768px) {
+    align-items: center;
+
+    .navBarOne {
+      .flex {
+        gap: 1.5rem;
+
+        li {
+          font-size: 13px;
+          gap: .5rem;
+          color: hsl(240, 1%, 48%);
+  
+          &:hover {
+            color: hsl(225, 50%, 48%);
+            text-decoration: underline;
+          }
+        }
+      }
+     
+    }
+
+    .navBarTwo {
+      justify-content: space-between;
+      align-items: center;
+
+      .logoDiv {
+        .logo {
+          max-width: 100%;
+        }
+      }
+
+      .navBarMenu {
+        .menu {
+          flex-direction: row;
+          gap: .5rem;
+
+          .listItem {
+            padding: 0 .5rem;
+            font-size: 14px;
+            cursor: pointer;
+            color: hsl(240, 1%, 48%);
+            font-weight: 700;
+
+            &:hover {
+              color: hsl(225, 50%, 48%);
+              font-weight: 700;
+              
+            }
+          }
+        }
+      }
+      
+
+      .btnOne, .toggleIcon {
+        display: none;
+      }
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    .navBarOne, .navBarTwo {
+      padding: 1.5rem 5rem;
+    }
+
+    .navBar_With_Bg {
+      padding: 2rem 5rem;
+    }
+  }
+
+  @media screen and (min-width: 1332px) {
+    .navBarTwo {
+      .navBarMenu {
+        .menu {
+          gap: 1rem;
+  
+          .listItem {
+            padding: 0 1rem;
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
 `;
 
 export default function Header() {

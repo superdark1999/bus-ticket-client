@@ -5,7 +5,7 @@ import Footer from '../../components/Footer';
 import Home from '../../components/Home';
 import Search from '../../components/Search';
 import Slogan from '../../components/Slogan';
-import CarouselImage from '../../components/CarouselImage';
+// import CarouselImage from '../../components/CarouselImage';
 
 
 const MainDefaultStyle = styled.div`
@@ -92,6 +92,45 @@ const MainDefaultStyle = styled.div`
     padding: 1rem 0;
     color: hsl(0,0%, 12%);
   }
+
+  @media screen and (min-width: 1024px) {
+    p {
+      font-size: 15px;
+      line-height: 25px;
+    }
+  
+    h4 {
+      font-size: 20px;
+    }
+  
+    h2 {
+      font-size: 27px;
+    }
+
+    .section {
+      padding: 6rem 0 4rem;
+    }
+  
+    .container {
+      width: 75%;
+      margin: auto;
+    }
+  }
+
+  ::selection {
+    background: hsl(225, 50%, 48%);
+    color: hsl(0, 0%, 100%);
+  }
+
+  ::webkit-scrollbar {
+    width: 10px;
+    background: hsl(0, 0%, 96%);
+  }
+
+  ::webkit-scrollbar-thumb {
+    background: hsl(225, 50%, 48%);
+    border-radius: 10px
+  }
 `
 
 const HomePage = () => (
@@ -100,7 +139,7 @@ const HomePage = () => (
     <Home/>
     <Search/>
     <Slogan/>
-    <CarouselImage/>
+    {/* <CarouselImage/> */}
     <Footer/>
   </MainDefaultStyle>
 );
