@@ -129,7 +129,7 @@ const Slogan = () => (
         </div>
 
         <div className="imgDiv">
-          <img src="/peopleOnBus.jpg" alt="" />
+          <img src="/hello.jpg" alt="" />
         </div>
       </div>
     </div>
