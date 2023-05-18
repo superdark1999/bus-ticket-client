@@ -2,15 +2,18 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Checkbox } from 'antd';
 import { EnvironmentOutlined, SwapRightOutlined, WifiOutlined, RestOutlined } from '@ant-design/icons';
+import SeatSelection from './selectedCard';
 
 interface Props {
-  departure: string;
-  arrival: string;
+  timeDeparture: string;
+  timeArrival: string;
   price: number;
   type: string;
   seatsAvailable: number;
   distance: string;
-  amenities: string[];
+  duration: string;
+  departure: string;
+  arrival: string;
   selected: boolean;
   onSelect: () => void;
 }
@@ -18,15 +21,17 @@ interface Props {
 const onSelected = () => {};
 
 const temp: Props = {
-  departure: '8:00',
-  arrival: '12:00',
+  timeDeparture: '8:00',
+  timeArrival: '12:00',
   price: 289000,
   seatsAvailable: 21,
-  amenities: ['air conditioning', 'restroom'],
-  selected: false,
+  departure: 'Bến xe Phía Nam Nha Trang',
+  arrival: ' Bến xe Miền Tây',
+  selected: true,
   onSelect: onSelected,
   type: 'Limousine',
   distance: '200km',
+  duration: '9 tiếng',
 };
 
 const BookingInfo: React.FC = () => {
@@ -34,14 +39,12 @@ const BookingInfo: React.FC = () => {
   return (
     <Container>
       <FirstRow>
-        {temp.departure}
+        {temp.timeDeparture}
         <SwapRightOutlined />
-        {temp.arrival}
+        {temp.timeArrival}
         <Amenities>
-          {temp.amenities.includes('air conditioning') && (
-            <WifiOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
-          )}
-          {temp.amenities.includes('restroom') && <RestOutlined style={{ fontSize: '16px', marginRight: '4px' }} />}
+          <WifiOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
+          <RestOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
         </Amenities>
       </FirstRow>
       <SecondRow>
@@ -55,12 +58,14 @@ const BookingInfo: React.FC = () => {
         <RouterInfo>
           <RouteLine>
             <LocationIcon />
-            Bến xe Phía Nam Nha Trang
-            <Distance>Xe tuyến: {temp.distance} = 9 tiếng</Distance>
+            {temp.departure}
+            <Distance>
+              Xe tuyến: {temp.distance} = {temp.duration}
+            </Distance>
           </RouteLine>
           <RouteLine>
             <LocationIcon />
-            Bến xe Miền Tây
+            {temp.arrival}
           </RouteLine>
         </RouterInfo>
         <CheckboxContainer>
@@ -68,6 +73,7 @@ const BookingInfo: React.FC = () => {
           Chọn
         </CheckboxContainer>
       </RouteContainer>
+      {temp.selected && <SeatSelection />}
     </Container>
   );
 };
@@ -76,7 +82,6 @@ const Container = styled.div`
   padding: 20px;
   border-radius: 8px;
   border: 1px solid #dde2e8;
-  margin-bottom: 20px;
 `;
 
 const FirstRow = styled.div`
