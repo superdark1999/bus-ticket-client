@@ -18,7 +18,7 @@ export default function BookingLayout() {
 }
 
 // cái height làm cho màn hình ko kéo dc nên Minh đã chuyển overflow từ hidden thành auto nhưng làm vậy sẽ ảnh hưởng 
-// tơí cái header của em không nổi lên dc 
+// tới cái header của em không nổi lên dc 
 const FullScreenStyled = styled.div`
   width: 100vw;
   height: 100vh;
