@@ -369,7 +369,6 @@ const Coach = ({}: SeflProp) => {
                       showNow={false}
                       format="HH:mm DD/MM/YYYY"
                       disabledDate={(date) => date <= dayjs().startOf("day")}
-                      minuteStep={5}
                     />
                   </Form.Item>
                 </Col>

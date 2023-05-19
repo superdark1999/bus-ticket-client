@@ -247,12 +247,11 @@ const CoachDetails = ({ coachId }: CoachDetailsProps) => {
       >
         <InfoWrapper>
           <Title>Thông tin chuyến xe {licensePlate}</Title>
-          {!isEditing && (
+          {!isEditing ? (
             <Button type="primary" onClick={handleEditClick}>
               Chỉnh sửa
             </Button>
-          )}
-          {isEditing && (
+          ) : (
             <WrappButton>
               <Button type="primary" htmlType="submit">
                 Lưu
@@ -312,11 +311,10 @@ const CoachDetails = ({ coachId }: CoachDetailsProps) => {
             ]}
           >
             <DatePicker
-              showTime={{ hideDisabledOptions: true }}
+              showTime={{ hideDisabledOptions: true, minuteStep: 5 }}
               showNow={false}
               format="HH:mm DD/MM/YYYY"
               disabledDate={(date) => date <= dayjs().startOf("day")}
-              minuteStep={5}
               style={{ width: "100%" }}
               disabled={!isEditing}
             />
