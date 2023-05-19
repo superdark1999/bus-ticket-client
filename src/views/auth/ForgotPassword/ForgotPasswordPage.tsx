@@ -1,10 +1,9 @@
-import React, { useState, useTransition } from "react";
-import styled from "styled-components";
-import { Form, Input, Button } from "antd";
-import logo from "../../../logo.svg";
-import VerifyCodeForm from "./components/ConfirmComponent";
-import FormPhoneNumber from "./components/PhoneNumberComponent";
-import NewPassword from "./components/NewPasswordComponent";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import logo from '../../../logo.svg';
+import VerifyCodeForm from './components/ConfirmComponent';
+import FormPhoneNumber from './components/PhoneNumberComponent';
+import NewPassword from './components/NewPasswordComponent';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -49,31 +48,10 @@ const Title = styled.div`
   margin-bottom: 30px;
 `;
 
-
 const ForgotPasswordPage: React.FC = () => {
   const [isPhoneNumber, setPhoneNumber] = useState(true);
-  const [isConfirmCode,setConfirmCode] = useState(false);
+  const [isConfirmCode, setConfirmCode] = useState(false);
   const [isNewPassword, setNewPassword] = useState(false);
-
-
-  // const [, startTransition] = useTransition();
-  // const onFinish = (values: any) => {
-  //   if (isConfirmCode) {
-  //     // TODO: Check confirmation code with API
-
-  //     return(<VerifyCodeForm phoneNumber="123"></VerifyCodeForm>)
-  //   }
-  //   console.log("Received values of form: ", values);
-  // };
-
-  // const navigate = useNavigate();
-  // const handleBackClick = () => {
-  //   startTransition(() => {
-  //     navigate("/login");
-  //   });
-  // };
-
-
 
   return (
     <Wrapper>
@@ -83,39 +61,16 @@ const ForgotPasswordPage: React.FC = () => {
           <LogoText>Bus ticket</LogoText>
         </Logo>
         <Title>Quên mật khẩu</Title>
-        { isPhoneNumber ? <FormPhoneNumber setPhoneNumber={setPhoneNumber} setConfirmCode={setConfirmCode} />
-        : isConfirmCode ? <VerifyCodeForm phoneNumber="123" setConfirmCode={setConfirmCode} setNewPassword={setNewPassword}/> 
-        : isNewPassword && <NewPassword />}
+        {isPhoneNumber ? (
+          <FormPhoneNumber setPhoneNumber={setPhoneNumber} setConfirmCode={setConfirmCode} />
+        ) : isConfirmCode ? (
+          <VerifyCodeForm setConfirmCode={setConfirmCode} setNewPassword={setNewPassword} />
+        ) : (
+          isNewPassword && <NewPassword />
+        )}
       </Container>
     </Wrapper>
   );
 };
 
 export default ForgotPasswordPage;
-
-
-{/* <RegisterForm onFinish={onFinish}>
-          <FormItem
-            name="phone"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập số điện thoại của bạn!",
-              },
-              {
-                pattern: /^\d+$/,
-                message: "Số điện thoại chỉ chấp nhận nhập số!",
-              },
-            ]}
-          >
-            <Input placeholder="Số điện thoại đã đăng ký" />
-          </FormItem>
-          <ButtonWrapper>
-            <Button type="default" onClick={handleBackClick} >
-              Quay lại
-            </Button>
-            <AccessButton type="primary" htmlType="submit">
-              Xác nhận
-            </AccessButton>
-          </ButtonWrapper>
-        </RegisterForm> */}

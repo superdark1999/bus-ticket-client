@@ -6,10 +6,10 @@ export const HEADER_HEIGHT = "60px";
 
 const ColorList = ["#f56a00", "#7265e6", "#ffbf00", "#00a2ae"];
 const randomIndex = Math.trunc(Math.random() * ColorList.length);
-const AdminHeader = () => {
+function AdminHeader() {
   return (
     <Header>
-      <div></div>
+      <div />
       <div>
         <CustomAvatar size={40} color={ColorList[randomIndex]}>
           ADMIN
@@ -17,7 +17,7 @@ const AdminHeader = () => {
       </div>
     </Header>
   );
-};
+}
 
 const CustomAvatar = styled(Avatar)`
   background-color: ${({ color }: { color: string }) => color};

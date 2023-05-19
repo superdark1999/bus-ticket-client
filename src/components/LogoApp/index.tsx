@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+
 interface SelfProps {
   showLabel: boolean;
   theme?: "light" | "dark";
@@ -13,11 +14,14 @@ const LOGO_URL = {
   small: "/bus64.png",
   medium: "/bus128.png",
   large: "/bus512.png",
+  nav: {
+    routes: "/icon/routes.svg",
+  },
 };
 
 const LOGO_BACKGROUND_DEFAULT = "#62a7ed";
 
-const LogoApp = (props: SelfProps) => {
+function LogoApp(props: SelfProps) {
   const {
     showLabel,
     // theme = "light",
@@ -31,13 +35,13 @@ const LogoApp = (props: SelfProps) => {
       {showLabel && <div>Bus Ticket</div>}
     </Box>
   );
-};
+}
 
 const Box = styled.div`
   display: flex;
   flex-direction: ${({ direction }: SelfProps) => direction};
   background-color: ${({ backgroundColor }: SelfProps) => backgroundColor};
-  cursor: ${({ onClick }: SelfProps) => (!!onClick ? "pointer" : "unset")};
+  cursor: ${({ onClick }: SelfProps) => (onClick ? "pointer" : "unset")};
   min-height: 32px;
   padding: 8px;
   border-radius: 8px;
