@@ -18,12 +18,12 @@ export default function BookingLayout() {
 }
 
 const FullScreenStyled = styled.div`
-  width: 100%;
+  width: 100vw;
   height: auto;
   overflow: hidden;
 `;
 
 const LayoutStyled = styled(Layout)`
-  width: 100%;
+  width: 100vw;
   height: auto;
 `;
