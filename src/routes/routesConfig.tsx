@@ -1,6 +1,6 @@
 import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
-import { AdminAssets, AdminTripRoute, AdminDashBoard, AdminTrips, AdminUser } from 'views/Admin';
+import { AdminAssets, AdminTripRoute, AdminDashBoard, AdminTrips, AdminUser, AdminDetailCoach } from 'views/Admin';
 import ErrorPage, { ErrorStatus } from 'views/ErrorPage';
 import { RouteObject } from './route.interface';
 
@@ -77,6 +77,10 @@ export const routesConfig: RouteObject[] = [
           {
             path: ROUTER_PATH.ADMIN_TRIP_ROUTES,
             element: <AdminTripRoute />,
+          },
+          {
+            path: `${ROUTER_PATH.ADMIN_COACH}/:id`,
+            element: <AdminDetailCoach coachId="id" />,
           },
           {
             path: ROUTER_PATH.ADMIN_DASHBOARD,
