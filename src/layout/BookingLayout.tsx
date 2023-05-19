@@ -20,10 +20,15 @@ export default function BookingLayout() {
 const FullScreenStyled = styled.div`
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const LayoutStyled = styled(Layout)`
   width: 100vw;
   height: 100vh;
+  background-color: white;
 `;

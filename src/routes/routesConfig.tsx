@@ -13,6 +13,7 @@ const LoginPage = lazy(() => import('views/auth/Login/LoginPage'));
 const RegisterPage = lazy(() => import('views/auth/Register/RegisterPage'));
 const ChangePasswordPage = lazy(() => import('views/auth/ChangePassword/ChangePasswordPage'));
 const ForgotPasswordPage = lazy(() => import('views/auth/ForgotPassword/ForgotPasswordPage'));
+const ListTripRoute = lazy(() => import('views/Booking/listTripRoute'));
 
 /* eslint-disable  @typescript-eslint/naming-convention  */
 export enum ROUTER_PATH {
@@ -53,6 +54,10 @@ export const routesConfig: RouteObject[] = [
           {
             path: '/booking',
             element: <BookingPage />,
+          },
+          {
+            path: '/booking/trip-routes',
+            element: <ListTripRoute />,
           },
         ],
       },
