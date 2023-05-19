@@ -1,12 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Col, Row } from 'antd';
 
+// display seat in one side
 const oneSideSeats = (
   start: number,
   end: number,
   keyword: string,
-  handleSelected: (seatId: number) => void,
+  handleSelected: (seatId: number, seatName: string) => void,
   seatStatuses: string[],
 ): JSX.Element[] => {
   const boxes: JSX.Element[] = [];
@@ -20,7 +21,7 @@ const oneSideSeats = (
         <>
           <Item>
             <Box
-              onClick={() => handleSelected(start)}
+              onClick={() => handleSelected(start, boxkeyword)}
               disabled={seatStatuses[start] === 'booked'}
               selected={seatStatuses[start] === 'selected'}
             >
@@ -30,7 +31,7 @@ const oneSideSeats = (
           <Item />
           <Item>
             <Box
-              onClick={() => handleSelected(start + 1)}
+              onClick={() => handleSelected(start + 1, `${keyword}${String(boxNumber + 1 - start).padStart(2, '0')}`)}
               disabled={seatStatuses[start + 1] === 'booked'}
               selected={seatStatuses[start + 1] === 'selected'}
             >{`${keyword}${String(boxNumber + 1 - start).padStart(2, '0')}`}</Box>
@@ -41,7 +42,7 @@ const oneSideSeats = (
       boxes.push(
         <Item key={`group-${i}`}>
           <Box
-            onClick={() => handleSelected(i)}
+            onClick={() => handleSelected(i, boxkeyword)}
             disabled={seatStatuses[i] === 'booked'}
             selected={seatStatuses[i] === 'selected'}
           >
@@ -104,87 +105,101 @@ function getSeatStatuses(seatss: boolean[]): SeatStatus[] {
   });
 }
 
+// input are  array seats, quantity, price seat
+// interface Props {
+//   seats: boolean[];
+//  quantity: number;
+//   price: number;
+// }
 const SeatSelection: React.FC = () => {
   // edit status seats from input
   const seatStatuses = useMemo(() => getSeatStatuses(seats), [seats]);
 
-  const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
+  const [selectedSeatsId, setSelectedSeatsId] = useState<number[]>([]);
+  const [selectedSeatsArray, setSelectedSeatsArray] = useState<string[]>([]);
 
-  useEffect(() => {
-    console.log('selected seats:', selectedSeats);
-  }, [selectedSeats]);
-
-  const handleSeatClick = (seatId: number) => {
+  const handleSeatClick = (seatId: number, seatName: string) => {
     if (seatStatuses[seatId] === 'empty') {
       // add a check for the status property
       seatStatuses[seatId] = 'selected';
-      setSelectedSeats([...selectedSeats, seatId]);
+      setSelectedSeatsId([...selectedSeatsId, seatId]);
+      setSelectedSeatsArray([...selectedSeatsArray, seatName]);
     } else if (seatStatuses[seatId] === 'selected') {
       // add a check for the status property
       seatStatuses[seatId] = 'empty';
-      setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
+      setSelectedSeatsId(selectedSeatsId.filter((id) => id !== seatId));
+      setSelectedSeatsArray(selectedSeatsArray.filter((name) => name !== seatName));
     }
   };
 
-  const totalPrice = selectedSeats.length * 100000;
+  const totalPrice = selectedSeatsId.length * 100000;
 
   return (
-    <Wrapper>
-      <Header>
-        <Schedule>Lịch trình chuyến đi</Schedule>
-      </Header>
-      <SeatContainer>
-        <Row
-          style={{
-            width: '100%',
-            height: '48px',
-            borderRadius: '8px 8px 0 0',
-            borderBottom: '1px solid #ebedee',
-            backgroundColor: '#fff',
-            alignItems: 'center',
-          }}
-        >
-          <Col span={12}>
-            <Title style={{ textAlign: 'center' }}>Tầng dưới</Title>
-          </Col>
-          <Col span={12}>
-            <Title style={{ textAlign: 'center' }}>Tầng trên</Title>
-          </Col>
-        </Row>
-        <Row style={{ width: '100%', backgroundColor: 'rgb(248, 249, 249)' }}>
-          <Col span={12}>
-            <Group>{oneSideSeats(0, 17, 'A', handleSeatClick, seatStatuses)}</Group>
-          </Col>
-          <Col span={12}>
-            <Group>{oneSideSeats(17, 34, 'B', handleSeatClick, seatStatuses)}</Group>
-          </Col>
-          <Row style={{ width: '100%', padding: '14px' }}>
-            <Col span={8} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Square selected={false} disabled={false} />
-              Trống
+    <Container>
+      <Wrapper>
+        {/* <Header>
+          <Schedule>Lịch trình chuyến đi</Schedule>
+        </Header> */}
+        <SeatContainer>
+          <Row
+            style={{
+              width: '100%',
+              height: '48px',
+              borderRadius: '8px 8px 0 0',
+              borderBottom: '1px solid #ebedee',
+              backgroundColor: '#fff',
+              alignItems: 'center',
+            }}
+          >
+            <Col span={12}>
+              <Title style={{ textAlign: 'center' }}>Tầng dưới</Title>
             </Col>
-            <Col span={8} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Square selected disabled={false} />
-              Đang chọn
-            </Col>
-            <Col span={8} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Square selected={false} disabled />
-              Đã đặt
+            <Col span={12}>
+              <Title style={{ textAlign: 'center' }}>Tầng trên</Title>
             </Col>
           </Row>
-        </Row>
-      </SeatContainer>
+          <Row style={{ width: '100%', backgroundColor: 'rgb(248, 249, 249)' }}>
+            <Col span={12}>
+              <Group>{oneSideSeats(0, 17, 'A', handleSeatClick, seatStatuses)}</Group>
+            </Col>
+            <Col span={12}>
+              <Group>{oneSideSeats(17, 34, 'B', handleSeatClick, seatStatuses)}</Group>
+            </Col>
+            <Row style={{ width: '100%', padding: '14px' }}>
+              <Col span={8} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Square selected={false} disabled={false} />
+                Trống
+              </Col>
+              <Col span={8} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Square selected disabled={false} />
+                Đang chọn
+              </Col>
+              <Col span={8} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Square selected={false} disabled />
+                Đã đặt
+              </Col>
+            </Row>
+          </Row>
+        </SeatContainer>
+      </Wrapper>
       <Footer>
-        <TicketInfo>
-          {selectedSeats.length} tickets: {totalPrice.toLocaleString()} VND
-        </TicketInfo>
-        <Button type="primary" disabled={selectedSeats.length === 0}>
-          Proceed to Payment
+        <Col>
+          <div>
+            {selectedSeatsId.length} vé: {selectedSeatsArray.join(', ')}
+          </div>
+          <div>
+            Tổng tiền: <span style={{ fontSize: '18px' }}>{totalPrice.toLocaleString()}</span> VND
+          </div>
+        </Col>
+        <Button type="primary" disabled={selectedSeatsId.length === 0}>
+          Tiếp tục
         </Button>
       </Footer>
-    </Wrapper>
+    </Container>
   );
 };
+
+const Container = styled.div``;
 
 const Wrapper = styled.div`
   display: flex;
@@ -193,18 +208,18 @@ const Wrapper = styled.div`
   padding: 24px;
 `;
 
-const Header = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 24px;
-`;
+// const Header = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   margin-bottom: 24px;
+// `;
 
-const Schedule = styled.h1`
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
-`;
+// const Schedule = styled.h1`
+//   font-size: 24px;
+//   font-weight: bold;
+//   margin: 0;
+// `;
 
 const Title = styled.h2`
   font-size: 18px;
@@ -224,25 +239,21 @@ const Footer = styled.div`
   max-width: 600px;
 `;
 
-const TicketInfo = styled.div`
-  font-size: 18px;
-`;
-
 const Group = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin: 20px;
-  margin-bottom: 8px;
+  margin: 20px 10px 8px;
+  justify-content: center;
 `;
 
 const Item = styled.div`
-  width: 33.33%;
+  width: 28.33%;
   padding: 8px 16px;
 `;
 
 const Box = styled.div<{ selected: boolean; disabled: boolean }>`
   border-radius: 10px;
-  height: 45px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;

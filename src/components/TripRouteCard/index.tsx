@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Checkbox } from 'antd';
 import { EnvironmentOutlined, SwapRightOutlined, WifiOutlined, RestOutlined } from '@ant-design/icons';
 import SeatSelection from './selectedCard';
 
-interface Props {
+export interface Props {
+  id: number;
   timeDeparture: string;
   timeArrival: string;
   price: number;
@@ -14,74 +15,65 @@ interface Props {
   duration: string;
   departure: string;
   arrival: string;
-  selected: boolean;
-  onSelect: () => void;
 }
 
-const onSelected = () => {};
-
-const temp: Props = {
-  timeDeparture: '8:00',
-  timeArrival: '12:00',
-  price: 289000,
-  seatsAvailable: 21,
-  departure: 'Bến xe Phía Nam Nha Trang',
-  arrival: ' Bến xe Miền Tây',
-  selected: true,
-  onSelect: onSelected,
-  type: 'Limousine',
-  distance: '200km',
-  duration: '9 tiếng',
-};
-
-const BookingInfo: React.FC = () => {
+const BookingInfo: React.FC<Props> = ({ ...props }) => {
   useEffect(() => {});
+  const [selected, setSelected] = useState<boolean>(false);
+
+  const handleCheckbox = () => {
+    setSelected(!selected);
+
+    // TODO: call API to get list seat
+    // Transmitting the seating list, quantity, and price to SeatSelection component.
+  };
   return (
-    <Container>
+    <Container selected={selected}>
       <FirstRow>
-        {temp.timeDeparture}
+        {props.timeDeparture}
         <SwapRightOutlined />
-        {temp.timeArrival}
+        {props.timeArrival}
         <Amenities>
           <WifiOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
           <RestOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
         </Amenities>
       </FirstRow>
       <SecondRow>
-        {temp.price}đ
+        {props.price}đ
         <Dot />
-        {temp.type}
+        {props.type}
         <Dot />
-        {temp.seatsAvailable} chỗ
+        {props.seatsAvailable} chỗ
       </SecondRow>
       <RouteContainer>
         <RouterInfo>
           <RouteLine>
             <LocationIcon />
-            {temp.departure}
+            {props.departure}
             <Distance>
-              Xe tuyến: {temp.distance} = {temp.duration}
+              Xe tuyến: {props.distance} = {props.duration}
             </Distance>
           </RouteLine>
           <RouteLine>
             <LocationIcon />
-            {temp.arrival}
+            {props.arrival}
           </RouteLine>
         </RouterInfo>
         <CheckboxContainer>
-          <Checkbox checked={temp.selected} onChange={temp.onSelect} />
+          <Checkbox checked={selected} onChange={handleCheckbox} />
           Chọn
         </CheckboxContainer>
       </RouteContainer>
-      {temp.selected && <SeatSelection />}
+      {selected && <SeatSelection />}
     </Container>
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ selected: boolean }>`
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid #dde2e8;
+  border: ${({ selected }) => (selected ? '2px solid #1677ff' : '1px solid #dde2e8')};
+  margin-bottom: 20px;
 `;
 
 const FirstRow = styled.div`

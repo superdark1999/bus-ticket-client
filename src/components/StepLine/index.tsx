@@ -2,22 +2,31 @@ import React from 'react';
 import styled from 'styled-components';
 import { Steps } from 'antd';
 
-const { Step } = Steps;
-
 interface Props {
   currentStep: number;
 }
 
-const StepLine: React.FC<Props> = ({ currentStep }) => (
-  <Container>
-    <StyledSteps current={currentStep} labelPlacement="vertical">
-      <Step title="CHỌN TUYẾN" />
-      <Step title="XÁC NHẬN LỘ TRÌNH" />
-      <Step title="THÔNG TIN HÀNH KHÁCH" />
-      <Step title="THANH TOÁN" />
-    </StyledSteps>
-  </Container>
-);
+const StepLine: React.FC<Props> = ({ currentStep }) => {
+  const steps = [
+    {
+      title: 'CHỌN TUYẾN',
+    },
+    {
+      title: 'XÁC NHẬN LỘ TRÌNH',
+    },
+    {
+      title: 'THÔNG TIN HÀNH KHÁCH',
+    },
+    {
+      title: 'THANH TOÁN',
+    },
+  ];
+  return (
+    <Container>
+      <StyledSteps current={currentStep} labelPlacement="vertical" items={steps} />
+    </Container>
+  );
+};
 
 const Container = styled.div`
   display: flex;
