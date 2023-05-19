@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Tag, Row, Col, Button, Modal, Form, Select, DatePicker } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router';
 import dayjs from 'dayjs';
 import { v4 } from 'uuid';
 import { ITrip } from './Trip';
@@ -23,7 +24,7 @@ export interface ITripRoute {
 //   destination: string;
 // }
 
-type TripRouteData = ITripRoute & ICoach & ITrip;
+export type TripRouteData = ITripRoute & ICoach & ITrip;
 // interface TripRouteData {
 //   id: number;
 //   origin: string;
@@ -178,6 +179,7 @@ const stationList = ['Sài Gòn', 'Quảng Trị', 'Bình Dương', 'Đồng Nai
 const busList = ['74F1-12345', '74F1-12345', '74F1-12345', '74F1-12345', '74F1-12345'];
 
 const TripRoute = () => {
+  const navigate = useNavigate();
   const [isAddingtripRouteOpen, setIsAddingtripRouteOpen] = useState(false);
   const [tripRouteList, settripRouteList] = useState<TripRouteData[]>([]);
 
@@ -375,7 +377,18 @@ const TripRoute = () => {
         </Row>
         <Row>
           <Col span={24}>
-            <Table dataSource={tripRouteList} columns={columns} />
+            <Table
+              dataSource={tripRouteList}
+              columns={columns.map((col) => ({
+                ...col,
+                onCell: (record: TripRouteData) => ({
+                  onClick: () => {
+                    navigate(`/admin/coach/${record.id}`, { state: { record } });
+                  },
+                }),
+              }))}
+              rowKey="id"
+            />
           </Col>
         </Row>
       </Col>
