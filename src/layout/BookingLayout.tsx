@@ -19,11 +19,11 @@ export default function BookingLayout() {
 
 const FullScreenStyled = styled.div`
   width: 100vw;
-  height: auto;
-  overflow: hidden;
+  height: 100vh;
+  overflow: hidden;  
 `;
 
 const LayoutStyled = styled(Layout)`
   width: 100vw;
-  height: auto;
+  height: 100vh;
 `;
