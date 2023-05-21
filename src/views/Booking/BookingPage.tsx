@@ -4,14 +4,14 @@ import StepLine from 'components/StepLine';
 import BookingInfo from 'components/TripRouteCard';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Props as infoCard } from 'components/TripRouteCard/index';
+import { Props as InfoCard } from 'components/TripRouteCard/index';
 import { useLocation, useNavigate } from 'react-router';
 import moment from 'moment';
 
 const { Option } = Select;
 
 // input
-interface Props {
+export interface InfoSearch {
   departure: string;
   destination: string;
   date: string;
@@ -19,7 +19,7 @@ interface Props {
 }
 
 // Mock data
-const tripRoutes: infoCard[] = [
+const tripRoutes: InfoCard[] = [
   {
     id: 1,
     timeDeparture: '8:00',
@@ -90,16 +90,17 @@ const timeRanges = {
 };
 const BookingPage: React.FC = () => {
   // get info from param
+  const navigate = useNavigate();
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const infoSearch: Props = {
+  const infoSearch: InfoSearch = {
     departure: searchParams.get('departure') || '',
     destination: searchParams.get('destination') || '',
     date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
     quantity: parseInt(searchParams.get('quantity') || '0', 10),
   };
 
-  const navigate = useNavigate();
   const content = 0;
 
   const [sortPrice, setSortPrice] = useState<'asc' | 'desc' | '0'>('0');
@@ -108,7 +109,7 @@ const BookingPage: React.FC = () => {
 
   const [timeSelected, setTimeSelected] = useState<0 | 1 | 2 | 3 | 4>(0);
 
-  const [routesRender, setRoutesRender] = useState<infoCard[]>(JSON.parse(JSON.stringify(tripRoutes)));
+  const [routesRender, setRoutesRender] = useState<InfoCard[]>(JSON.parse(JSON.stringify(tripRoutes)));
 
   useEffect(() => {
     // TODO: sort triproute with time
@@ -120,7 +121,7 @@ const BookingPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const temp: infoCard[] = JSON.parse(JSON.stringify(tripRoutes));
+    const temp: InfoCard[] = JSON.parse(JSON.stringify(tripRoutes));
 
     const sortRoutes =
       sortPrice === 'asc'

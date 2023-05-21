@@ -1,25 +1,22 @@
 import { Button, Row, Divider, Select } from 'antd';
 import StepLine from 'components/StepLine';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { LeftOutlined, EnvironmentOutlined, EditOutlined, RightOutlined } from '@ant-design/icons';
+import moment from 'moment';
+import { InfoSearch } from 'views/Booking/BookingPage';
+import { Props as InfoCard } from 'components/TripRouteCard/index';
+import SeatSelection from 'components/TripRouteCard/selectSeats';
 
 const { Option } = Select;
 
-interface Props {
-  departure: string;
-  destination: string;
-  date: string;
-  quantity: number;
-}
-
-const infoSearch: Props = {
-  departure: 'nha trang',
-  destination: 'sài gòn',
-  date: '20/05/2023',
-  quantity: 1,
-};
+// const infoSearch: Props = {
+//   departure: 'nha trang',
+//   destination: 'sài gòn',
+//   date: '20/05/2023',
+//   quantity: 1,
+// };
 
 const options = [
   { value: 'option1', label: 'Option 1' },
@@ -29,50 +26,95 @@ const options = [
 
 const ConfirmingPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [infoCard] = useState<InfoCard>(location.state?.infoCard || '');
+  const [infoSeat] = useState({
+    seats: location.state?.seats,
+    seatsId: location.state?.seatsId,
+  });
+  // check pick shuttle
+  const [isPick, setIsPick] = useState<boolean>(false);
+  // check pick select seats
+  const [showSelectedSeats, setShowSelectedSeats] = useState(false);
+  // check path to navigate booking
+  useEffect(() => {
+    if (!location.state) {
+      navigate({
+        pathname: '/booking',
+        search: `${location.search}`,
+      });
+    }
+  }, []);
+
+  // Get data from path, and state of path
+  const searchParams = new URLSearchParams(location.search);
+  const infoSearch: InfoSearch = {
+    departure: searchParams.get('departure') || '',
+    destination: searchParams.get('destination') || '',
+    date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
+    quantity: parseInt(searchParams.get('quantity') || '0', 10),
+  };
+
+  // content in step
   const content = 1;
 
-  const [isPick, setIsPick] = useState<boolean>(false);
-  useEffect(() => {});
+  // hanle when click btn "Chọn ghế" then hidden btn "Tiếp tục" in selectSeats component
+  const handleSelectSeats = () => {
+    infoCard.hiddenBtn = true;
+    setShowSelectedSeats(true);
+  };
+
+  if (!location.state) return null;
+
   return (
     <Container>
       <Row style={{ fontSize: '24px', fontWeight: 'bold' }}>XÁC NHẬN LỘ TRÌNH</Row>
-      <Row style={{ fontSize: '14px', margin: '8px 0 16px' }}>
-        {infoSearch.date} {infoSearch.departure} - {infoSearch.destination}
+      <Row style={{ fontSize: '14px', margin: '8px 0 16px', alignItems: 'center' }}>
+        {infoSearch.date} <Dot style={{ opacity: '1' }} /> {infoSearch.departure} - {infoSearch.destination}
       </Row>
       <StepLine currentStep={content} />
       <Row>
         <Content>
           <FirstRow>XÁC NHẬN LỘ TRÌNH ĐI</FirstRow>
           <SecondRow>
-            props.priceđ
+            {infoCard.price}đ
             <Dot />
-            props.type
+            {infoCard.type}
           </SecondRow>
           <RouteContainer>
             <RouterInfo>
               <RouteLine>
-                <RouteLineTime>08:00</RouteLineTime>
+                <RouteLineTime>{infoCard.timeDeparture}</RouteLineTime>
                 <LocationIcon />
-                props.departure
-                <Distance>Xe tuyến: props.distance = props.duration</Distance>
+                {infoCard.departure}
+                <Distance>
+                  Xe tuyến: {infoCard.distance} = {infoCard.duration}
+                </Distance>
               </RouteLine>
               <RouteLine>
-                <RouteLineTime>20:00</RouteLineTime>
+                <RouteLineTime>{infoCard.timeArrival}</RouteLineTime>
                 <LocationIcon />
-                props.arrival
+                {infoCard.arrival}
               </RouteLine>
             </RouterInfo>
           </RouteContainer>
           <StyledDivider />
-          <ContainerChooseSeat>
-            <TitleSeat>
-              Chon ghế
-              <InfoSeat>A16</InfoSeat>
-            </TitleSeat>
-            <ButtonSeat>
-              CHỌN GHẾ <EditOutlined />
-            </ButtonSeat>
-          </ContainerChooseSeat>
+          {!showSelectedSeats ? (
+            <ContainerChooseSeat>
+              <TitleSeat>
+                Chon ghế
+                <InfoSeat>{infoSeat.seats?.join(', ')}</InfoSeat>
+              </TitleSeat>
+              <ButtonSeat onClick={handleSelectSeats}>
+                CHỌN GHẾ <EditOutlined />
+              </ButtonSeat>
+            </ContainerChooseSeat>
+          ) : (
+            <div style={{ padding: '0 20px 20px' }}>
+              <SeatSelection infoCard={infoCard} seatsId={infoSeat.seatsId} seatsSelected={infoSeat.seats} />
+            </div>
+          )}
           <StyledDivider />
           <Row style={{ padding: '20px', flexDirection: 'column' }}>
             <Label>Điểm lên xe</Label>
@@ -133,7 +175,6 @@ const SecondRow = styled.div`
   color: #111;
   margin: 0 20px 20px;
   font-size: 15px;
-  min-width: 200px;
   height: 28px;
   border-radius: 16px;
   padding: 5px 12px;
