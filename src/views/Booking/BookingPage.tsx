@@ -88,7 +88,7 @@ const timeRanges = {
   '3': { start: 12, end: 18 },
   '4': { start: 18, end: 24 },
 };
-const ListTripRoute: React.FC = () => {
+const BookingPage: React.FC = () => {
   // get info from param
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -217,4 +217,4 @@ const BackButton = styled(Button)`
   height: 40px;
 `;
 
-export default ListTripRoute;
+export default BookingPage;
