@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+
 import Home from '../../components/Home';
 import Search from '../../components/Search';
 import Slogan from '../../components/Slogan';
@@ -135,12 +134,12 @@ const MainDefaultStyle = styled.div`
 
 const HomePage = () => (
   <MainDefaultStyle>
-    <Header/>
+    
     <Home/>
     <Search/>
     <Slogan/>
     {/* <CarouselImage/> */}
-    <Footer/>
+    
   </MainDefaultStyle>
 );
 

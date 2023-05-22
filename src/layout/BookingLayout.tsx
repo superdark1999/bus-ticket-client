@@ -2,16 +2,20 @@ import React from 'react';
 import { Layout } from 'antd';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
+import Footer from 'components/Footer';
+import Header from 'components/Header';
 
 export default function BookingLayout() {
-  const { Content } = Layout;
+  
 
   return (
     <FullScreenStyled>
       <LayoutStyled>
+        <Header />
         <Content>
           <Outlet />
         </Content>
+        <Footer />
       </LayoutStyled>
     </FullScreenStyled>
   );
@@ -23,7 +27,6 @@ const FullScreenStyled = styled.div`
   width: 100vw;
   height: 100vh;
   overflow: auto;
-
   ::-webkit-scrollbar {
     display: none;
   }
@@ -34,3 +37,9 @@ const LayoutStyled = styled(Layout)`
   height: 100vh;
   background-color: white;
 `;
+
+const Content = styled.div`
+  
+  display: flex;
+  flex-direction: column;
+`
