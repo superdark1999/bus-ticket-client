@@ -5,6 +5,130 @@ import { TiSocialFacebook } from 'react-icons/ti'
 import { AiFillYoutube, AiOutlineTwitter } from 'react-icons/ai';
 import { FaPinterestP } from 'react-icons/fa'
 
+const Container = styled.div`
+  a {
+    text-decoration: none;
+  }
+
+  li {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .section {
+    padding: 4rem 0 2rem;
+  }
+
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .icon {
+    font-size: 1.3rem;
+    cursor: pointer;
+  }
+
+  .flex {
+    display: flex;
+    align-items: center;
+  }
+
+  .grid {
+    display: grid;
+    align-items: center;
+  }
+
+  .none {
+    display: none;
+  }
+
+  .btn {
+    padding: .7rem 1.5rem;
+    background: hsl(225, 50%, 48%);
+    border: none;
+    outline: none;
+    border-radius: 3rem;
+    cursor: pointer;
+    color: hsl(0,0%, 100%);
+
+    a {
+      color: hsl(0,0%, 100%);
+      font-weight: 500;
+    }
+
+    &:hover {
+      background: hsl(225, 56%, 59%)
+    }
+  }
+
+  img, video {
+    width: 100%;
+    height: auto;
+  }
+
+  input {
+    font-size: 100%;
+    color: rgb(145,145,145);
+  }
+
+  p {
+    font-size: 13px;
+    color: rgb(145,145,145);
+    line-height: 22px;
+  }
+
+  h4 {
+    padding: 1rem 0;
+    font-weight: 700;
+    color: hsl(0,0%, 12%);
+  }
+
+  h2 {
+    font-size: 25px;
+    padding: 1rem 0;
+    color: hsl(0,0%, 12%);
+  }
+
+  @media screen and (min-width: 1024px) {
+    p {
+      font-size: 15px;
+      line-height: 25px;
+    }
+  
+    h4 {
+      font-size: 20px;
+    }
+  
+    h2 {
+      font-size: 27px;
+    }
+
+    .section {
+      padding: 6rem 0 4rem;
+    }
+  
+    .container {
+      width: 75%;
+      margin: auto;
+    }
+  }
+
+  ::selection {
+    background: hsl(225, 50%, 48%);
+    color: hsl(0, 0%, 100%);
+  }
+
+  ::webkit-scrollbar {
+    width: 10px;
+    background: hsl(0, 0%, 96%);
+  }
+
+  ::webkit-scrollbar-thumb {
+    background: hsl(225, 50%, 48%);
+    border-radius: 10px
+  }
+`
 
 const FooterStyle = styled.div`
   background: hsl(180, 17%, 95%);
@@ -64,7 +188,7 @@ const FooterStyle = styled.div`
         padding: .3rem 0;
 
         &:hover {
-          transform: translateY(7px);
+          transform: translateY(3px);
           color: hsl(225, 50%, 48%);
         }
       }
@@ -109,83 +233,87 @@ const FooterStyle = styled.div`
 `
 
 function Footer() {
-  return <FooterStyle>
-    <div className="sectionContainer container grid">
+  return (
+    <Container>
+      <FooterStyle>
+        <div className="sectionContainer container grid">
 
-      <div className="gridOne">
-        <div className="logoDiv">
-          <img src="/bus64.png" alt="" className='logo' />
+          <div className="gridOne">
+            <div className="logoDiv">
+              <img src="/bus64.png" alt="" className='logo' />
+            </div>
+            <p>Your mind should be stronger than your feeling, fly!</p>
+            <div className="socialIcon flex">
+              <TiSocialFacebook className='icon' />
+              <AiOutlineTwitter className='icon' />
+              <AiFillYoutube className='icon' />
+              <FaPinterestP className='icon' />
+            </div>
+          </div>
+
+          <div className="footerLinks">
+            <span className="linkTitle">Bus Lines</span>
+            <li>
+              <a href="/">Trang chủ</a>
+            </li>
+            <li>
+              <a href="/">Lịch trình</a>
+            </li>
+            <li>
+              <a href="/">Tin tức</a>
+            </li>
+            <li>
+              <a href="/">Liên hệ</a>
+            </li>
+            <li>
+              <a href="/">Hóa đơn</a>
+            </li>
+          </div>
+
+          <div className="footerLinks">
+            <span className="linkTitle">Hướng dẫn</span>
+            <li>
+              <a href="/">Điều khoản sử dụng</a>
+            </li>
+            <li>
+              <a href="/">Hỏi đáp</a>
+            </li>
+            <li>
+              <a href="/">Hướng dẫn đặt vé trên Web</a>
+            </li>
+            <li>
+              <a href="/">Hướng dẫn đặt vé trên App</a>
+            </li>
+            <li>
+              <a href="/">Mạng lưới văn phòng</a>
+            </li>
+          </div>
+
+          <div className="footerLinks">
+            <span className="linkTitle">Hướng dẫn</span>
+            <li>
+              <a href="/">Điều khoản sử dụng</a>
+            </li>
+            <li>
+              <a href="/">Hỏi đáp</a>
+            </li>
+            <li>
+              <a href="/">Hướng dẫn đặt vé trên Web</a>
+            </li>
+            <li>
+              <a href="/">Hướng dẫn đặt vé trên App</a>
+            </li>
+            <li>
+              <a href="/">Mạng lưới văn phòng</a>
+            </li>
+          </div>
         </div>
-        <p>Your mind should be stronger than your feeling, fly!</p>
-        <div className="socialIcon flex">
-          <TiSocialFacebook className='icon' />
-          <AiOutlineTwitter className='icon' />
-          <AiFillYoutube className='icon' />
-          <FaPinterestP className='icon' />
+
+        <div className="copyRightDiv flex">
+          <p>Bản quyền thuộc về Công ty Cổ phần Xe Khách Bus Lines | <a target='_blank' href="/">www.busline.vn </a></p>
         </div>
-      </div>
-
-      <div className="footerLinks">
-        <span className="linkTitle">Bus Lines</span>
-        <li>
-          <a href="/">Trang chủ</a>
-        </li>
-        <li>
-          <a href="/">Lịch trình</a>
-        </li>
-        <li>
-          <a href="/">Tin tức</a>
-        </li>
-        <li>
-          <a href="/">Liên hệ</a>
-        </li>
-        <li>
-          <a href="/">Hóa đơn</a>
-        </li>
-      </div>
-
-      <div className="footerLinks">
-        <span className="linkTitle">Hướng dẫn</span>
-        <li>
-          <a href="/">Điều khoản sử dụng</a>
-        </li>
-        <li>
-          <a href="/">Hỏi đáp</a>
-        </li>
-        <li>
-          <a href="/">Hướng dẫn đặt vé trên Web</a>
-        </li>
-        <li>
-          <a href="/">Hướng dẫn đặt vé trên App</a>
-        </li>
-        <li>
-          <a href="/">Mạng lưới văn phòng</a>
-        </li>
-      </div>
-
-      <div className="footerLinks">
-        <span className="linkTitle">Hướng dẫn</span>
-        <li>
-          <a href="/">Điều khoản sử dụng</a>
-        </li>
-        <li>
-          <a href="/">Hỏi đáp</a>
-        </li>
-        <li>
-          <a href="/">Hướng dẫn đặt vé trên Web</a>
-        </li>
-        <li>
-          <a href="/">Hướng dẫn đặt vé trên App</a>
-        </li>
-        <li>
-          <a href="/">Mạng lưới văn phòng</a>
-        </li>
-      </div>
-    </div>
-
-    <div className="copyRightDiv flex">
-      <p>Bản quyền thuộc về Công ty Cổ phần Xe Khách Bus Lines | <a target='_blank' href="/">www.busline.vn </a></p>
-    </div>
-  </FooterStyle>;
+      </FooterStyle>
+    </Container>
+  );
 }
 export default Footer;
