@@ -36,5 +36,6 @@ module.exports = {
     'react/require-default-props': 0,
     'no-console': 0,
     '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/no-unused-vars': 'warn',
   },
 };
