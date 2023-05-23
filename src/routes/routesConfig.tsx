@@ -10,16 +10,17 @@ const BookingLayout = lazy(() => import('layout/BookingLayout'));
 const AdminLayout = lazy(() => import('layout/AdminLayout'));
 const HomePage = lazy(() => import('views/Booking/HomePage'));
 const BookingPage = lazy(() => import('views/Booking/BookingPage'));
+const ConfirmingPage = lazy(() => import('views/Booking/ConfirmingPage'));
 const LoginPage = lazy(() => import('views/auth/Login/LoginPage'));
 const RegisterPage = lazy(() => import('views/auth/Register/RegisterPage'));
 const ChangePasswordPage = lazy(() => import('views/auth/ChangePassword/ChangePasswordPage'));
 const ForgotPasswordPage = lazy(() => import('views/auth/ForgotPassword/ForgotPasswordPage'));
-const ListTripRoute = lazy(() => import('views/Booking/listTripRoute'));
 
 /* eslint-disable  @typescript-eslint/naming-convention  */
 export enum ROUTER_PATH {
   'LOGIN' = '/login',
   'BOOKING' = '/booking',
+  'CONRFIRMING' = '/booking/confirming',
   'ADMIN' = '/admin',
   'ADMIN_USER' = '/admin/user',
   'ADMIN_COACH' = '/admin/coach',
@@ -54,15 +55,15 @@ export const routesConfig: RouteObject[] = [
         children: [
           {
             path: '/',
-            element: <HomePage/>,
+            element: <HomePage />,
           },
           {
             path: '/booking',
             element: <BookingPage />,
           },
           {
-            path: '/booking/trip-routes',
-            element: <ListTripRoute />,
+            path: ROUTER_PATH.CONRFIRMING,
+            element: <ConfirmingPage />,
           },
         ],
       },

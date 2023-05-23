@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Col, Row } from 'antd';
+import { useLocation, useNavigate } from 'react-router';
+import { Props as InfoCard } from 'components/TripRouteCard/index';
 
 // display seat in one side
 const oneSideSeats = (
@@ -96,27 +98,34 @@ const seats = [
 // convert input into type appropriate
 type SeatStatus = 'booked' | 'empty' | 'selected';
 
-function getSeatStatuses(seatss: boolean[]): SeatStatus[] {
-  return seatss.map((seat) => {
+function getSeatStatuses(seatss: boolean[], seatsSelectedId: number[]): SeatStatus[] {
+  return seatss.map((seat, index) => {
     if (seat) {
       return 'booked';
+    }
+    if (seatsSelectedId.includes(index)) {
+      return 'selected';
     }
     return 'empty';
   });
 }
 
 // input are  array seats, quantity, price seat
-// interface Props {
-//   seats: boolean[];
-//  quantity: number;
-//   price: number;
-// }
-const SeatSelection: React.FC = () => {
-  // edit status seats from input
-  const seatStatuses = useMemo(() => getSeatStatuses(seats), [seats]);
+interface Props {
+  infoCard: InfoCard;
+  seatsSelected: string[];
+  seatsId: number[];
+}
 
-  const [selectedSeatsId, setSelectedSeatsId] = useState<number[]>([]);
-  const [selectedSeatsArray, setSelectedSeatsArray] = useState<string[]>([]);
+const SeatSelection: React.FC<Props> = ({ infoCard, seatsSelected, seatsId }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  // edit status seats from input
+  const seatStatuses = useMemo(() => getSeatStatuses(seats, seatsId), [seats]);
+
+  const [selectedSeatsId, setSelectedSeatsId] = useState<number[]>(seatsId);
+  const [selectedSeatsArray, setSelectedSeatsArray] = useState<string[]>(seatsSelected);
+  console.log('minh2 ', infoCard);
 
   const handleSeatClick = (seatId: number, seatName: string) => {
     if (seatStatuses[seatId] === 'empty') {
@@ -132,7 +141,24 @@ const SeatSelection: React.FC = () => {
     }
   };
 
-  const totalPrice = selectedSeatsId.length * 100000;
+  const handleContinueButton = () => {
+    console.log(location.search, ' ', infoCard);
+    navigate(
+      {
+        pathname: '/booking/confirming',
+        search: `${location.search}`,
+      },
+      {
+        state: {
+          infoCard: { ...infoCard },
+          seats: selectedSeatsArray,
+          seatsId: selectedSeatsId,
+        },
+      },
+    );
+  };
+
+  const totalPrice = selectedSeatsId.length * infoCard.price;
 
   return (
     <Container>
@@ -191,9 +217,11 @@ const SeatSelection: React.FC = () => {
             Tổng tiền: <span style={{ fontSize: '18px' }}>{totalPrice.toLocaleString()}</span> VND
           </div>
         </Col>
-        <Button type="primary" disabled={selectedSeatsId.length === 0}>
-          Tiếp tục
-        </Button>
+        {!infoCard.hiddenBtn && (
+          <Button type="primary" disabled={selectedSeatsId.length === 0} onClick={handleContinueButton}>
+            Tiếp tục
+          </Button>
+        )}
       </Footer>
     </Container>
   );
