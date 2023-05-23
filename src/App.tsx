@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 // import useUserHook from 'hooks/useUserHook';
 import { BrowserRouter } from 'react-router-dom';
 import Router from 'routes';
@@ -22,10 +22,11 @@ function App() {
   return (
     <BrowserRouter>
       <GlobalStyle />
-      <Router />
+      <Suspense fallback={<div>loading</div>}>
+        <Router />
+      </Suspense>
     </BrowserRouter>
   );
-  
 }
 
 export default App;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Checkbox } from 'antd';
 import { EnvironmentOutlined, SwapRightOutlined, WifiOutlined, RestOutlined } from '@ant-design/icons';
-import SeatSelection from './selectedCard';
+import SeatSelection from './selectSeats';
 
 export interface Props {
   id: number;
@@ -15,6 +15,7 @@ export interface Props {
   duration: string;
   departure: string;
   arrival: string;
+  hiddenBtn?: boolean;
 }
 
 const BookingInfo: React.FC<Props> = ({ ...props }) => {
@@ -64,7 +65,7 @@ const BookingInfo: React.FC<Props> = ({ ...props }) => {
           Chọn
         </CheckboxContainer>
       </RouteContainer>
-      {selected && <SeatSelection />}
+      {selected && <SeatSelection infoCard={props} seatsSelected={[]} seatsId={[]} />}
     </Container>
   );
 };
@@ -88,7 +89,6 @@ const SecondRow = styled.div`
   color: #111;
   margin: 8px 0 16px;
   font-size: 15px;
-  min-width: 200px;
   height: 28px;
   border-radius: 16px;
   padding: 5px 12px;

@@ -171,17 +171,14 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Form, Select, DatePicker, InputNumber, Button } from 'antd'
-import type { RangePickerProps } from "antd/es/date-picker";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-
+import { Form, Select, DatePicker, InputNumber, Button } from 'antd';
+import type { RangePickerProps } from 'antd/es/date-picker';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { RxCalendar } from 'react-icons/rx';
-
-
-
+import { useNavigate } from 'react-router';
 
 const SearchStyle = styled.div`
   .sectionContainer {
@@ -199,36 +196,36 @@ const SearchStyle = styled.div`
 
       .singleInput {
         .iconDiv {
-            padding: 16px 10px;
-            border-radius: 3rem;
-            background: hsl(180, 17%, 95%);
-            margin-right: 1rem;
+          padding: 16px 10px;
+          border-radius: 3rem;
+          background: hsl(180, 17%, 95%);
+          margin-right: 1rem;
 
-            .icon {
-                color: hsl(0, 0%, 12%);
-                opacity: .7;
-            }
+          .icon {
+            color: hsl(0, 0%, 12%);
+            opacity: 0.7;
+          }
         }
 
         .text {
-            h4 {
-                padding-top: 0%;
-                padding-bottom: .7rem;
-                color: hsl(0, 0%, 12%);
-                font-weight: 700;
-            }
+          h4 {
+            padding-top: 0%;
+            padding-bottom: 0.7rem;
+            color: hsl(0, 0%, 12%);
+            font-weight: 700;
+          }
 
-            input {
-                width: 95%;
-                border: none;
-                outline: none;
-                background: transparent;
+          input {
+            width: 95%;
+            border: none;
+            outline: none;
+            background: transparent;
 
-                &::placeholder {
-                    font-size: 12px;
-                    opacity: .5;
-                }
+            &::placeholder {
+              font-size: 12px;
+              opacity: 0.5;
             }
+          }
         }
       }
 
@@ -289,18 +286,23 @@ const SearchStyle = styled.div`
 `;
 
 const Search = () => {
+  const navigate = useNavigate();
 
   dayjs.extend(customParseFormat);
   const { Option } = Select;
-
 
   const config = {
     rules: [{ type: 'object' as const, required: true, message: 'Please select time!' }],
   };
 
-
   const onFinish = (values: any) => {
     console.log('Received values of form: ', values);
+
+    // link to booking
+    navigate({
+      pathname: '/booking',
+      search: `?departure=${values.start}&destination=${values.end}&date=${values.date}&quantity=${values.quantity}`,
+    });
   };
 
   // const { RangePicker } = DatePicker;
@@ -314,9 +316,9 @@ const Search = () => {
   };
 
   // eslint-disable-next-line arrow-body-style
-  const disabledDate: RangePickerProps["disabledDate"] = (current) => {
+  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
     // Can not select days before today and today
-    return current && current < dayjs().startOf("day");
+    return current && current < dayjs().startOf('day');
   };
 
   const disabledDateTime = () => ({
@@ -343,10 +345,7 @@ const Search = () => {
   return (
     <SearchStyle className="container section">
       <div className="sectionContainer grid">
-        <Form
-          name="validate_other"
-          onFinish={onFinish}
-          className="searchInputs flex">
+        <Form name="validate_other" onFinish={onFinish} className="searchInputs flex">
           {/* Single Input */}
           <div className="singleInput flex">
             <div className="iconDiv">
@@ -355,17 +354,12 @@ const Search = () => {
 
             <div className="text">
               <h4>Điểm đi</h4>
-              <Form.Item
-                name="start"
-                hasFeedback
-                rules={[{ required: true, message: 'Vui lòng chọn điểm đi!' }]}
-              >
+              <Form.Item name="start" hasFeedback rules={[{ required: true, message: 'Vui lòng chọn điểm đi!' }]}>
                 <Select placeholder="Bạn muốn đi từ đâu?">
                   <Option value="china">China</Option>
                   <Option value="usa">U.S.A</Option>
                 </Select>
               </Form.Item>
-
             </div>
           </div>
           {/* Single Input */}
@@ -376,11 +370,7 @@ const Search = () => {
 
             <div className="text">
               <h4>Điểm đến</h4>
-              <Form.Item
-                name="end"
-                hasFeedback
-                rules={[{ required: true, message: 'Vui lòng chọn điểm đến!' }]}
-              >
+              <Form.Item name="end" hasFeedback rules={[{ required: true, message: 'Vui lòng chọn điểm đến!' }]}>
                 <Select placeholder="Bạn muốn đi đến đâu?">
                   <Option value="china">China</Option>
                   <Option value="usa">U.S.A</Option>
@@ -396,19 +386,19 @@ const Search = () => {
 
             <div className="text">
               <h4>Ngày đi</h4>
-              <Form.Item name="date" {...config}
-              >
+              <Form.Item name="date" {...config}>
                 <DatePicker
                   disabledDate={disabledDate}
                   disabledTime={disabledDateTime}
-                  placeholder="Bạn muốn đi vào ngày nào?" />
+                  placeholder="Bạn muốn đi vào ngày nào?"
+                />
               </Form.Item>
               {/* <input type="text" placeholder="Bạn muốn đi vào ngày nào?" /> */}
             </div>
           </div>
 
           {/* Single Input */}
-          <div className="singleInput flex"  >
+          <div className="singleInput flex">
             <div className="iconDiv">
               <RxCalendar className="icon" />
             </div>
@@ -416,9 +406,12 @@ const Search = () => {
             <div className="text">
               <h4>Số vé muốn mua</h4>
               <Form.Item>
-                <Form.Item name="quantity" noStyle
+                <Form.Item
+                  name="quantity"
+                  noStyle
                   hasFeedback
-                  rules={[{ required: true, message: 'Vui lòng chọn số vé muốn mua!' }]}>
+                  rules={[{ required: true, message: 'Vui lòng chọn số vé muốn mua!' }]}
+                >
                   <InputNumber min={1} max={10} />
                 </Form.Item>
                 <span className="ant-form-text" style={{ marginLeft: 8 }}>
@@ -433,9 +426,8 @@ const Search = () => {
           </Button>
         </Form>
       </div>
-    </SearchStyle >
-  )
-}
-
+    </SearchStyle>
+  );
+};
 
 export default Search;
