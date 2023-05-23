@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { SiConsul } from 'react-icons/si';
@@ -153,6 +153,8 @@ const NavBar = styled.div`
   }
 
   .navBarTwo {
+    background: hsl(180, 17%, 95%);
+    
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -307,10 +309,10 @@ const NavBar = styled.div`
 `;
 
 export default function Header() {
-  const [active, setActive] = useState('navBarMenu');
-  const showNavBar = () => {
-    setActive('navBarMenu showNavBar');
-  };
+  // const [active, setActive] = useState('navBarMenu');
+  // const showNavBar = () => {
+  //   setActive('navBarMenu showNavBar');
+  // };
 
   // const removeNavBar = () => {
   //   setActive('navBarMenu ');
@@ -318,15 +320,31 @@ export default function Header() {
 
   // Thêm background vào navBarTwo khi scroll chuột
   const [noBg, addBg] = useState('navBarTwo');
-  const addBgColor = () => {
-    if (window.scrollY >= 10) {
-      addBg('navBarTwo navBar_With_Bg');
-    } else {
-      addBg('navBarTwo ');
-    }
-  };
+  // const addBgColor = () => {
+  //   if (window.scrollY >= 10) {
+  //     addBg('navBarTwo navBar_With_Bg');
+  //   } else {
+  //     addBg('navBarTwo ');
+  //   }
+  // };
 
-  window.addEventListener('scroll', addBgColor)
+  // window.addEventListener('scroll', addBgColor)
+
+  useEffect(() => {
+    const addBgColor = () => {
+      if (window.scrollY >= 10) {
+        addBg('navBarTwo navBar_With_Bg');
+      } else {
+        addBg('navBarTwo');
+      }
+    };
+  
+    window.addEventListener('scroll', addBgColor);
+  
+    return () => {
+      window.removeEventListener('scroll', addBgColor);
+    };
+  }, []);
 
   return (
     <Container>
@@ -350,13 +368,14 @@ export default function Header() {
           </button>
         </div>
 
+        {/* noBg la navbarTwo */}
         <div className={noBg}>
           <div className="logoDiv">
             <img src="/bus64.png" className="logo" alt="" />
           </div>
 
           {/* className ở đây là navBarMenu */}
-          <div className={active}>
+          <div className="navBarMenu">
             <ul className="menu flex">
               <li className="listItem">Trang chủ</li>
               <li className="listItem">Lịch trình</li>
@@ -365,7 +384,7 @@ export default function Header() {
               <li className="listItem">Hóa đơn</li>
             </ul>
           </div>
-          <button type="button" onClick={showNavBar} className="toggleIcon">
+          <button type="button"  className="toggleIcon">
             <CgMenuGridO className="icon" />
           </button>
         </div>
