@@ -11,6 +11,7 @@ const AdminLayout = lazy(() => import('layout/AdminLayout'));
 const HomePage = lazy(() => import('views/Booking/HomePage'));
 const BookingPage = lazy(() => import('views/Booking/BookingPage'));
 const ConfirmingPage = lazy(() => import('views/Booking/ConfirmingPage'));
+const InputInfoPage = lazy(() => import('views/Booking/InputInfoPage'));
 const LoginPage = lazy(() => import('views/auth/Login/LoginPage'));
 const RegisterPage = lazy(() => import('views/auth/Register/RegisterPage'));
 const ChangePasswordPage = lazy(() => import('views/auth/ChangePassword/ChangePasswordPage'));
@@ -64,6 +65,10 @@ export const routesConfig: RouteObject[] = [
           {
             path: ROUTER_PATH.CONRFIRMING,
             element: <ConfirmingPage />,
+          },
+          {
+            path: '/booking/input-info',
+            element: <InputInfoPage />,
           },
         ],
       },

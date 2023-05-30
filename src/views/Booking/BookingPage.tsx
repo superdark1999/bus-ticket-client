@@ -193,9 +193,10 @@ const BookingPage: React.FC = () => {
 };
 
 const Container = styled.div`
-  max-width: 700px;
+  width: 700px;
   background-color: white;
   margin: auto;
+  padding-top: 10rem;
 `;
 
 const StyledSelect = styled(Select)`
