@@ -14,6 +14,25 @@ const InputInfoPage: React.FC = () => {
 
   const onFinish = (values: any) => {
     console.log('inputInfoPage', values, location.state);
+    const data = location.state;
+    if (data) {
+      navigate(
+        {
+          pathname: '/booking/payment',
+          search: `${location.search}`,
+        },
+        {
+          state: {
+            infoCard: data.infoCard,
+            seats: data.seats,
+            seatsId: data.seatsId,
+            shuttle: data.shuttle,
+            infoCus: values,
+          },
+        },
+      );
+    }
+
     message.success('Submit success!');
   };
 

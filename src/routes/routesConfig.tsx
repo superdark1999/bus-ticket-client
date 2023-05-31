@@ -12,6 +12,7 @@ const HomePage = lazy(() => import('views/Booking/HomePage'));
 const BookingPage = lazy(() => import('views/Booking/BookingPage'));
 const ConfirmingPage = lazy(() => import('views/Booking/ConfirmingPage'));
 const InputInfoPage = lazy(() => import('views/Booking/InputInfoPage'));
+const PaymentPage = lazy(() => import('views/Booking/PaymentPage'));
 const LoginPage = lazy(() => import('views/auth/Login/LoginPage'));
 const RegisterPage = lazy(() => import('views/auth/Register/RegisterPage'));
 const ChangePasswordPage = lazy(() => import('views/auth/ChangePassword/ChangePasswordPage'));
@@ -69,6 +70,10 @@ export const routesConfig: RouteObject[] = [
           {
             path: '/booking/input-info',
             element: <InputInfoPage />,
+          },
+          {
+            path: '/booking/payment',
+            element: <PaymentPage />,
           },
         ],
       },
