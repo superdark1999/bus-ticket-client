@@ -1,8 +1,5 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-
-
-
 
 const HomeStyle = styled.div`
   padding-top: 10rem;
@@ -72,7 +69,6 @@ const HomeStyle = styled.div`
     }
   }
 
-
   @media screen and (min-width: 960px) {
     padding-top: 13rem;
 
@@ -85,7 +81,6 @@ const HomeStyle = styled.div`
   }
 
   @media screen and (min-width: 1024px) {
-
     .mainText {
       width: 60%;
       font-size: 25px;
@@ -108,38 +103,33 @@ const HomeStyle = styled.div`
   }
 
   @media screen and (min-width: 1440px) {
-
     .homeImage {
-      
-      
     }
   }
 `;
 
-
-
 const Home = () => {
-  useEffect(() =>{
-    
-  }, [])
+  useEffect(() => {}, []);
 
   return (
     <HomeStyle className="flex container">
       <div className="mainText">
-        <h1 data-aos='fade-up' data-aos-duration='2500'>Create Ever-lasting Memories With Us</h1>
+        <h1 data-aos="fade-up" data-aos-duration="2500">
+          Create Ever-lasting Memories With Us ---------
+        </h1>
       </div>
-  
+
       <div className="homeImage flex">
         <div className="videoDiv">
           <video src="/bus_video.mp4" autoPlay muted loop className="video">
             <track kind="" src="" label="" />
           </video>
         </div>
-  
+
         {/* <img src="/bus.png" alt="" className="bus" width="100px" /> */}
       </div>
     </HomeStyle>
-  )
-}
+  );
+};
 
 export default Home;
