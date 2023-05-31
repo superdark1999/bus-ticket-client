@@ -6,17 +6,10 @@ import styled from 'styled-components';
 import { LeftOutlined, EnvironmentOutlined, EditOutlined, RightOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { InfoSearch } from 'views/Booking/BookingPage';
-import { Props as InfoCard } from 'components/TripRouteCard/index';
+import { InfoCard } from 'components/TripRouteCard/index';
 import SeatSelection from 'components/TripRouteCard/selectSeats';
 
 const { Option } = Select;
-
-// const infoSearch: Props = {
-//   departure: 'nha trang',
-//   destination: 'sài gòn',
-//   date: '20/05/2023',
-//   quantity: 1,
-// };
 
 const options = [
   { value: 'option1', label: 'Option 1' },
@@ -28,16 +21,17 @@ const ConfirmingPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // get data from location state
   const [infoCard] = useState<InfoCard>(location.state?.infoCard || '');
   const [infoSeat] = useState({
     seats: location.state?.seats,
     seatsId: location.state?.seatsId,
   });
-  // check pick shuttle
-  const [isPick, setIsPick] = useState<boolean>(false);
+  // pick shuttle
+  const [optionPicked, setOptionPicked] = useState<string>('');
   // check pick select seats
   const [showSelectedSeats, setShowSelectedSeats] = useState(false);
-  // check path to navigate booking
+  // check path to navigate booking when reload page by path
   useEffect(() => {
     if (!location.state) {
       navigate({
@@ -47,13 +41,12 @@ const ConfirmingPage: React.FC = () => {
     }
   }, []);
 
-  // Get data from path, and state of path
+  // Get data from path
   const searchParams = new URLSearchParams(location.search);
   const infoSearch: InfoSearch = {
     departure: searchParams.get('departure') || '',
     destination: searchParams.get('destination') || '',
     date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
-    quantity: parseInt(searchParams.get('quantity') || '0', 10),
   };
 
   // content in step
@@ -63,6 +56,23 @@ const ConfirmingPage: React.FC = () => {
   const handleSelectSeats = () => {
     infoCard.hiddenBtn = true;
     setShowSelectedSeats(true);
+  };
+
+  const handleContinue = () => {
+    navigate(
+      {
+        pathname: '/booking/input-info',
+        search: `${location.search}`,
+      },
+      {
+        state: {
+          infoCard: { ...infoCard },
+          seats: infoSeat.seats,
+          seatsId: infoSeat.seatsId,
+          shuttle: optionPicked,
+        },
+      },
+    );
   };
 
   if (!location.state) return null;
@@ -118,7 +128,7 @@ const ConfirmingPage: React.FC = () => {
           <StyledDivider />
           <Row style={{ padding: '20px', flexDirection: 'column' }}>
             <Label>Điểm lên xe</Label>
-            <Select defaultValue="Chọn điểm lên xe" onChange={() => setIsPick(true)}>
+            <Select defaultValue="Chọn điểm lên xe" onChange={(value) => setOptionPicked(value)}>
               {options.map((option) => (
                 <Option key={option.value} value={option.label}>
                   {option.label}
@@ -132,7 +142,12 @@ const ConfirmingPage: React.FC = () => {
         <StyledButton type="default" style={{ marginRight: '16px' }} onClick={() => navigate(-1)}>
           <LeftOutlined /> Quay lại
         </StyledButton>
-        <StyledButton type="primary" style={{ marginLeft: '16px' }} disabled={!isPick} onClick={() => navigate(-1)}>
+        <StyledButton
+          type="primary"
+          style={{ marginLeft: '16px' }}
+          disabled={Boolean(!optionPicked)}
+          onClick={handleContinue}
+        >
           Tiếp tục <RightOutlined />
         </StyledButton>
       </Row>
@@ -141,9 +156,10 @@ const ConfirmingPage: React.FC = () => {
 };
 
 const Container = styled.div`
-  max-width: 700px;
+  width: 700px;
   background-color: white;
   margin: auto;
+  padding-top: 10rem;
 `;
 
 const StyledButton = styled(Button)`

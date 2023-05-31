@@ -4,7 +4,7 @@ import StepLine from 'components/StepLine';
 import BookingInfo from 'components/TripRouteCard';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Props as InfoCard } from 'components/TripRouteCard/index';
+import { InfoCard } from 'components/TripRouteCard/index';
 import { useLocation, useNavigate } from 'react-router';
 import moment from 'moment';
 
@@ -15,7 +15,6 @@ export interface InfoSearch {
   departure: string;
   destination: string;
   date: string;
-  quantity: number;
 }
 
 // Mock data
@@ -81,6 +80,8 @@ const tripRoutes: InfoCard[] = [
     duration: '9 tiếng',
   },
 ];
+
+// Option to select time
 const timeRanges = {
   '0': { start: 0, end: 24 },
   '1': { start: 0, end: 6 },
@@ -88,6 +89,7 @@ const timeRanges = {
   '3': { start: 12, end: 18 },
   '4': { start: 18, end: 24 },
 };
+
 const BookingPage: React.FC = () => {
   // get info from param
   const navigate = useNavigate();
@@ -98,7 +100,6 @@ const BookingPage: React.FC = () => {
     departure: searchParams.get('departure') || '',
     destination: searchParams.get('destination') || '',
     date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
-    quantity: parseInt(searchParams.get('quantity') || '0', 10),
   };
 
   const content = 0;
@@ -113,6 +114,7 @@ const BookingPage: React.FC = () => {
 
   useEffect(() => {
     // TODO: sort triproute with time
+    // call API to get data from infoSearch
 
     console.log('didmount');
     return () => {
@@ -193,9 +195,10 @@ const BookingPage: React.FC = () => {
 };
 
 const Container = styled.div`
-  max-width: 700px;
+  width: 700px;
   background-color: white;
   margin: auto;
+  padding-top: 10rem;
 `;
 
 const StyledSelect = styled(Select)`

@@ -40,9 +40,10 @@ const StyledSteps = styled(Steps)`
 
   .ant-steps-item-title {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1.5;
   }
+  width: 700px;
 `;
 
 export default StepLine;
