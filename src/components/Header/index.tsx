@@ -1,10 +1,135 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { SiConsul } from 'react-icons/si';
 import { BsPhoneVibrate } from 'react-icons/bs';
 import { AiOutlineGlobal } from 'react-icons/ai';
 import { CgMenuGridO } from 'react-icons/cg';
+
+const Container = styled.div`
+  a {
+    text-decoration: none;
+  }
+
+  li {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .section {
+    padding: 4rem 0 2rem;
+  }
+
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .icon {
+    font-size: 1.3rem;
+    cursor: pointer;
+  }
+
+  .flex {
+    display: flex;
+    align-items: center;
+  }
+
+  .grid {
+    display: grid;
+    align-items: center;
+  }
+
+  .none {
+    display: none;
+  }
+
+  .btn {
+    padding: .7rem 1.5rem;
+    background: hsl(225, 50%, 48%);
+    border: none;
+    outline: none;
+    border-radius: 3rem;
+    cursor: pointer;
+    color: hsl(0,0%, 100%);
+
+    a {
+      color: hsl(0,0%, 100%);
+      font-weight: 500;
+    }
+
+    &:hover {
+      background: hsl(225, 56%, 59%)
+    }
+  }
+
+  img, video {
+    width: 100%;
+    height: auto;
+  }
+
+  input {
+    font-size: 100%;
+    color: rgb(145,145,145);
+  }
+
+  p {
+    font-size: 13px;
+    color: rgb(145,145,145);
+    line-height: 22px;
+  }
+
+  h4 {
+    padding: 1rem 0;
+    font-weight: 700;
+    color: hsl(0,0%, 12%);
+  }
+
+  h2 {
+    font-size: 25px;
+    padding: 1rem 0;
+    color: hsl(0,0%, 12%);
+  }
+
+  @media screen and (min-width: 1024px) {
+    p {
+      font-size: 15px;
+      line-height: 25px;
+    }
+  
+    h4 {
+      font-size: 20px;
+    }
+  
+    h2 {
+      font-size: 27px;
+    }
+
+    .section {
+      padding: 6rem 0 4rem;
+    }
+  
+    .container {
+      width: 75%;
+      margin: auto;
+    }
+  }
+
+  ::selection {
+    background: hsl(225, 50%, 48%);
+    color: hsl(0, 0%, 100%);
+  }
+
+  ::webkit-scrollbar {
+    width: 10px;
+    background: hsl(0, 0%, 96%);
+  }
+
+  ::webkit-scrollbar-thumb {
+    background: hsl(225, 50%, 48%);
+    border-radius: 10px
+  }
+`
 
 const NavBar = styled.div`
   position: fixed;
@@ -28,6 +153,8 @@ const NavBar = styled.div`
   }
 
   .navBarTwo {
+    background: hsl(180, 17%, 95%);
+    
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -92,7 +219,7 @@ const NavBar = styled.div`
   .navBar_With_Bg {
     background: hsl(180, 17%, 95%);
     padding: 0.5rem 1rem;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+    box-shadow: rgba(0 , 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   }
 
 
@@ -182,10 +309,10 @@ const NavBar = styled.div`
 `;
 
 export default function Header() {
-  const [active, setActive] = useState('navBarMenu');
-  const showNavBar = () => {
-    setActive('navBarMenu showNavBar');
-  };
+  // const [active, setActive] = useState('navBarMenu');
+  // const showNavBar = () => {
+  //   setActive('navBarMenu showNavBar');
+  // };
 
   // const removeNavBar = () => {
   //   setActive('navBarMenu ');
@@ -193,56 +320,75 @@ export default function Header() {
 
   // Thêm background vào navBarTwo khi scroll chuột
   const [noBg, addBg] = useState('navBarTwo');
-  const addBgColor = () => {
-    if (window.scrollY >= 10) {
-      addBg('navBarTwo navBar_With_Bg');
-    } else {
-      addBg('navBarTwo ');
-    }
-  };
+  // const addBgColor = () => {
+  //   if (window.scrollY >= 10) {
+  //     addBg('navBarTwo navBar_With_Bg');
+  //   } else {
+  //     addBg('navBarTwo ');
+  //   }
+  // };
 
-  window.addEventListener('scroll', addBgColor)
+  // window.addEventListener('scroll', addBgColor)
+
+  useEffect(() => {
+    const addBgColor = () => {
+      if (window.scrollY >= 10) {
+        addBg('navBarTwo navBar_With_Bg');
+      } else {
+        addBg('navBarTwo');
+      }
+    };
+  
+    window.addEventListener('scroll', addBgColor);
+  
+    return () => {
+      window.removeEventListener('scroll', addBgColor);
+    };
+  }, []);
 
   return (
-    <NavBar className="flex">
-      <div className="navBarOne flex">
-        <div>
-          <SiConsul className="icon" />
+    <Container>
+      <NavBar className="flex">
+        <div className="navBarOne flex">
+          <div>
+            <SiConsul className="icon" />
+          </div>
+
+          <div className="flex">
+            <li className="flex">
+              <BsPhoneVibrate className="icon" /> Hỗ trợ
+            </li>
+            <li className="flex">
+              <AiOutlineGlobal className="icon" /> Ngôn ngữ
+            </li>
+          </div>
+
+          <button className="btn flex btnOne" type="button">
+            Đăng nhập
+          </button>
         </div>
 
-        <div className="flex">
-          <li className="flex">
-            <BsPhoneVibrate className="icon" /> Hỗ trợ
-          </li>
-          <li className="flex">
-            <AiOutlineGlobal className="icon" /> Ngôn ngữ
-          </li>
-        </div>
+        {/* noBg la navbarTwo */}
+        <div className={noBg}>
+          <div className="logoDiv">
+            <img src="/bus64.png" className="logo" alt="" />
+          </div>
 
-        <button className="btn flex btnOne" type="button">
-          Đăng nhập
-        </button>
-      </div>
-
-      <div className={noBg}>
-        <div className="logoDiv">
-          <img src="/bus64.png" className="logo" alt="" />
+          {/* className ở đây là navBarMenu */}
+          <div className="navBarMenu">
+            <ul className="menu flex">
+              <li className="listItem">Trang chủ</li>
+              <li className="listItem">Lịch trình</li>
+              <li className="listItem">Tin tức</li>
+              <li className="listItem">Liên hệ</li>
+              <li className="listItem">Hóa đơn</li>
+            </ul>
+          </div>
+          <button type="button"  className="toggleIcon">
+            <CgMenuGridO className="icon" />
+          </button>
         </div>
-
-        {/* className ở đây là navBarMenu */}
-        <div className={active}>
-          <ul className="menu flex">
-            <li className="listItem">Trang chủ</li>
-            <li className="listItem">Lịch trình</li>
-            <li className="listItem">Tin tức</li>
-            <li className="listItem">Liên hệ</li>
-            <li className="listItem">Hóa đơn</li>
-          </ul>
-        </div>
-        <button type="button" onClick={showNavBar} className="toggleIcon">
-          <CgMenuGridO className="icon" />
-        </button>
-      </div>
-    </NavBar>
+      </NavBar>
+    </Container>
   );
 }
