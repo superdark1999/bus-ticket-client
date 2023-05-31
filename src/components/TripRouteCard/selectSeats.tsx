@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Col, Row } from 'antd';
 import { useLocation, useNavigate } from 'react-router';
-import { Props as InfoCard } from 'components/TripRouteCard/index';
+import { InfoCard } from 'components/TripRouteCard/index';
 
 // display seat in one side
 const oneSideSeats = (

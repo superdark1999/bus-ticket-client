@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Form, Select, DatePicker, Button } from 'antd'
-import type { RangePickerProps } from "antd/es/date-picker";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
+import { Form, Select, DatePicker, Button } from 'antd';
+import type { RangePickerProps } from 'antd/es/date-picker';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { RxCalendar } from 'react-icons/rx';
@@ -131,7 +131,7 @@ const Search = () => {
     // link to booking
     navigate({
       pathname: '/booking',
-      search: `?departure=${values.start}&destination=${values.end}&date=${values.date}&quantity=${values.quantity}`,
+      search: `?departure=${values.start}&destination=${values.end}&date=${values.date}`,
     });
   };
 
@@ -175,17 +175,15 @@ const Search = () => {
   return (
     <SearchStyle className="container section">
       <div className="sectionContainer grid">
-
         <Form
           name="validate_other"
           onFinish={onFinish}
           className="searchInputs flex"
           style={{
-            display: "flex",
-            flexDirection: "row",
+            display: 'flex',
+            flexDirection: 'row',
           }}
         >
-
           {/* Single Input */}
           <div className="singleInput flex">
             <div className="iconDiv">

@@ -4,7 +4,7 @@ import { Checkbox } from 'antd';
 import { EnvironmentOutlined, SwapRightOutlined, WifiOutlined, RestOutlined } from '@ant-design/icons';
 import SeatSelection from './selectSeats';
 
-export interface Props {
+export interface InfoCard {
   id: number;
   timeDeparture: string;
   timeArrival: string;
@@ -18,7 +18,7 @@ export interface Props {
   hiddenBtn?: boolean;
 }
 
-const BookingInfo: React.FC<Props> = ({ ...props }) => {
+const BookingInfo: React.FC<InfoCard> = ({ ...props }) => {
   useEffect(() => {});
   const [selected, setSelected] = useState<boolean>(false);
 

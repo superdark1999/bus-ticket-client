@@ -4,7 +4,7 @@ import StepLine from 'components/StepLine';
 import BookingInfo from 'components/TripRouteCard';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Props as InfoCard } from 'components/TripRouteCard/index';
+import { InfoCard } from 'components/TripRouteCard/index';
 import { useLocation, useNavigate } from 'react-router';
 import moment from 'moment';
 
@@ -15,7 +15,6 @@ export interface InfoSearch {
   departure: string;
   destination: string;
   date: string;
-  quantity: number;
 }
 
 // Mock data
@@ -98,7 +97,6 @@ const BookingPage: React.FC = () => {
     departure: searchParams.get('departure') || '',
     destination: searchParams.get('destination') || '',
     date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
-    quantity: parseInt(searchParams.get('quantity') || '0', 10),
   };
 
   const content = 0;

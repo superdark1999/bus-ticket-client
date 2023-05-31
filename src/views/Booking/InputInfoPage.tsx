@@ -5,6 +5,12 @@ import styled from 'styled-components';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router';
 
+export interface InfoCus {
+  name: string;
+  phone: string;
+  email: string;
+}
+
 const InputInfoPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -15,6 +21,11 @@ const InputInfoPage: React.FC = () => {
   const onFinish = (values: any) => {
     console.log('inputInfoPage', values, location.state);
     const data = location.state;
+    const infoCus: InfoCus = {
+      name: values.name,
+      phone: values.phone,
+      email: values.email,
+    };
     if (data) {
       navigate(
         {
@@ -27,7 +38,7 @@ const InputInfoPage: React.FC = () => {
             seats: data.seats,
             seatsId: data.seatsId,
             shuttle: data.shuttle,
-            infoCus: values,
+            infoCus,
           },
         },
       );

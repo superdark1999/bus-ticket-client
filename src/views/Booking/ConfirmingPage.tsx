@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { LeftOutlined, EnvironmentOutlined, EditOutlined, RightOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { InfoSearch } from 'views/Booking/BookingPage';
-import { Props as InfoCard } from 'components/TripRouteCard/index';
+import { InfoCard } from 'components/TripRouteCard/index';
 import SeatSelection from 'components/TripRouteCard/selectSeats';
 
 const { Option } = Select;
@@ -28,6 +28,7 @@ const ConfirmingPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // get data from location state
   const [infoCard] = useState<InfoCard>(location.state?.infoCard || '');
   const [infoSeat] = useState({
     seats: location.state?.seats,
@@ -53,7 +54,6 @@ const ConfirmingPage: React.FC = () => {
     departure: searchParams.get('departure') || '',
     destination: searchParams.get('destination') || '',
     date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
-    quantity: parseInt(searchParams.get('quantity') || '0', 10),
   };
 
   // content in step

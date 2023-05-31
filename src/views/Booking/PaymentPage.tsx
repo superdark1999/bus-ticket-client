@@ -1,15 +1,48 @@
 import { Button, Col, Row, Typography } from 'antd';
 import StepLine from 'components/StepLine';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { LeftOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router';
+import moment from 'moment';
+import { InfoCard } from 'components/TripRouteCard/index';
+import { InfoSearch } from './BookingPage';
+import { InfoCus } from './InputInfoPage';
+
+interface InfoTicket {
+  infoSearch: InfoSearch;
+  infoCard: InfoCard;
+  infoSeat: {
+    seats: string[];
+    seatsId: number[];
+  };
+  shuttle: string;
+  infoCus: InfoCus;
+}
 
 const PaymentPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const content = 3;
-  console.log(location.state);
+
+  // get data form location
+  const searchParams = new URLSearchParams(location.search);
+  const data: InfoTicket = {
+    infoSearch: {
+      departure: searchParams.get('departure') || '',
+      destination: searchParams.get('destination') || '',
+      date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
+    },
+    infoCard: location.state?.infoCard || '',
+    infoSeat: {
+      seats: location.state?.seats,
+      seatsId: location.state?.seatsId,
+    },
+    shuttle: location.state?.shuttle,
+    infoCus: location.state?.infoCus,
+  };
+  console.log(data);
+
   return (
     <Wrapper>
       {/* Title + Step line */}
@@ -53,15 +86,15 @@ const PaymentPage: React.FC = () => {
           <Col span={12}>
             <Field>
               <SubTitle>Họ tên:</SubTitle>
-              <Typography.Text>Nguyen Anh Minh</Typography.Text>
+              <Typography.Text>{data.infoCus.name}</Typography.Text>
             </Field>
             <Field>
               <SubTitle>Số điện thoại:</SubTitle>
-              <Typography.Text>097xxxx145</Typography.Text>
+              <Typography.Text>{data.infoCus.phone}</Typography.Text>
             </Field>
             <Field>
               <SubTitle>Email:</SubTitle>
-              <Typography.Text>nguxxxxxxxxxxxxxxxxxx@gmail.com</Typography.Text>
+              <Typography.Text>{data.infoCus.email}</Typography.Text>
             </Field>
           </Col>
         </Row>
@@ -70,7 +103,7 @@ const PaymentPage: React.FC = () => {
           style={{ height: '38px', paddingLeft: '24px', borderBottom: '0.5px solid rgba(151, 151, 151, 0.5)' }}
         >
           <Typography.Title level={5} style={{ margin: '0' }}>
-            Thông tin chuyến: Nha Trang - Sài Gòn
+            Thông tin chuyến: {data.infoSearch.departure} - {data.infoSearch.destination}
           </Typography.Title>
         </Row>
         <Row
@@ -93,10 +126,14 @@ const PaymentPage: React.FC = () => {
           </Col>
           <Col span={8}>
             <Field>
-              <Typography.Text>Bến xe Nha Trang - Bến xe miền Tây </Typography.Text>
+              <Typography.Text>
+                {data.infoCard.departure} - {data.infoCard.arrival}{' '}
+              </Typography.Text>
             </Field>
             <Field>
-              <Typography.Text>00:00 01/06/2023</Typography.Text>
+              <Typography.Text>
+                {data.infoCard.timeDeparture} {data.infoSearch.date}
+              </Typography.Text>
             </Field>
             <Field>
               <Typography.Text>Bến xe phía Nam</Typography.Text>
@@ -112,10 +149,10 @@ const PaymentPage: React.FC = () => {
           </Col>
           <Col span={8} style={{ paddingLeft: '24px' }}>
             <Field>
-              <Typography.Text>1</Typography.Text>
+              <Typography.Text>{data.infoSeat.seatsId.length}</Typography.Text>
             </Field>
             <Field>
-              <Typography.Text>B16</Typography.Text>
+              <Typography.Text>{data.infoSeat.seats.join(', ')}</Typography.Text>
             </Field>
           </Col>
         </Row>
@@ -131,15 +168,19 @@ const PaymentPage: React.FC = () => {
           }}
         >
           <FooterTitle>TỔNG TIỀN</FooterTitle>
-          <FooterPrice>300.000 đ</FooterPrice>
+          <FooterPrice>{(data.infoCard.price * data.infoSeat.seatsId.length).toLocaleString()} VND</FooterPrice>
         </Row>
       </Container>
       <Row style={{ flexFlow: 'row' }}>
         <StyledButton type="default" style={{ marginRight: '16px' }} onClick={() => navigate(-1)}>
           <LeftOutlined /> Quay lại
         </StyledButton>
-        <StyledButton type="primary" style={{ marginLeft: '16px' }} onClick={() => navigate(-1)}>
-          Tiếp tục <RightOutlined />
+        <StyledButton
+          type="primary"
+          style={{ marginLeft: '16px', paddingRight: '0', backgroundColor: '#00603d', fontWeight: 'bold' }}
+          onClick={() => navigate(-1)}
+        >
+          Thanh toán
         </StyledButton>
       </Row>
     </Wrapper>
@@ -187,6 +228,7 @@ const StyledButton = styled(Button)`
   padding-right: 36px;
   margin: 10px 0 50px;
   height: 40px;
+  font-size: 16px;
 `;
 
 export default PaymentPage;
