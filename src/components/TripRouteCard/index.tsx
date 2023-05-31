@@ -26,7 +26,7 @@ const BookingInfo: React.FC<InfoCard> = ({ ...props }) => {
     setSelected(!selected);
 
     // TODO: call API to get list seat
-    // Transmitting the seating list, quantity, and price to SeatSelection component.
+    // Transmitting the seating list, and price to SeatSelection component.
   };
   return (
     <Container selected={selected}>

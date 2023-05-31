@@ -1,76 +1,27 @@
-import { Button, Col, Row, Typography, message } from 'antd';
-import StepLine from 'components/StepLine';
-import React from 'react';
-import styled from 'styled-components';
-import { LeftOutlined } from '@ant-design/icons';
+import { Button, Col, Row, Typography } from 'antd';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import moment from 'moment';
-import { InfoCard } from 'components/TripRouteCard/index';
-import { InfoSearch } from './BookingPage';
-import { InfoCus } from './InputInfoPage';
+import styled from 'styled-components';
+import { InfoPayment } from './PaymentPage';
 
-export interface InfoPayment {
-  infoSearch: InfoSearch;
-  infoCard: InfoCard;
-  infoSeat: {
-    seats: string[];
-    seatsId: number[];
-  };
-  shuttle: string;
-  infoCus: InfoCus;
-}
-
-const PaymentPage: React.FC = () => {
+const TicketPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const content = 3;
+  useEffect(() => {});
 
-  // get data form location
-  const searchParams = new URLSearchParams(location.search);
-  const data: InfoPayment = {
-    infoSearch: {
-      departure: searchParams.get('departure') || '',
-      destination: searchParams.get('destination') || '',
-      date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
-    },
-    infoCard: location.state?.infoCard || '',
+  const data: InfoPayment = location.state?.data || {
+    infoSearch: '',
+    infoCard: '',
     infoSeat: {
-      seats: location.state?.seats,
-      seatsId: location.state?.seatsId,
+      seats: [],
+      seatsId: [],
     },
-    shuttle: location.state?.shuttle,
-    infoCus: location.state?.infoCus,
-  };
-  console.log(data);
-
-  const handlePaymentBtn = () => {
-    // TODO: call API to create a ticket, return ticket code
-
-    message.success('Submit success!');
-    const ticketCode = '123456'; // use alternate for real database
-    navigate(
-      {
-        pathname: '/ticket',
-        search: `?code=${ticketCode}`,
-      },
-      {
-        state: {
-          data,
-        },
-      },
-    );
+    shuttle: '',
+    infoCus: '',
   };
 
   return (
     <Wrapper>
-      {/* Title + Step line */}
-      <Row style={{ fontSize: '24px', fontWeight: 'bold', margin: 'auto', paddingBottom: '20px', width: '700px' }}>
-        THÔNG TIN KHÁCH HÀNG
-      </Row>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <StepLine currentStep={content} />
-      </div>
-      {/* Info buy ticket */}
       <Container>
         <Row
           justify="center"
@@ -83,15 +34,32 @@ const PaymentPage: React.FC = () => {
           }}
         >
           <Typography.Title level={5} style={{ margin: '0', color: '#fff' }}>
-            THÔNG TIN MUA VÉ
+            THÔNG TIN VÉ
           </Typography.Title>
         </Row>
+        <div
+          style={{
+            backgroundColor: '#fff',
+            borderBottom: '0.5px solid rgba(151, 151, 151, 0.5)',
+            padding: '10px 0',
+          }}
+        >
+          <Row justify="center">
+            <Typography.Title level={4} style={{ color: 'red' }}>
+              Mã vé: 123456
+            </Typography.Title>
+          </Row>
+          <Row justify="center">
+            <img src="/QR_code.webp" alt="qr_code" width="150px" height="150px" />
+          </Row>
+        </div>
+
         <Row
           align="middle"
           style={{ height: '38px', paddingLeft: '24px', borderBottom: '0.5px solid rgba(151, 151, 151, 0.5)' }}
         >
           <Typography.Title level={5} style={{ margin: '0' }}>
-            Thông tin khách hàng
+            Thông tin liên hệ
           </Typography.Title>
         </Row>
         <Row
@@ -121,7 +89,7 @@ const PaymentPage: React.FC = () => {
           style={{ height: '38px', paddingLeft: '24px', borderBottom: '0.5px solid rgba(151, 151, 151, 0.5)' }}
         >
           <Typography.Title level={5} style={{ margin: '0' }}>
-            Thông tin chuyến: {data.infoSearch.departure} - {data.infoSearch.destination}
+            Thông tin chuyến
           </Typography.Title>
         </Row>
         <Row
@@ -142,7 +110,7 @@ const PaymentPage: React.FC = () => {
               <SubTitle>Điểm lên xe:</SubTitle>
             </Field>
           </Col>
-          <Col span={10}>
+          <Col span={11}>
             <Field>
               <Typography.Text>
                 {data.infoCard.departure} - {data.infoCard.arrival}
@@ -165,7 +133,7 @@ const PaymentPage: React.FC = () => {
               <SubTitle>Số ghế:</SubTitle>
             </Field>
           </Col>
-          <Col span={6} style={{ paddingLeft: '24px' }}>
+          <Col span={5} style={{ paddingLeft: '24px' }}>
             <Field>
               <Typography.Text>{data.infoSeat.seatsId.length}</Typography.Text>
             </Field>
@@ -189,16 +157,9 @@ const PaymentPage: React.FC = () => {
           <FooterPrice>{(data.infoCard.price * data.infoSeat.seatsId.length).toLocaleString()} VND</FooterPrice>
         </Row>
       </Container>
-      <Row style={{ flexFlow: 'row' }}>
-        <StyledButton type="default" style={{ marginRight: '16px' }} onClick={() => navigate(-1)}>
-          <LeftOutlined /> Quay lại
-        </StyledButton>
-        <StyledButton
-          type="primary"
-          style={{ marginLeft: '16px', paddingRight: '0', backgroundColor: '#00603d', fontWeight: 'bold' }}
-          onClick={handlePaymentBtn}
-        >
-          Thanh toán
+      <Row justify="center">
+        <StyledButton type="primary" style={{ paddingRight: '0', width: '50%' }} onClick={() => navigate('/')}>
+          Mua vé khác
         </StyledButton>
       </Row>
     </Wrapper>
@@ -206,15 +167,13 @@ const PaymentPage: React.FC = () => {
 };
 
 const Wrapper = styled.div`
-  max-width: 936px;
-  width: 100vw;
+  width: 700px;
   background-color: white;
   margin: auto;
   padding-top: 10rem;
 `;
 
 const Container = styled.div`
-  margin: 20px 0;
   background-color: #f5f5f5;
   border: 1px solid rgba(151, 151, 151, 0.5);
   border-radius: 8px;
@@ -250,4 +209,4 @@ const StyledButton = styled(Button)`
   font-size: 16px;
 `;
 
-export default PaymentPage;
+export default TicketPage;

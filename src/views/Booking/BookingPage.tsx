@@ -80,6 +80,8 @@ const tripRoutes: InfoCard[] = [
     duration: '9 tiếng',
   },
 ];
+
+// Option to select time
 const timeRanges = {
   '0': { start: 0, end: 24 },
   '1': { start: 0, end: 6 },
@@ -87,6 +89,7 @@ const timeRanges = {
   '3': { start: 12, end: 18 },
   '4': { start: 18, end: 24 },
 };
+
 const BookingPage: React.FC = () => {
   // get info from param
   const navigate = useNavigate();
@@ -111,6 +114,7 @@ const BookingPage: React.FC = () => {
 
   useEffect(() => {
     // TODO: sort triproute with time
+    // call API to get data from infoSearch
 
     console.log('didmount');
     return () => {

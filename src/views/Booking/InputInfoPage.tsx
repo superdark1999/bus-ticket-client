@@ -1,6 +1,6 @@
 import { Button, Checkbox, Col, Form, Input, Row, Typography, message } from 'antd';
 import StepLine from 'components/StepLine';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router';
@@ -43,12 +43,6 @@ const InputInfoPage: React.FC = () => {
         },
       );
     }
-
-    message.success('Submit success!');
-  };
-
-  const onFinishFailed = () => {
-    message.error('Submit failed!');
   };
 
   return (
@@ -65,7 +59,7 @@ const InputInfoPage: React.FC = () => {
         {/* Input info */}
         <Col span={12}>
           <InputContainer>
-            <Form form={form} layout="vertical" onFinish={onFinish} onFinishFailed={onFinishFailed}>
+            <Form form={form} layout="vertical" onFinish={onFinish}>
               <TitleText>THÔNG TIN HÀNH KHÁCH</TitleText>
               <FormItem
                 name="name"

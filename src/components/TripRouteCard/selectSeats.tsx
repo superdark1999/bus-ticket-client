@@ -4,6 +4,7 @@ import { Button, Col, Row } from 'antd';
 import { useLocation, useNavigate } from 'react-router';
 import { InfoCard } from 'components/TripRouteCard/index';
 
+// TODO: add new type bus (now has limousine)
 // display seat in one side
 const oneSideSeats = (
   start: number,
@@ -163,9 +164,6 @@ const SeatSelection: React.FC<Props> = ({ infoCard, seatsSelected, seatsId }) =>
   return (
     <Container>
       <Wrapper>
-        {/* <Header>
-          <Schedule>Lịch trình chuyến đi</Schedule>
-        </Header> */}
         <SeatContainer>
           <Row
             style={{
@@ -235,19 +233,6 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 24px;
 `;
-
-// const Header = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   margin-bottom: 24px;
-// `;
-
-// const Schedule = styled.h1`
-//   font-size: 24px;
-//   font-weight: bold;
-//   margin: 0;
-// `;
 
 const Title = styled.h2`
   font-size: 18px;
