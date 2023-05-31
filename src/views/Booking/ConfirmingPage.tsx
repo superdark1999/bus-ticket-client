@@ -11,13 +11,6 @@ import SeatSelection from 'components/TripRouteCard/selectSeats';
 
 const { Option } = Select;
 
-// const infoSearch: Props = {
-//   departure: 'nha trang',
-//   destination: 'sài gòn',
-//   date: '20/05/2023',
-//   quantity: 1,
-// };
-
 const options = [
   { value: 'option1', label: 'Option 1' },
   { value: 'option2', label: 'Option 2' },
