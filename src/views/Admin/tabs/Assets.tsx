@@ -4,6 +4,7 @@ import { ColumnsType, TableProps } from 'antd/es/table';
 import { v4 as uuidv4 } from 'uuid';
 import { EditFilled, DeleteFilled } from '@ant-design/icons';
 import styled from 'styled-components';
+import coachAPI from 'api/actions/coachAPI';
 
 enum ICoachModel {
   'GHE' = 'GHE',
@@ -17,7 +18,7 @@ const CoachModelLabel = {
 };
 export interface ICoach {
   id: string;
-  model: ICoachModel;
+  model: string;
   capacity: number; // số ghế
   registrationNumber: string; // biển số xe
 }
@@ -107,7 +108,15 @@ const Coach = () => {
 
     // Got data successfully
     setTableStatus('loading');
-    getListCoach(0, 100).then((data) => {
+
+    // call from mock data
+    // getListCoach(0, 100).then((data) => {
+    //   setCoachList(data);
+    //   setTableStatus('none');
+    // });
+
+    // call from api
+    coachAPI.getCoachList().then((data) => {
       setCoachList(data);
       setTableStatus('none');
     });
@@ -132,19 +141,19 @@ const Coach = () => {
     const { capacity, model, registrationNumber } = values;
     const id = values.id || uuidv4();
     // Fake call api
-    const newCoach: ICoach = {
-      id,
-      capacity,
-      model,
-      registrationNumber,
-    };
+    // const newCoach: ICoach = {
+    //   id,
+    //   capacity,
+    //   model,
+    //   registrationNumber,
+    // };
     try {
-      const api =
+      const newCoach =
         type === 'create'
-          ? coachApi.createCoach(newCoach)
+          ? await coachAPI.createNewCoach(model, capacity, registrationNumber)
           : coachApi.updateCoach(id, { capacity, model, registrationNumber });
 
-      console.log('🚀 ~ file: Assets.tsx ~ line 143 ~ onFinish ~ api', api);
+      console.log('🚀 ~ file: Assets.tsx ~ line 143 ~ onFinish ~ api');
       setTableStatus('loading');
       // const res = await api;
       await delay(500);
@@ -167,12 +176,13 @@ const Coach = () => {
       setCoachList(newCoachList);
 
       message.success(type === 'create' ? 'Thêm dữ liệu thành công!' : 'Chỉnh sửa dữ liệu thành công!');
+
+      highlightRows([newCoach.id], 'update');
+      setTableStatus('none');
+      setIsOpenModal(false);
     } catch (error) {
       message.error('Có lỗi xảy ra, vui lòng thử lại!');
     }
-    highlightRows([newCoach.id], 'update');
-    setTableStatus('none');
-    setIsOpenModal(false);
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -211,7 +221,7 @@ const Coach = () => {
       title: 'Loại xe',
       dataIndex: 'model',
       key: 'id',
-      render: (_, coach) => CoachModelLabel[coach.model],
+      // render: (_, coach) => CoachModelLabel[coach.model],
     },
     {
       title: 'Số ghế',
@@ -297,7 +307,7 @@ const Coach = () => {
                 <Select
                   options={Object.keys(ICoachModel).map((modelKey) => ({
                     label: CoachModelLabel[modelKey as ICoachModel],
-                    value: modelKey,
+                    value: CoachModelLabel[modelKey as ICoachModel],
                   }))}
                 />
               </Form.Item>
