@@ -151,7 +151,7 @@ const Coach = () => {
       const newCoach =
         type === 'create'
           ? await coachAPI.createNewCoach(model, capacity, registrationNumber)
-          : coachApi.updateCoach(id, { capacity, model, registrationNumber });
+          : await coachAPI.updateCoach(id, capacity, model, registrationNumber);
 
       console.log('🚀 ~ file: Assets.tsx ~ line 143 ~ onFinish ~ api');
       setTableStatus('loading');
@@ -193,7 +193,7 @@ const Coach = () => {
     setTableStatus('loading');
     highlightRows([coach.id], 'delete');
     try {
-      await coachApi.deleteCoach(coach.id);
+      await coachAPI.deleteCoach(coach.id);
       message.success(`Xóa thành công xe có biển số: ${coach.registrationNumber}`);
       const newCoachList = coachList.filter((item) => item.id !== coach.id);
       setCoachList(newCoachList);
