@@ -30,15 +30,6 @@ export interface ITripRoute {
 // }
 
 export type TripRouteData = ITripRoute & ICoach & ITrip;
-// interface TripRouteData {
-//   id: number;
-//   origin: string;
-//   destination: string;
-//   departureTime: any;
-//   registrationNumber: string;
-//   capacity: number;
-//   status: string;
-// }
 
 // Call api to get data later, now mock it
 const tripRouteListMock: TripRouteData[] = [
@@ -197,7 +188,7 @@ const TripRoute = () => {
     // get trip route
     adminTripRoute.getTripRouteList().then((res) => {
       console.log('🚀 ~ file: TripRoute.tsx:199 ~ adminTripRoute.getTripRouteList ~ res:', res);
-      settripRouteList(res);
+      settripRouteList(res.reverse());
     });
 
     // get trip list to select, get 1000 because it maybe include all item
@@ -272,7 +263,7 @@ const TripRoute = () => {
         console.log('🚀 ~ file: TripRoute.tsx:272 ~ .then ~ tripRoute:', tripRoute);
         const newtripRouteList = [tripRoute, ...tripRouteList];
         // Update data/ui
-        settripRouteList(newtripRouteList as any);
+        settripRouteList(newtripRouteList);
         setIsAddingtripRouteOpen(false);
       })
       .catch((e) => {
@@ -286,13 +277,23 @@ const TripRoute = () => {
 
   // Handle table component
   const columns: ColumnsType<TripRouteData> = [
+    // {
+    //   title: 'Tuyến đường',
+    //   render: (record) => (
+    //     <span>
+    //       {record.origin} --{'>'} {record.destination}
+    //     </span>
+    //   ),
+    //   key: 'id',
+    // },
     {
-      title: 'Tuyến đường',
-      render: (record) => (
-        <span>
-          {record.origin} --{'>'} {record.destination}
-        </span>
-      ),
+      title: 'Điểm đi',
+      dataIndex: 'origin',
+      key: 'id',
+    },
+    {
+      title: 'Đến đến',
+      dataIndex: 'destination',
       key: 'id',
     },
     {
@@ -306,7 +307,7 @@ const TripRoute = () => {
       key: 'id',
     },
     {
-      title: 'Số Lượng Khách/Số chỗ',
+      title: 'Số Khách/Số chỗ',
       render: (record) => (
         <span>
           {record.bookedSeat.filter((item: boolean) => item).length}/{record.capacity}
@@ -401,7 +402,7 @@ const TripRoute = () => {
                 ...col,
                 onCell: (record: TripRouteData) => ({
                   onClick: () => {
-                    navigate(`/admin/coach/${record.id}`, { state: { record } });
+                    navigate(`/admin/coach/${record.id}`, { state: { record, tripList } });
                   },
                 }),
               }))}

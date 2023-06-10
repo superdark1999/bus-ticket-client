@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, DatePicker, Form, Input, Modal, Select } from 'antd';
+import { Button, DatePicker, Form, Input, Modal, Select, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import Table, { ColumnsType } from 'antd/es/table';
 import { useLocation, useParams, useNavigate } from 'react-router';
 import { LeftOutlined } from '@ant-design/icons';
+import adminTripRoute from 'api/actions/tripRouteAPI';
+import moment from 'moment';
 import { TripRouteData } from './TripRoute';
+import { ITrip } from './Trip';
 
 interface DetailsProps {
   coachId: string;
 }
 
-interface TripRouteDetail {
-  from: string;
-  to: string;
-  departureTime: any;
-  estimatedTime: any;
-  distance: string;
-  // licensePlate: string;
-  passengerAmount: number;
-  // status: string;
-  ticketPrice: number;
-}
+// interface TripRouteDetail {
+//   from: string;
+//   to: string;
+//   departureTime: any;
+//   estimatedTime: any;
+//   distance: string;
+//   // licensePlate: string;
+//   passengerAmount: number;
+//   // status: string;
+//   ticketPrice: number;
+// }
 
 interface InfoCustomer {
   id: number;
@@ -32,9 +35,9 @@ interface InfoCustomer {
 }
 
 // Mock data
-const stationList = ['Sài Gòn', 'Quảng Trị', 'Bình Dương', 'Đồng Nai', 'Vùng Tàu', 'Long An'];
-const statusList = ['Đang Chờ', 'Đang Chạy', 'Đã Hủy', 'Hoàn Thành'];
-const licensePlate = '74F1-12345';
+// const stationList = ['Sài Gòn', 'Quảng Trị', 'Bình Dương', 'Đồng Nai', 'Vùng Tàu', 'Long An'];
+// const statusList = ['Đang Chờ', 'Đang Chạy', 'Đã Hủy', 'Hoàn Thành'];
+// const licensePlate = '74F1-12345';
 const customerList = [
   {
     id: 1,
@@ -84,28 +87,24 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
   const { id } = useParams();
   const location = useLocation();
   const data: TripRouteData = location.state.record;
+  const tList: ITrip[] = location.state.tripList;
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [coachDetail, setCoachDetail] = useState<TripRouteDetail>({
-    from: data.origin,
-    to: data.destination,
-    departureTime: dayjs(data.departureTime),
-    estimatedTime: '',
-    distance: '',
-    passengerAmount: data.capacity,
-    ticketPrice: 0,
-  });
+  const [tripRouteDetail, settripRouteDetail] = useState<TripRouteData>(data);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isStatus] = useState(dayjs(tripRouteDetail.departureTime, 'HH:mm DD/MM/YYYY').unix() <= dayjs().unix());
+
+  const stationList = tList.map((trip) => trip.destination);
+  const uniqueStationList = stationList.filter((item, index, self) => self.indexOf(item) === index);
 
   // Handle form
   const [form] = Form.useForm();
 
   useEffect(() => {
-    // TODO: call API to get coach detail from ID
-    // now data miss distance, estimatedTime, ticketPrice
+    // create list to select origin and destination
 
     console.log('id ', id, coachId);
     console.log('record ', data);
@@ -113,8 +112,8 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
 
   // Calculate totalAmount
   useEffect(() => {
-    setTotalAmount(coachDetail.ticketPrice * coachDetail.passengerAmount);
-  }, [coachDetail.ticketPrice, coachDetail.passengerAmount]);
+    setTotalAmount(tripRouteDetail.price * tripRouteDetail.bookedSeat.filter((item: boolean) => item).length);
+  }, []);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -122,40 +121,35 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
 
   const handleCancel = () => {
     setIsEditing(false);
-    form.setFieldsValue(coachDetail);
+    form.resetFields();
+    // form.setFieldsValue(tripRouteDetail);
   };
 
   const handleSubmit = async (values: any) => {
     console.log(values);
     setIsEditing(false);
 
-    // Handle store new detail
-    const newCoachDetail: TripRouteDetail = {
-      from: values.from,
-      to: values.to,
-      departureTime: values.departureTime,
-      estimatedTime: values.estimatedTime,
-      distance: values.distance,
-      // status: values.status,
-      passengerAmount: Number(values.passengerAmount),
-      ticketPrice: Number(values.ticketPrice),
-    };
-    setCoachDetail(newCoachDetail);
+    const durationTrip = tripRouteDetail.duration;
+    const date = moment(new Date(values.departureTime)).add(durationTrip, 'minute');
 
-    // TODO: Call API to store in database
-    // try {
-    //   const response = await fetch("your-api-url", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(newCoachDetail),
-    //   });
-    //   const data = await response.json();
-    //   console.log(data);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    await adminTripRoute
+      .updateTripRoute(id || '', {
+        origin: values.from,
+        destination: values.to,
+        departureTime: values.departureTime.format('HH:mm DD/MM/YYYY'),
+        arrivalTime: date.format('HH:mm DD/MM/YYYY'),
+      })
+      .then((res) => {
+        const newCoachDetail: TripRouteData = {
+          ...tripRouteDetail,
+          ...res,
+        };
+        settripRouteDetail(newCoachDetail);
+        console.log('🚀 ~ file: DetailTripRoute.tsx:149 ~ .then ~ newCoachDetail:', newCoachDetail);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   };
 
   // Handle modal table
@@ -193,23 +187,25 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
         layout="vertical"
         onFinish={handleSubmit}
         initialValues={{
-          from: coachDetail.from,
-          to: coachDetail.to,
-          departureTime: coachDetail.departureTime,
-          estimatedTime: coachDetail.estimatedTime,
-          distance: coachDetail.distance,
-          // status: coachDetail.status,
-          passengerAmount: coachDetail.passengerAmount,
-          ticketPrice: coachDetail.ticketPrice,
+          from: tripRouteDetail.origin,
+          to: tripRouteDetail.destination,
+          departureTime: dayjs(tripRouteDetail.departureTime, 'HH:mm DD/MM/YYYY'),
+          estimatedTime: tripRouteDetail.duration,
+          model: tripRouteDetail.model,
+          status: isStatus ? 'Đã hoàn thành' : 'Đang chờ',
+          passengerAmount: tripRouteDetail.bookedSeat.filter((item: boolean) => item).length,
+          ticketPrice: tripRouteDetail.price,
         }}
         form={form}
       >
         <InfoWrapper>
-          <Title>Thông tin chuyến xe {licensePlate}</Title>
+          <Title>Thông tin chuyến xe {tripRouteDetail.registrationNumber}</Title>
           {!isEditing ? (
-            <Button type="primary" onClick={handleEditClick}>
-              Chỉnh sửa
-            </Button>
+            <Tooltip title={isStatus ? 'Chuyến xe đã hoàn thành' : ''}>
+              <Button type="primary" onClick={handleEditClick} disabled={isStatus}>
+                Chỉnh sửa
+              </Button>
+            </Tooltip>
           ) : (
             <WrappButton>
               <Button type="primary" htmlType="submit">
@@ -225,7 +221,7 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
           <FormItem label="Điểm đi:" name="from" rules={[{ required: true, message: 'Chưa chọn điểm đi' }]}>
             <Select
               showSearch
-              options={stationList.map((station) => ({
+              options={uniqueStationList.map((station) => ({
                 value: station,
                 label: station,
               }))}
@@ -238,7 +234,7 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
           <FormItem label="Điểm đến:" name="to" rules={[{ required: true, message: 'Chưa chọn điểm đến' }]}>
             <Select
               showSearch
-              options={stationList.map((station) => ({
+              options={uniqueStationList.map((station) => ({
                 value: station,
                 label: station,
               }))}
@@ -262,30 +258,20 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
               disabled={!isEditing}
             />
           </FormItem>
-          <FormItem label="Thời gian dự kiến:" name="estimatedTime">
-            <Input disabled={!isEditing} />
+          <FormItem label="Thời gian dự kiến (phút):" name="estimatedTime">
+            <Input disabled />
           </FormItem>
-          <FormItem label="Độ dài quãng đường:" name="distance">
-            <Input disabled={!isEditing} />
+          <FormItem label="Loại xe:" name="model">
+            <Input disabled />
           </FormItem>
           <FormItem label="Trạng thái:" name="status" rules={[{ required: true, message: 'Chưa chọn trạng thái ' }]}>
-            <Select
-              showSearch
-              options={statusList.map((status) => ({
-                value: status,
-                label: status,
-              }))}
-              filterSort={(optA, optB) =>
-                (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
-              }
-              disabled={!isEditing}
-            />
+            <Input disabled />
           </FormItem>
           <FormItem label="Số lượng hành khách:" name="passengerAmount">
-            <Input disabled={!isEditing} type="number" />
+            <Input disabled type="number" />
           </FormItem>
-          <FormItem label="Giá vé:" name="ticketPrice">
-            <Input disabled={!isEditing} type="number" />
+          <FormItem label="Giá vé (VND):" name="ticketPrice">
+            <Input disabled type="number" />
           </FormItem>
           <TotalAmount>Tổng số tiền: {totalAmount}</TotalAmount>
         </FormContainer>
@@ -301,13 +287,8 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
       </ButtonRow>
 
       <Modal
-        title={
-          typeof coachDetail.departureTime.format === 'function'
-            ? `${licensePlate} - ${coachDetail.from} - ${coachDetail.to} - ${coachDetail.departureTime.format(
-                'HH:mm DD/MM/YYYY',
-              )}`
-            : `${licensePlate} - ${coachDetail.from} - ${coachDetail.to} - `
-        }
+        title={`${tripRouteDetail.registrationNumber} - ${tripRouteDetail.origin} - ${tripRouteDetail.destination} -
+         ${tripRouteDetail.departureTime}`}
         open={isOpenModal}
         onCancel={() => setIsOpenModal(false)}
         onOk={() => setIsOpenModal(false)}
