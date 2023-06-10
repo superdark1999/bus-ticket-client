@@ -19,7 +19,7 @@ interface TripRouteDetail {
   distance: string;
   // licensePlate: string;
   passengerAmount: number;
-  status: string;
+  // status: string;
   ticketPrice: number;
 }
 
@@ -94,7 +94,6 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
     departureTime: dayjs(data.departureTime),
     estimatedTime: '',
     distance: '',
-    status: data.status,
     passengerAmount: data.capacity,
     ticketPrice: 0,
   });
@@ -137,7 +136,7 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
       departureTime: values.departureTime,
       estimatedTime: values.estimatedTime,
       distance: values.distance,
-      status: values.status,
+      // status: values.status,
       passengerAmount: Number(values.passengerAmount),
       ticketPrice: Number(values.ticketPrice),
     };
@@ -199,7 +198,7 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
           departureTime: coachDetail.departureTime,
           estimatedTime: coachDetail.estimatedTime,
           distance: coachDetail.distance,
-          status: coachDetail.status,
+          // status: coachDetail.status,
           passengerAmount: coachDetail.passengerAmount,
           ticketPrice: coachDetail.ticketPrice,
         }}
