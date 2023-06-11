@@ -2,17 +2,15 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Checkbox } from 'antd';
 import { EnvironmentOutlined, SwapRightOutlined, WifiOutlined, RestOutlined } from '@ant-design/icons';
+import { TripRouteData } from 'views/Admin/tabs/TripRoute';
 import SeatSelection from './selectSeats';
 
-export interface InfoCard {
-  id: number;
+export interface InfoCard extends TripRouteData {
   timeDeparture: string;
   timeArrival: string;
-  price: number;
   type: string;
   seatsAvailable: number;
   distance: string;
-  duration: string;
   departure: string;
   arrival: string;
   hiddenBtn?: boolean;
@@ -40,7 +38,7 @@ const BookingInfo: React.FC<InfoCard> = ({ ...props }) => {
         </Amenities>
       </FirstRow>
       <SecondRow>
-        {props.price}đ
+        {props.price.toLocaleString()}đ
         <Dot />
         {props.type}
         <Dot />
@@ -51,9 +49,7 @@ const BookingInfo: React.FC<InfoCard> = ({ ...props }) => {
           <RouteLine>
             <LocationIcon />
             {props.departure}
-            <Distance>
-              Xe tuyến: {props.distance} = {props.duration}
-            </Distance>
+            <Distance>{/* Xe tuyến: {props.distance} = {props.duration} */}</Distance>
           </RouteLine>
           <RouteLine>
             <LocationIcon />
@@ -139,6 +135,7 @@ const Distance = styled.div`
   font-size: 13px;
   color: #00613d;
   line-height: 48px;
+  height: 30px;
 `;
 
 const CheckboxContainer = styled.div`

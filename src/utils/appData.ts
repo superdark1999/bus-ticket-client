@@ -14,7 +14,7 @@ export interface ICityLocation extends ILocation {
   Districts: IDistrictLocation[];
 }
 
-export const getLocationData = async (): Promise<ICityLocation[]> => {
+const getLocationData = async (): Promise<ICityLocation[]> => {
   const promise = new Promise<ICityLocation[]>((res) => {
     $.getJSON('/data/location.json', (data: any) => {
       res(data);
@@ -24,7 +24,7 @@ export const getLocationData = async (): Promise<ICityLocation[]> => {
   return promise;
 };
 
-export const getLocationName = (data: ICityLocation[], cityId: string, districtId?: string, wardId?: string) => {
+const getLocationName = (data: ICityLocation[], cityId: string, districtId?: string, wardId?: string) => {
   const city = data.find((item) => item.Id === cityId);
   const district = city?.Districts.find((item) => item.Id === districtId);
   const ward = district?.Wards.find((item) => item.Id === wardId);
@@ -38,7 +38,10 @@ export const getLocationName = (data: ICityLocation[], cityId: string, districtI
   return name;
 };
 
+const isSubstring = (parent: string, child: string) => parent.toLocaleLowerCase().includes(child.toLocaleLowerCase());
+
 export const LocationCommon = {
   getLocationData,
   getLocationName,
+  isSubstring,
 };

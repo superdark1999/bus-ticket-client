@@ -30,6 +30,7 @@
     "react-router": "^6.9.0",
     "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1",
+    "redux-logger": "^3.0.6",
     "styled-components": "^5.3.9",
     "typescript": "^5.0.2",
     "uuid": "^9.0.0",
@@ -64,6 +65,7 @@
   },
   "devDependencies": {
     "@types/jquery": "^3.5.16",
+    "@types/redux-logger": "^3.0.9",
     "@types/styled-components": "^5.1.26",
     "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
