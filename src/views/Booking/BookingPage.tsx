@@ -7,6 +7,12 @@ import styled from 'styled-components';
 import { InfoCard } from 'components/TripRouteCard/index';
 import { useLocation, useNavigate } from 'react-router';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
+import { appSelector } from 'state/app/reducer';
+import { useAppDispatch } from 'state';
+import { fetchAllTripRoutes } from 'state/app/action';
+import { LocationCommon } from 'utils/appData';
+import { CoachModelLabel, ICoachModel } from 'views/Admin/tabs/Assets';
 
 const { Option } = Select;
 
@@ -17,69 +23,27 @@ export interface InfoSearch {
   date: string;
 }
 
-// Mock data
-const tripRoutes: InfoCard[] = [
-  {
-    id: 1,
-    timeDeparture: '8:00',
-    timeArrival: '12:00',
-    price: 289000,
-    seatsAvailable: 21,
-    departure: 'Bến xe Phía Nam Nha Trang',
-    arrival: ' Bến xe Miền Tây',
-    type: 'Ghế',
-    distance: '200km',
-    duration: '9 tiếng',
-  },
-  {
-    id: 2,
-    timeDeparture: '10:00',
-    timeArrival: '14:00',
-    price: 350000,
-    seatsAvailable: 15,
-    departure: 'Bến xe Phía Nam Nha Trang',
-    arrival: ' Bến xe Miền Tây',
-    type: 'Giường',
-    distance: '200km',
-    duration: '9 tiếng',
-  },
-  {
-    id: 3,
-    timeDeparture: '12:00',
-    timeArrival: '16:00',
-    price: 450000,
-    seatsAvailable: 8,
-    departure: 'Bến xe Phía Nam Nha Trang',
-    arrival: ' Bến xe Miền Tây',
-    type: 'Limousine',
-    distance: '200km',
-    duration: '9 tiếng',
-  },
-  {
-    id: 4,
-    timeDeparture: '14:00',
-    timeArrival: '18:00',
-    price: 250000,
-    seatsAvailable: 30,
-    departure: 'Bến xe Phía Nam Nha Trang',
-    arrival: ' Bến xe Miền Tây',
-    type: 'Limousine',
-    distance: '200km',
-    duration: '9 tiếng',
-  },
-  {
-    id: 5,
-    timeDeparture: '16:00',
-    timeArrival: '20:00',
-    price: 550000,
-    seatsAvailable: 5,
-    departure: 'Bến xe Phía Nam Nha Trang',
-    arrival: ' Bến xe Miền Tây',
-    type: 'Limousine',
-    distance: '200km',
-    duration: '9 tiếng',
-  },
-];
+interface CoachModelSortOption {
+  value: ICoachModel;
+  label: string;
+}
+
+enum ISortValue {
+  'ASC' = 'asc',
+  'DESC' = 'desc',
+  'NONE' = 'none',
+}
+
+const sortDefaulLabel = {
+  [ISortValue.ASC]: 'Tăng dần',
+  [ISortValue.DESC]: 'Giảm dần',
+  [ISortValue.NONE]: '',
+};
+
+interface SortDefultOption {
+  value: ISortValue;
+  label: string;
+}
 
 // Option to select time
 const timeRanges = {
@@ -93,6 +57,7 @@ const timeRanges = {
 const BookingPage: React.FC = () => {
   // get info from param
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -102,28 +67,55 @@ const BookingPage: React.FC = () => {
     date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
   };
 
+  const { tripRoutes, loading } = useSelector(appSelector);
+
   const content = 0;
 
-  const [sortPrice, setSortPrice] = useState<'asc' | 'desc' | '0'>('0');
+  const [sortPrice, setSortPrice] = useState<ISortValue>(ISortValue.NONE);
 
-  const [typeBus, setTypeBus] = useState<'Ghế' | 'Giường' | 'Limousine' | '0'>('0');
+  const [typeBus, setTypeBus] = useState<ICoachModel>(ICoachModel.NONE);
 
   const [timeSelected, setTimeSelected] = useState<0 | 1 | 2 | 3 | 4>(0);
 
-  const [routesRender, setRoutesRender] = useState<InfoCard[]>(JSON.parse(JSON.stringify(tripRoutes)));
+  const [routesRender, setRoutesRender] = useState<InfoCard[]>([]);
+
+  const [allTripRoute, setAllTripRoute] = useState<InfoCard[]>([]);
+
+  const getAllTripRoute = () => {
+    if (loading === 'succeeded' && tripRoutes.length) {
+      const tripRoutesResults: InfoCard[] = tripRoutes
+        .filter(
+          (city) =>
+            LocationCommon.isSubstring(city.origin, infoSearch.departure) &&
+            LocationCommon.isSubstring(city.destination, infoSearch.destination),
+        )
+        .map((item) => ({
+          ...item,
+          timeDeparture: item.departureTime.split(' ')[0],
+          timeArrival: item.arrivalTime.split(' ')[0],
+          seatsAvailable: item.capacity,
+          departure: item.origin,
+          arrival: item.destination,
+          type: item.model,
+          distance: '200km',
+          duration: 9,
+        }));
+      setRoutesRender(tripRoutesResults);
+      setAllTripRoute(tripRoutesResults);
+    }
+  };
 
   useEffect(() => {
-    // TODO: sort triproute with time
-    // call API to get data from infoSearch
-
-    console.log('didmount');
-    return () => {
-      console.log('unmount', Date.now());
-    };
+    if (loading === 'idle') dispatch(fetchAllTripRoutes());
+    else getAllTripRoute();
   }, []);
 
   useEffect(() => {
-    const temp: InfoCard[] = JSON.parse(JSON.stringify(tripRoutes));
+    getAllTripRoute();
+  }, [loading, tripRoutes]);
+
+  useEffect(() => {
+    const temp: InfoCard[] = [...allTripRoute];
 
     const sortRoutes =
       sortPrice === 'asc'
@@ -132,7 +124,9 @@ const BookingPage: React.FC = () => {
         ? temp.sort((a, b) => b.price - a.price)
         : temp;
 
-    let filteredRoutes = sortRoutes.filter((route) => route.type === typeBus || typeBus === '0');
+    let filteredRoutes = sortRoutes.filter(
+      (route) => typeBus === ICoachModel.NONE || route.type === CoachModelLabel[typeBus],
+    );
 
     const { start, end } = timeRanges[timeSelected];
     filteredRoutes = filteredRoutes.filter((route) => {
@@ -143,6 +137,20 @@ const BookingPage: React.FC = () => {
     setRoutesRender(filteredRoutes);
   }, [sortPrice, timeSelected, typeBus]);
 
+  const coachModelOptions: CoachModelSortOption[] = [
+    ICoachModel.GHE,
+    ICoachModel.GIUONG_NAM,
+    ICoachModel.PHONG_NAM,
+  ].map((item) => ({
+    value: item,
+    label: CoachModelLabel[item],
+  }));
+
+  const sortlOptions: SortDefultOption[] = [ISortValue.ASC, ISortValue.DESC].map((item) => ({
+    value: item,
+    label: sortDefaulLabel[item],
+  }));
+
   return (
     <Container>
       <Row style={{ fontSize: '24px', fontWeight: 'bold' }}>
@@ -152,26 +160,29 @@ const BookingPage: React.FC = () => {
       <StepLine currentStep={content} />
       <Row gutter={[16, 16]} style={{ padding: '20px 0 35px' }}>
         <Col span={6}>
-          <StyledSelect defaultValue="0" onChange={(value) => setSortPrice(value as 'asc' | 'desc' | '0')}>
-            <Option value="0">Giá</Option>
-            <Option value="asc">Thấp - Cao</Option>
-            <Option value="desc">Cao - Thấp</Option>
-          </StyledSelect>
+          <StyledSelect
+            placeholder="Giá tiền"
+            onChange={(value: any) => setSortPrice(value || ISortValue.NONE)}
+            options={sortlOptions}
+            allowClear
+          />
+        </Col>
+        <Col span={6}>
+          <StyledCoachModelSelect
+            placeholder="Loại ghế ngồi"
+            onChange={(value: any) => {
+              setTypeBus(value || ICoachModel.NONE);
+            }}
+            allowClear
+            options={coachModelOptions}
+          />
         </Col>
         <Col span={6}>
           <StyledSelect
-            defaultValue="0"
-            onChange={(value) => setTypeBus(value as '0' | 'Ghế' | 'Giường' | 'Limousine')}
+            onChange={(value) => setTimeSelected(value as 0 | 1 | 2 | 3 | 4)}
+            placeholder="Thời gian"
+            allowClear
           >
-            <Option value="0">Loại xe</Option>
-            <Option value="Ghế">Ghế</Option>
-            <Option value="Giường">Giường</Option>
-            <Option value="Limousine">Limousine</Option>
-          </StyledSelect>
-        </Col>
-        <Col span={6}>
-          <StyledSelect defaultValue="0" onChange={(value) => setTimeSelected(value as 0 | 1 | 2 | 3 | 4)}>
-            <Option value="0">Giờ</Option>
             <Option value="1">0h - 6h</Option>
             <Option value="2">6h - 12h</Option>
             <Option value="3">12h - 18h</Option>
@@ -203,7 +214,14 @@ const Container = styled.div`
 
 const StyledSelect = styled(Select)`
   width: 100%;
+  .ant-select-selector {
+    border-radius: 20px;
+    background-color: rgba(99, 114, 128, 0.1) !important;
+  }
+`;
 
+const StyledCoachModelSelect = styled(Select)`
+  width: 100%;
   .ant-select-selector {
     border-radius: 20px;
     background-color: rgba(99, 114, 128, 0.1) !important;

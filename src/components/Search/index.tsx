@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { Form, Select, DatePicker, Button } from 'antd';
@@ -9,6 +9,11 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { RxCalendar } from 'react-icons/rx';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
+import { appSelector } from 'state/app/reducer';
+import { useAppDispatch } from 'state';
+import { fetchAllTripRoutes } from 'state/app/action';
+import { LocationCommon } from 'utils/appData';
 
 const SearchStyle = styled.div`
   .sectionContainer {
@@ -115,7 +120,17 @@ const SearchStyle = styled.div`
   }
 `;
 
+interface SearchOption {
+  label: string;
+  value: string;
+}
+
 const Search = () => {
+  const dispatch = useAppDispatch();
+  const { loading, tripRoutes, locationData } = useSelector(appSelector);
+  const [originOptions, setOriginOptions] = useState<SearchOption[]>([]);
+  const [desOptions, setDesOptions] = useState<SearchOption[]>([]);
+
   const navigate = useNavigate();
 
   dayjs.extend(customParseFormat);
@@ -157,20 +172,36 @@ const Search = () => {
     disabledSeconds: () => [55, 56],
   });
 
-  // const disabledRangeTime: RangePickerProps["disabledTime"] = (_, type) => {
-  //   if (type === "start") {
-  //     return {
-  //       disabledHours: () => range(0, 60).splice(4, 20),
-  //       disabledMinutes: () => range(30, 60),
-  //       disabledSeconds: () => [55, 56],
-  //     };
-  //   }
-  //   return {
-  //     disabledHours: () => range(0, 60).splice(20, 4),
-  //     disabledMinutes: () => range(0, 31),
-  //     disabledSeconds: () => [55, 56],
-  //   };
-  // };
+  useEffect(() => {
+    if (loading === 'idle') {
+      dispatch(fetchAllTripRoutes());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loading === 'succeeded' && locationData.length && tripRoutes.length) {
+      const listOrigin = locationData.filter((city) =>
+        tripRoutes.some((tripRoute) => tripRoute.origin.toLocaleLowerCase().includes(city.Name.toLocaleLowerCase())),
+      );
+      const listDes = locationData.filter((city) =>
+        tripRoutes.some((tripRoute) =>
+          tripRoute.destination.toLocaleLowerCase().includes(city.Name.toLocaleLowerCase()),
+        ),
+      );
+      setOriginOptions(
+        listOrigin.map((item) => ({
+          value: item.Name,
+          label: item.Name,
+        })),
+      );
+      setDesOptions(
+        listDes.map((item) => ({
+          value: item.Name,
+          label: item.Name,
+        })),
+      );
+    }
+  }, [loading, tripRoutes, locationData]);
 
   return (
     <SearchStyle className="container section">
@@ -192,11 +223,15 @@ const Search = () => {
 
             <div className="text">
               <h4>Điểm đi</h4>
-              <Form.Item name="start" hasFeedback rules={[{ required: true, message: 'Vui lòng chọn điểm đi!' }]}>
-                <Select placeholder="Bạn muốn đi từ đâu?">
-                  <Option value="china">China</Option>
-                  <Option value="usa">U.S.A</Option>
-                </Select>
+              <Form.Item name="start" rules={[{ required: true, message: 'Vui lòng chọn điểm đi!' }]}>
+                <Select
+                  placeholder="Bạn muốn đi từ đâu?"
+                  showSearch
+                  filterOption={(inputValue: string, option?: SearchOption) =>
+                    LocationCommon.isSubstring(option?.value || '', inputValue)
+                  }
+                  options={originOptions}
+                />
               </Form.Item>
             </div>
           </div>
@@ -209,10 +244,14 @@ const Search = () => {
             <div className="text">
               <h4>Điểm đến</h4>
               <Form.Item name="end" hasFeedback rules={[{ required: true, message: 'Vui lòng chọn điểm đến!' }]}>
-                <Select placeholder="Bạn muốn đi đến đâu?">
-                  <Option value="china">China</Option>
-                  <Option value="usa">U.S.A</Option>
-                </Select>
+                <Select
+                  placeholder="Bạn muốn đi đến đâu?"
+                  showSearch
+                  filterOption={(inputValue: string, option?: SearchOption) =>
+                    LocationCommon.isSubstring(option?.value || '', inputValue)
+                  }
+                  options={desOptions}
+                />
               </Form.Item>
             </div>
           </div>

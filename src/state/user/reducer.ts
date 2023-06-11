@@ -1,18 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { AppState } from "state";
-import { fetchUserById } from "./action";
+import { createSlice } from '@reduxjs/toolkit';
+import { AppState } from 'state';
+import { fetchUserById } from './action';
 
-export const USER_SLICE_NAME = "user";
+export const USER_SLICE_NAME = 'user';
 interface UserState {
   email: string;
   isAdmin: boolean;
-  loading: "idle" | "pending" | "succeeded" | "failed";
+  loading: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
 const initialState = {
-  email: "",
+  email: '',
   isAdmin: false,
-  loading: "idle",
+  loading: 'idle',
 } as UserState;
 
 export const userSlice = createSlice({
@@ -25,7 +25,7 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserById.pending, (state) => {
-      state.loading = "pending";
+      state.loading = 'pending';
     });
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(fetchUserById.fulfilled, (state, action) => {
@@ -33,7 +33,7 @@ export const userSlice = createSlice({
       state.email = action.payload.email;
       state.isAdmin = action.payload.isAdmin;
 
-      state.loading = "succeeded";
+      state.loading = 'succeeded';
     });
   },
 });

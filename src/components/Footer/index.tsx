@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { TiSocialFacebook } from 'react-icons/ti'
+import { TiSocialFacebook } from 'react-icons/ti';
 import { AiFillYoutube, AiOutlineTwitter } from 'react-icons/ai';
-import { FaPinterestP } from 'react-icons/fa'
+import { FaPinterestP } from 'react-icons/fa';
 
 const Container = styled.div`
   a {
@@ -44,50 +44,51 @@ const Container = styled.div`
   }
 
   .btn {
-    padding: .7rem 1.5rem;
+    padding: 0.7rem 1.5rem;
     background: hsl(225, 50%, 48%);
     border: none;
     outline: none;
     border-radius: 3rem;
     cursor: pointer;
-    color: hsl(0,0%, 100%);
+    color: hsl(0, 0%, 100%);
 
     a {
-      color: hsl(0,0%, 100%);
+      color: hsl(0, 0%, 100%);
       font-weight: 500;
     }
 
     &:hover {
-      background: hsl(225, 56%, 59%)
+      background: hsl(225, 56%, 59%);
     }
   }
 
-  img, video {
+  img,
+  video {
     width: 100%;
     height: auto;
   }
 
   input {
     font-size: 100%;
-    color: rgb(145,145,145);
+    color: rgb(145, 145, 145);
   }
 
   p {
     font-size: 13px;
-    color: rgb(145,145,145);
+    color: rgb(145, 145, 145);
     line-height: 22px;
   }
 
   h4 {
     padding: 1rem 0;
     font-weight: 700;
-    color: hsl(0,0%, 12%);
+    color: hsl(0, 0%, 12%);
   }
 
   h2 {
     font-size: 25px;
     padding: 1rem 0;
-    color: hsl(0,0%, 12%);
+    color: hsl(0, 0%, 12%);
   }
 
   @media screen and (min-width: 1024px) {
@@ -95,11 +96,11 @@ const Container = styled.div`
       font-size: 15px;
       line-height: 25px;
     }
-  
+
     h4 {
       font-size: 20px;
     }
-  
+
     h2 {
       font-size: 27px;
     }
@@ -107,7 +108,7 @@ const Container = styled.div`
     .section {
       padding: 6rem 0 4rem;
     }
-  
+
     .container {
       width: 75%;
       margin: auto;
@@ -126,16 +127,16 @@ const Container = styled.div`
 
   ::webkit-scrollbar-thumb {
     background: hsl(225, 50%, 48%);
-    border-radius: 10px
+    border-radius: 10px;
   }
-`
+`;
 
 const FooterStyle = styled.div`
   background: hsl(180, 17%, 95%);
 
   .sectionContainer {
     gap: 2.5rem;
-    
+
     .gridOne {
       gap: 1rem;
       justify-content: center;
@@ -157,13 +158,13 @@ const FooterStyle = styled.div`
           border-radius: 10rem;
           border: 1px solid hsl(0, 0%, 83%);
           box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-          padding: .4rem;
+          padding: 0.4rem;
           color: rgb(145, 145, 145);
 
           &:hover {
             background: hsl(225, 50%, 48%);
             transform: translateY(-7px);
-            transition: .4s ease-in-out;
+            transition: 0.4s ease-in-out;
             border: 1px solid hsl(225, 50%, 48%);
             color: hsl(0, 0%, 100%);
           }
@@ -184,8 +185,8 @@ const FooterStyle = styled.div`
       li a {
         display: block;
         color: rgb(145, 145, 145);
-        transition: .4s ease-in-out;
-        padding: .3rem 0;
+        transition: 0.4s ease-in-out;
+        padding: 0.3rem 0;
 
         &:hover {
           transform: translateY(3px);
@@ -204,7 +205,6 @@ const FooterStyle = styled.div`
     text-align: center;
   }
 
-
   @media screen and (min-width: 480px) {
     .sectionContainer {
       align-items: flex-start;
@@ -220,34 +220,31 @@ const FooterStyle = styled.div`
     .sectionContainer {
       padding-top: 2rem;
       grid-template-columns: repeat(3, 1fr);
-
     }
   }
 
   @media screen and (min-width: 680px) {
     .sectionContainer {
       grid-template-columns: repeat(4, 1fr);
-
     }
   }
-`
+`;
 
 function Footer() {
   return (
     <Container>
       <FooterStyle>
         <div className="sectionContainer container grid">
-
           <div className="gridOne">
             <div className="logoDiv">
-              <img src="/bus64.png" alt="" className='logo' />
+              <img src="/bus64.png" alt="" className="logo" />
             </div>
             <p>Your mind should be stronger than your feeling, fly!</p>
             <div className="socialIcon flex">
-              <TiSocialFacebook className='icon' />
-              <AiOutlineTwitter className='icon' />
-              <AiFillYoutube className='icon' />
-              <FaPinterestP className='icon' />
+              <TiSocialFacebook className="icon" />
+              <AiOutlineTwitter className="icon" />
+              <AiFillYoutube className="icon" />
+              <FaPinterestP className="icon" />
             </div>
           </div>
 
@@ -256,12 +253,7 @@ function Footer() {
             <li>
               <a href="/">Trang chủ</a>
             </li>
-            <li>
-              <a href="/">Lịch trình</a>
-            </li>
-            <li>
-              <a href="/">Tin tức</a>
-            </li>
+
             <li>
               <a href="/">Liên hệ</a>
             </li>
@@ -310,7 +302,12 @@ function Footer() {
         </div>
 
         <div className="copyRightDiv flex">
-          <p>Bản quyền thuộc về Công ty Cổ phần Xe Khách Bus Lines | <a target='_blank' href="/">www.busline.vn </a></p>
+          <p>
+            Bản quyền thuộc về Công ty Cổ phần Xe Khách Bus Lines |{' '}
+            <a target="_blank" href="/">
+              www.busline.vn{' '}
+            </a>
+          </p>
         </div>
       </FooterStyle>
     </Container>

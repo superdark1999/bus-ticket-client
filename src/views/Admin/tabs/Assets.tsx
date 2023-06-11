@@ -6,15 +6,17 @@ import { EditFilled, DeleteFilled } from '@ant-design/icons';
 import styled from 'styled-components';
 import coachAPI from 'api/actions/coachAPI';
 
-enum ICoachModel {
+export enum ICoachModel {
   'GHE' = 'GHE',
   'GIUONG_NAM' = 'GIUONG_NAM',
   'PHONG_NAM' = 'PHONG_NAM',
+  'NONE' = 'NONE',
 }
-const CoachModelLabel = {
+export const CoachModelLabel = {
   [ICoachModel.GHE]: 'Ghế ngồi',
   [ICoachModel.GIUONG_NAM]: 'Giường nằm',
   [ICoachModel.PHONG_NAM]: 'Phòng nằm',
+  [ICoachModel.NONE]: '',
 };
 export interface ICoach {
   id: string;
