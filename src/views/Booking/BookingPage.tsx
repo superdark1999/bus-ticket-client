@@ -85,9 +85,10 @@ const BookingPage: React.FC = () => {
     if (loading === 'succeeded' && tripRoutes.length) {
       const tripRoutesResults: InfoCard[] = tripRoutes
         .filter(
-          (city) =>
-            LocationCommon.isSubstring(city.origin, infoSearch.departure) &&
-            LocationCommon.isSubstring(city.destination, infoSearch.destination),
+          (tripRoute) =>
+            LocationCommon.isSubstring(tripRoute.origin, infoSearch.departure) &&
+            LocationCommon.isSubstring(tripRoute.destination, infoSearch.destination) &&
+            tripRoute.arrivalTime.includes(infoSearch.date.trim()),
         )
         .map((item) => ({
           ...item,
@@ -100,8 +101,8 @@ const BookingPage: React.FC = () => {
           distance: '200km',
           duration: 9,
         }));
-      setRoutesRender(tripRoutesResults);
-      setAllTripRoute(tripRoutesResults);
+      setRoutesRender([...tripRoutesResults]);
+      setAllTripRoute([...tripRoutesResults]);
     }
   };
 
@@ -111,8 +112,8 @@ const BookingPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    getAllTripRoute();
-  }, [loading, tripRoutes]);
+    if (loading === 'succeeded') getAllTripRoute();
+  }, [loading]);
 
   useEffect(() => {
     const temp: InfoCard[] = [...allTripRoute];
@@ -129,13 +130,14 @@ const BookingPage: React.FC = () => {
     );
 
     const { start, end } = timeRanges[timeSelected];
-    filteredRoutes = filteredRoutes.filter((route) => {
-      const [hour] = route.timeDeparture.split(':');
-      const hourNumber = parseInt(hour, 10);
-      return hourNumber >= start && hourNumber < end;
-    });
+    if (timeSelected)
+      filteredRoutes = filteredRoutes.filter((route) => {
+        const [hour] = route.timeDeparture.split(':');
+        const hourNumber = parseInt(hour, 10);
+        return hourNumber >= start && hourNumber < end;
+      });
     setRoutesRender(filteredRoutes);
-  }, [sortPrice, timeSelected, typeBus]);
+  }, [sortPrice, timeSelected, typeBus, allTripRoute]);
 
   const coachModelOptions: CoachModelSortOption[] = [
     ICoachModel.GHE,
@@ -178,11 +180,7 @@ const BookingPage: React.FC = () => {
           />
         </Col>
         <Col span={6}>
-          <StyledSelect
-            onChange={(value) => setTimeSelected(value as 0 | 1 | 2 | 3 | 4)}
-            placeholder="Thời gian"
-            allowClear
-          >
+          <StyledSelect onChange={(value: any) => setTimeSelected(value || 0)} placeholder="Thời gian" allowClear>
             <Option value="1">0h - 6h</Option>
             <Option value="2">6h - 12h</Option>
             <Option value="3">12h - 18h</Option>
