@@ -29,7 +29,17 @@ const getTripRouteList = async (): Promise<TripRouteData[]> => {
 }
 
 
+const updateTripRoute = async (id: string, dataUpdate: { [key: string]: any }): Promise<ITripRoute> => {
+  try {
+    const response = await axiosAdmin.axiosAdminTripRoute.put(`/${id}`, dataUpdate);
+    return response.data;
+  } catch (error) {
+    throw new Error('Update failed!');
+  }
+};
+
 export default {
     createTripRoute,
-    getTripRouteList
+    getTripRouteList,
+    updateTripRoute
 }
