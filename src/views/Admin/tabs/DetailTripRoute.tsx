@@ -97,9 +97,6 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isStatus] = useState(dayjs(tripRouteDetail.departureTime, 'HH:mm DD/MM/YYYY').unix() <= dayjs().unix());
 
-  const stationList = tList.map((trip) => trip.destination);
-  const uniqueStationList = stationList.filter((item, index, self) => self.indexOf(item) === index);
-
   // Handle form
   const [form] = Form.useForm();
 
@@ -129,13 +126,16 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
     console.log(values);
     setIsEditing(false);
 
+    // set arrivalTime
     const durationTrip = tripRouteDetail.duration;
     const date = moment(new Date(values.departureTime)).add(durationTrip, 'minute');
+    // set id_trip
+    const tripId = tList.filter((value) => `${value.origin} --> ${value.destination}` === values.trip);
 
+    console.log('🚀 ~ file: DetailTripRoute.tsx:135 ~ handleSubmit ~ tripId:', tripId);
     await adminTripRoute
       .updateTripRoute(id || '', {
-        origin: values.from,
-        destination: values.to,
+        trip_id: tripId[0].id,
         departureTime: values.departureTime.format('HH:mm DD/MM/YYYY'),
         arrivalTime: date.format('HH:mm DD/MM/YYYY'),
       })
@@ -143,6 +143,8 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
         const newCoachDetail: TripRouteData = {
           ...tripRouteDetail,
           ...res,
+          origin: tripId[0].origin,
+          destination: tripId[0].destination,
         };
         settripRouteDetail(newCoachDetail);
         console.log('🚀 ~ file: DetailTripRoute.tsx:149 ~ .then ~ newCoachDetail:', newCoachDetail);
@@ -187,8 +189,7 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
         layout="vertical"
         onFinish={handleSubmit}
         initialValues={{
-          from: tripRouteDetail.origin,
-          to: tripRouteDetail.destination,
+          trip: `${tripRouteDetail.origin} --> ${tripRouteDetail.destination}`,
           departureTime: dayjs(tripRouteDetail.departureTime, 'HH:mm DD/MM/YYYY'),
           estimatedTime: tripRouteDetail.duration,
           model: tripRouteDetail.model,
@@ -217,8 +218,22 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
         </InfoWrapper>
         <Separator />
 
+        <Form.Item name="trip" label="Tuyến đường" rules={[{ required: true, message: 'Chưa chọn tuyến đường' }]}>
+          <Select
+            showSearch
+            defaultValue="Điểm Đi --> Điểm đến"
+            options={tList.map((trip) => ({
+              value: `${trip.origin} --> ${trip.destination}`,
+              label: `${trip.origin} --> ${trip.destination}`,
+            }))}
+            filterSort={(optA, optB) =>
+              (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
+            }
+            disabled={!isEditing}
+          />
+        </Form.Item>
         <FormContainer>
-          <FormItem label="Điểm đi:" name="from" rules={[{ required: true, message: 'Chưa chọn điểm đi' }]}>
+          {/* <FormItem label="Điểm đi:" name="from" rules={[{ required: true, message: 'Chưa chọn điểm đi' }]}>
             <Select
               showSearch
               options={uniqueStationList.map((station) => ({
@@ -243,7 +258,7 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
               }
               disabled={!isEditing}
             />
-          </FormItem>
+          </FormItem> */}
           <FormItem
             label="Thời gian xuất phát:"
             name="departureTime"
@@ -313,7 +328,6 @@ const FormContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   column-gap: 3rem;
-  margin-top: 2rem;
 `;
 const FormItem = styled(Form.Item)`
   margin-bottom: 1rem;

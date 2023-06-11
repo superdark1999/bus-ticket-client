@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Row, Col, Button, Modal, Form, Select, DatePicker } from 'antd';
-import { ColumnsType } from 'antd/es/table';
+import { Table, Row, Col, Button, Modal, Form, Select, DatePicker, message } from 'antd';
+import { ColumnsType, TableProps } from 'antd/es/table';
 // import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import dayjs from 'dayjs';
@@ -9,6 +9,7 @@ import { v4 } from 'uuid';
 import adminTripApi from 'api/actions/trip';
 import adminCoach from 'api/actions/coachAPI';
 import adminTripRoute from 'api/actions/tripRouteAPI';
+import styled from 'styled-components';
 
 import { ITrip } from './Trip';
 import { ICoach } from './Assets';
@@ -171,14 +172,26 @@ const tripRouteListMock: TripRouteData[] = [
   },
 ];
 
+function sortedTripRouteList(tripRouteList: TripRouteData[]) {
+  return tripRouteList.sort((a, b) => {
+    const aTime = moment(a.departureTime, 'HH:mm DD/MM/YYYY');
+    console.log('🚀 ~ file: TripRoute.tsx:218 ~ sortedTripRouteList ~ aTime:', aTime);
+    const bTime = moment(b.departureTime, 'HH:mm DD/MM/YYYY');
+    return bTime.diff(aTime);
+  });
+}
+
 const TripRoute = () => {
   const navigate = useNavigate();
-  const [isAddingtripRouteOpen, setIsAddingtripRouteOpen] = useState(false);
+  const [isAddingtripRouteOpen, setIsAddingRripRouteOpen] = useState(false);
   const [tripRouteList, settripRouteList] = useState<TripRouteData[]>([]);
   const [tripList, setTripList] = useState<ITrip[]>([]);
   const [stationList, setStationList] = useState<string[]>([]);
   const [coachList, setCoachList] = useState<ICoach[]>([]);
   const [registrationList, setRegistrationList] = useState<string[]>([]);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [highlightType, setHighlightType] = useState<'update' | 'delete'>('update');
 
   // Get data after mount
   useEffect(() => {
@@ -188,7 +201,7 @@ const TripRoute = () => {
     // get trip route
     adminTripRoute.getTripRouteList().then((res) => {
       console.log('🚀 ~ file: TripRoute.tsx:199 ~ adminTripRoute.getTripRouteList ~ res:', res);
-      settripRouteList(res.reverse());
+      settripRouteList(sortedTripRouteList(res));
     });
 
     // get trip list to select, get 1000 because it maybe include all item
@@ -206,14 +219,13 @@ const TripRoute = () => {
       setCoachList(res);
       setRegistrationList(coach);
     });
-
-    // Got data successfully
-    // settripRouteList(tripRouteListMock);
   }, []);
+
+  // sort tripRouteList by time
 
   // Handle adding tripRoute dialog
   const showModal = () => {
-    setIsAddingtripRouteOpen(true);
+    setIsAddingRripRouteOpen(true);
   };
 
   const handleOk = () => {
@@ -221,7 +233,17 @@ const TripRoute = () => {
   };
 
   const handleCancel = () => {
-    setIsAddingtripRouteOpen(false);
+    setIsAddingRripRouteOpen(false);
+  };
+
+  const highlightRows = (rowKeys: string[], type: 'update' | 'delete', timeDelay: number | 'none' = 5000) => {
+    setSelectedRowKeys(rowKeys);
+    setHighlightType(type);
+    if (timeDelay !== 'none') {
+      setTimeout(() => {
+        setSelectedRowKeys([]);
+      }, timeDelay);
+    }
   };
 
   // Handle form
@@ -260,11 +282,12 @@ const TripRoute = () => {
           ...tripList[stationList.indexOf(values.trip)],
           ...result,
         };
-        console.log('🚀 ~ file: TripRoute.tsx:272 ~ .then ~ tripRoute:', tripRoute);
         const newtripRouteList = [tripRoute, ...tripRouteList];
         // Update data/ui
-        settripRouteList(newtripRouteList);
-        setIsAddingtripRouteOpen(false);
+        settripRouteList(sortedTripRouteList(newtripRouteList));
+        setIsAddingRripRouteOpen(false);
+        message.success('Đã thêm thành công');
+        highlightRows([result.id], 'update');
       })
       .catch((e) => {
         console.error(e);
@@ -396,7 +419,7 @@ const TripRoute = () => {
         </Row>
         <Row>
           <Col span={24}>
-            <Table
+            <CustomAntdTable
               dataSource={tripRouteList}
               columns={columns.map((col) => ({
                 ...col,
@@ -407,6 +430,7 @@ const TripRoute = () => {
                 }),
               }))}
               rowKey="id"
+              rowClassName={(trip: ITrip) => (selectedRowKeys.includes(trip.id) ? `highlight_${highlightType}` : '')}
             />
           </Col>
         </Row>
@@ -414,4 +438,32 @@ const TripRoute = () => {
     </Row>
   );
 };
+
+const CustomAntdTable: React.FC<TableProps<any>> = styled(Table)`
+  .highlight {
+    &_update {
+      background-color: #91caff69;
+    }
+
+    @keyframes analogue {
+      0% {
+        opacity: 1;
+        height: 44px;
+        clip-path: inset(0px 0px 0px 0px);
+      }
+      100% {
+        height: 0px;
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
+    &_delete {
+      background-color: #ff000045;
+      animation: analogue ease 1.5s;
+      height: 0px;
+      width: 0px;
+      opacity: 0;
+    }
+  }
+`;
 export default TripRoute;
