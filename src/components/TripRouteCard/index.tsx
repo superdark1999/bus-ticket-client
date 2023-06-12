@@ -49,7 +49,11 @@ const BookingInfo: React.FC<InfoCard> = ({ ...props }) => {
           <RouteLine>
             <LocationIcon />
             {props.departure}
-            <Distance>{/* Xe tuyến: {props.distance} = {props.duration} */}</Distance>
+            <Distance>
+              Thời gian dự kiến: {Math.floor(props.duration / 60)} giờ{' '}
+              {props.duration % 60 === 0 ? '' : `${props.duration % 60} phút`}
+            </Distance>
+            {/* Xe tuyến: {props.distance} = {props.duration} */}
           </RouteLine>
           <RouteLine>
             <LocationIcon />
@@ -134,7 +138,7 @@ const LocationIcon = styled(EnvironmentOutlined)`
 const Distance = styled.div`
   font-size: 13px;
   color: #00613d;
-  line-height: 48px;
+  line-height: 28px;
   height: 30px;
 `;
 
