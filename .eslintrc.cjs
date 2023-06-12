@@ -37,5 +37,7 @@ module.exports = {
     'no-console': 0,
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-unused-vars': 'warn',
+    'jsx-a11y/click-events-have-key-events': 0,
+    'jsx-a11y/no-static-element-interactions': 0,
   },
 };

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-import { SiConsul } from 'react-icons/si';
-import { BsPhoneVibrate } from 'react-icons/bs';
-import { AiOutlineGlobal } from 'react-icons/ai';
 import { CgMenuGridO } from 'react-icons/cg';
+import { useNavigate } from 'react-router';
+import { ROUTER_PATH } from 'routes/routesConfig';
 
 const Container = styled.div`
   a {
@@ -45,50 +43,51 @@ const Container = styled.div`
   }
 
   .btn {
-    padding: .7rem 1.5rem;
+    padding: 0.7rem 1.5rem;
     background: hsl(225, 50%, 48%);
     border: none;
     outline: none;
     border-radius: 3rem;
     cursor: pointer;
-    color: hsl(0,0%, 100%);
+    color: hsl(0, 0%, 100%);
 
     a {
-      color: hsl(0,0%, 100%);
+      color: hsl(0, 0%, 100%);
       font-weight: 500;
     }
 
     &:hover {
-      background: hsl(225, 56%, 59%)
+      background: hsl(225, 56%, 59%);
     }
   }
 
-  img, video {
+  img,
+  video {
     width: 100%;
     height: auto;
   }
 
   input {
     font-size: 100%;
-    color: rgb(145,145,145);
+    color: rgb(145, 145, 145);
   }
 
   p {
     font-size: 13px;
-    color: rgb(145,145,145);
+    color: rgb(145, 145, 145);
     line-height: 22px;
   }
 
   h4 {
     padding: 1rem 0;
     font-weight: 700;
-    color: hsl(0,0%, 12%);
+    color: hsl(0, 0%, 12%);
   }
 
   h2 {
     font-size: 25px;
     padding: 1rem 0;
-    color: hsl(0,0%, 12%);
+    color: hsl(0, 0%, 12%);
   }
 
   @media screen and (min-width: 1024px) {
@@ -96,11 +95,11 @@ const Container = styled.div`
       font-size: 15px;
       line-height: 25px;
     }
-  
+
     h4 {
       font-size: 20px;
     }
-  
+
     h2 {
       font-size: 27px;
     }
@@ -108,7 +107,7 @@ const Container = styled.div`
     .section {
       padding: 6rem 0 4rem;
     }
-  
+
     .container {
       width: 75%;
       margin: auto;
@@ -127,9 +126,9 @@ const Container = styled.div`
 
   ::webkit-scrollbar-thumb {
     background: hsl(225, 50%, 48%);
-    border-radius: 10px
+    border-radius: 10px;
   }
-`
+`;
 
 const NavBar = styled.div`
   position: fixed;
@@ -154,16 +153,17 @@ const NavBar = styled.div`
 
   .navBarTwo {
     background: hsl(180, 17%, 95%);
-    
+
     display: flex;
     align-items: center;
     justify-content: space-between;
-    top: 4rem;
+    top: 0px;
     padding: 1.5rem 1rem;
     position: fixed;
     transition: 0.3s ease-in-out;
 
     .logoDiv {
+      cursor: pointer;
       .logo {
         width: 100%;
       }
@@ -219,9 +219,8 @@ const NavBar = styled.div`
   .navBar_With_Bg {
     background: hsl(180, 17%, 95%);
     padding: 0.5rem 1rem;
-    box-shadow: rgba(0 , 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   }
-
 
   @media screen and (min-width: 768px) {
     align-items: center;
@@ -232,16 +231,15 @@ const NavBar = styled.div`
 
         li {
           font-size: 13px;
-          gap: .5rem;
+          gap: 0.5rem;
           color: hsl(240, 1%, 48%);
-  
+
           &:hover {
             color: hsl(225, 50%, 48%);
             text-decoration: underline;
           }
         }
       }
-     
     }
 
     .navBarTwo {
@@ -257,10 +255,10 @@ const NavBar = styled.div`
       .navBarMenu {
         .menu {
           flex-direction: row;
-          gap: .5rem;
+          gap: 0.5rem;
 
           .listItem {
-            padding: 0 .5rem;
+            padding: 0 0.5rem;
             font-size: 14px;
             cursor: pointer;
             color: hsl(240, 1%, 48%);
@@ -269,21 +267,21 @@ const NavBar = styled.div`
             &:hover {
               color: hsl(225, 50%, 48%);
               font-weight: 700;
-              
             }
           }
         }
       }
-      
 
-      .btnOne, .toggleIcon {
+      .btnOne,
+      .toggleIcon {
         display: none;
       }
     }
   }
 
   @media screen and (min-width: 1024px) {
-    .navBarOne, .navBarTwo {
+    .navBarOne,
+    .navBarTwo {
       padding: 1.5rem 5rem;
     }
 
@@ -297,7 +295,7 @@ const NavBar = styled.div`
       .navBarMenu {
         .menu {
           gap: 1rem;
-  
+
           .listItem {
             padding: 0 1rem;
             font-size: 20px;
@@ -308,27 +306,9 @@ const NavBar = styled.div`
   }
 `;
 
-export default function Header() {
-  // const [active, setActive] = useState('navBarMenu');
-  // const showNavBar = () => {
-  //   setActive('navBarMenu showNavBar');
-  // };
-
-  // const removeNavBar = () => {
-  //   setActive('navBarMenu ');
-  // };
-
-  // Thêm background vào navBarTwo khi scroll chuột
+const Header = () => {
+  const navigate = useNavigate();
   const [noBg, addBg] = useState('navBarTwo');
-  // const addBgColor = () => {
-  //   if (window.scrollY >= 10) {
-  //     addBg('navBarTwo navBar_With_Bg');
-  //   } else {
-  //     addBg('navBarTwo ');
-  //   }
-  // };
-
-  // window.addEventListener('scroll', addBgColor)
 
   useEffect(() => {
     const addBgColor = () => {
@@ -338,9 +318,9 @@ export default function Header() {
         addBg('navBarTwo');
       }
     };
-  
+
     window.addEventListener('scroll', addBgColor);
-  
+
     return () => {
       window.removeEventListener('scroll', addBgColor);
     };
@@ -349,28 +329,14 @@ export default function Header() {
   return (
     <Container>
       <NavBar className="flex">
-        <div className="navBarOne flex">
-          <div>
-            <SiConsul className="icon" />
-          </div>
-
-          <div className="flex">
-            <li className="flex">
-              <BsPhoneVibrate className="icon" /> Hỗ trợ
-            </li>
-            <li className="flex">
-              <AiOutlineGlobal className="icon" /> Ngôn ngữ
-            </li>
-          </div>
-
-          <button className="btn flex btnOne" type="button">
-            Đăng nhập
-          </button>
-        </div>
-
         {/* noBg la navbarTwo */}
         <div className={noBg}>
-          <div className="logoDiv">
+          <div
+            className="logoDiv"
+            onClick={() => {
+              navigate(ROUTER_PATH.HOMEPAGE);
+            }}
+          >
             <img src="/bus64.png" className="logo" alt="" />
           </div>
 
@@ -384,11 +350,13 @@ export default function Header() {
               <li className="listItem">Hóa đơn</li>
             </ul>
           </div>
-          <button type="button"  className="toggleIcon">
+          <button type="button" className="toggleIcon">
             <CgMenuGridO className="icon" />
           </button>
         </div>
       </NavBar>
     </Container>
   );
-}
+};
+
+export default Header;

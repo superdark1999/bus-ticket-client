@@ -64,7 +64,7 @@ const BookingPage: React.FC = () => {
   const infoSearch: InfoSearch = {
     departure: searchParams.get('departure') || '',
     destination: searchParams.get('destination') || '',
-    date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
+    date: searchParams.get('date') || '',
   };
 
   const { tripRoutes, loading } = useSelector(appSelector);
@@ -89,7 +89,7 @@ const BookingPage: React.FC = () => {
           (tripRoute) =>
             LocationCommon.isSubstring(tripRoute.origin, infoSearch.departure) &&
             LocationCommon.isSubstring(tripRoute.destination, infoSearch.destination) &&
-            tripRoute.departureTime.includes(infoSearch.date.trim()),
+            tripRoute.arrivalTime.includes(infoSearch.date.trim()),
         )
         .map((item) => ({
           ...item,
