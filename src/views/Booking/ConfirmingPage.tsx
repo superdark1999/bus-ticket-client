@@ -30,7 +30,7 @@ const ConfirmingPage: React.FC = () => {
   // pick shuttle
   const [optionPicked, setOptionPicked] = useState<string>('');
   // check pick select seats
-  const [showSelectedSeats, setShowSelectedSeats] = useState(false);
+  const [showSelectedSeats, setShowSelectedSeats] = useState(true);
   // check path to navigate booking when reload page by path
   useEffect(() => {
     if (!location.state) {
@@ -51,12 +51,6 @@ const ConfirmingPage: React.FC = () => {
 
   // content in step
   const content = 1;
-
-  // hanle when click btn "Chọn ghế" then hidden btn "Tiếp tục" in selectSeats component
-  const handleSelectSeats = () => {
-    infoCard.hiddenBtn = true;
-    setShowSelectedSeats(true);
-  };
 
   const handleContinue = () => {
     navigate(
@@ -116,26 +110,12 @@ const ConfirmingPage: React.FC = () => {
                 Chon ghế
                 <InfoSeat>{infoSeat.seats?.join(', ')}</InfoSeat>
               </TitleSeat>
-              <ButtonSeat onClick={handleSelectSeats}>
-                CHỌN GHẾ <EditOutlined />
-              </ButtonSeat>
             </ContainerChooseSeat>
           ) : (
             <div style={{ padding: '0 20px 20px' }}>
               <SeatSelection infoCard={infoCard} seatsId={infoSeat.seatsId} seatsSelected={infoSeat.seats} />
             </div>
           )}
-          <StyledDivider />
-          <Row style={{ padding: '20px', flexDirection: 'column' }}>
-            <Label>Điểm lên xe</Label>
-            <Select defaultValue="Chọn điểm lên xe" onChange={(value) => setOptionPicked(value)}>
-              {options.map((option) => (
-                <Option key={option.value} value={option.label}>
-                  {option.label}
-                </Option>
-              ))}
-            </Select>
-          </Row>
         </Content>
       </Row>
       <Row style={{ flexFlow: 'row' }}>
@@ -160,6 +140,9 @@ const Container = styled.div`
   background-color: white;
   margin: auto;
   padding-top: 10rem;
+  * {
+    user-select: none;
+  }
 `;
 
 const StyledButton = styled(Button)`

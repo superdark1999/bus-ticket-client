@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { Checkbox } from 'antd';
 import { EnvironmentOutlined, SwapRightOutlined, WifiOutlined, RestOutlined } from '@ant-design/icons';
 import { TripRouteData } from 'views/Admin/tabs/TripRoute';
-import SeatSelection from './selectSeats';
+import { useNavigate, useLocation } from 'react-router';
 
 export interface InfoCard extends TripRouteData {
   timeDeparture: string;
@@ -17,17 +16,28 @@ export interface InfoCard extends TripRouteData {
 }
 
 const BookingInfo: React.FC<InfoCard> = ({ ...props }) => {
-  useEffect(() => {});
-  const [selected, setSelected] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleCheckbox = () => {
-    setSelected(!selected);
-
-    // TODO: call API to get list seat
-    // Transmitting the seating list, and price to SeatSelection component.
+  const handleContinueButton = () => {
+    console.log(location.search, ' ', props);
+    navigate(
+      {
+        pathname: '/booking/confirming',
+        search: `${location.search}`,
+      },
+      {
+        state: {
+          infoCard: props,
+          seats: [],
+          seatsId: [],
+        },
+      },
+    );
   };
+
   return (
-    <Container selected={selected}>
+    <Container onClick={() => handleContinueButton()}>
       <FirstRow>
         {props.timeDeparture}
         <SwapRightOutlined />
@@ -56,21 +66,20 @@ const BookingInfo: React.FC<InfoCard> = ({ ...props }) => {
             {props.arrival}
           </RouteLine>
         </RouterInfo>
-        <CheckboxContainer>
-          <Checkbox checked={selected} onChange={handleCheckbox} />
-          Chọn
-        </CheckboxContainer>
       </RouteContainer>
-      {selected && <SeatSelection infoCard={props} seatsSelected={[]} seatsId={[]} />}
     </Container>
   );
 };
 
-const Container = styled.div<{ selected: boolean }>`
+const Container = styled.div`
   padding: 20px;
   border-radius: 8px;
-  border: ${({ selected }) => (selected ? '2px solid #1677ff' : '1px solid #dde2e8')};
+  box-sizing: border-box;
+  border: 2px solid #dde2e8;
   margin-bottom: 20px;
+  &:hover {
+    border: 2px solid #1677ff;
+  }
 `;
 
 const FirstRow = styled.div`
@@ -136,16 +145,6 @@ const Distance = styled.div`
   color: #00613d;
   line-height: 48px;
   height: 30px;
-`;
-
-const CheckboxContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  color: #01613d;
-  font-size: 13px;
-  width: 34px;
 `;
 
 export default BookingInfo;

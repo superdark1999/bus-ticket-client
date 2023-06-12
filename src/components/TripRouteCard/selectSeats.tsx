@@ -119,8 +119,6 @@ interface Props {
 }
 
 const SeatSelection: React.FC<Props> = ({ infoCard, seatsSelected, seatsId }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
   // edit status seats from input
   const seatStatuses = useMemo(() => getSeatStatuses(seats, seatsId), [seats]);
 
@@ -140,23 +138,6 @@ const SeatSelection: React.FC<Props> = ({ infoCard, seatsSelected, seatsId }) =>
       setSelectedSeatsId(selectedSeatsId.filter((id) => id !== seatId));
       setSelectedSeatsArray(selectedSeatsArray.filter((name) => name !== seatName));
     }
-  };
-
-  const handleContinueButton = () => {
-    console.log(location.search, ' ', infoCard);
-    navigate(
-      {
-        pathname: '/booking/confirming',
-        search: `${location.search}`,
-      },
-      {
-        state: {
-          infoCard: { ...infoCard },
-          seats: selectedSeatsArray,
-          seatsId: selectedSeatsId,
-        },
-      },
-    );
   };
 
   const totalPrice = selectedSeatsId.length * infoCard.price;
@@ -215,11 +196,6 @@ const SeatSelection: React.FC<Props> = ({ infoCard, seatsSelected, seatsId }) =>
             Tổng tiền: <span style={{ fontSize: '18px' }}>{totalPrice.toLocaleString()}</span> VND
           </div>
         </Col>
-        {!infoCard.hiddenBtn && (
-          <Button type="primary" disabled={selectedSeatsId.length === 0} onClick={handleContinueButton}>
-            Tiếp tục
-          </Button>
-        )}
       </Footer>
     </Container>
   );
