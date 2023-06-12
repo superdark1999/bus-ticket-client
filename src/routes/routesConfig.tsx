@@ -8,6 +8,7 @@ const MemberGuard = lazy(() => import('guards/MemberGuard'));
 const AdminGuard = lazy(() => import('guards/AdminGuard'));
 const BookingLayout = lazy(() => import('layout/BookingLayout'));
 const AdminLayout = lazy(() => import('layout/AdminLayout'));
+const MyTicketPage = lazy(() => import('views/Booking/MyTicketPage'));
 const HomePage = lazy(() => import('views/Booking/HomePage'));
 const BookingPage = lazy(() => import('views/Booking/BookingPage'));
 const ConfirmingPage = lazy(() => import('views/Booking/ConfirmingPage'));
@@ -22,6 +23,7 @@ const ForgotPasswordPage = lazy(() => import('views/auth/ForgotPassword/ForgotPa
 /* eslint-disable  @typescript-eslint/naming-convention  */
 export enum ROUTER_PATH {
   'LOGIN' = '/login',
+  'MYTICKET' = '/myticket',
   'BOOKING' = '/booking',
   'CONRFIRMING' = '/booking/confirming',
   'ADMIN' = '/admin',
@@ -79,6 +81,10 @@ export const routesConfig: RouteObject[] = [
           {
             path: '/ticket',
             element: <TicketPage />,
+          },
+          {
+            path: '/myticket',
+            element: <MyTicketPage />,
           },
         ],
       },
