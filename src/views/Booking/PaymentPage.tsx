@@ -48,7 +48,7 @@ const PaymentPage: React.FC = () => {
     // TODO: call API to create a ticket, return ticket code
 
     const ticket = await bookingApi.createTripRoute({
-      seatNumber: data.infoSeat.seatsId[0],
+      seatNumberList: data.infoSeat.seatsId,
       tripRoute_id: data.infoCard.id,
       customerName: data.infoCus.name,
       customerPhone: data.infoCus.phone,
