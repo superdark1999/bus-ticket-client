@@ -6,6 +6,7 @@ import { LeftOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router';
 import moment from 'moment';
 import { InfoCard } from 'components/TripRouteCard/index';
+import bookingApi from 'api/actions/booking';
 import { InfoSearch } from './BookingPage';
 import { InfoCus } from './InputInfoPage';
 
@@ -43,15 +44,23 @@ const PaymentPage: React.FC = () => {
   };
   console.log(data);
 
-  const handlePaymentBtn = () => {
+  const handlePaymentBtn = async () => {
     // TODO: call API to create a ticket, return ticket code
 
+    const ticket = await bookingApi.createTripRoute({
+      seatNumber: data.infoSeat.seatsId[0],
+      tripRoute_id: data.infoCard.id,
+      customerName: data.infoCus.name,
+      customerPhone: data.infoCus.phone,
+      customerEmail: data.infoCus.email,
+    });
+    console.log('🚀 ~ file: PaymentPage.tsx:59 ~ handlePaymentBtn ~ ticket:', ticket);
     message.success('Submit success!');
-    const ticketCode = '123456'; // use alternate for real database
     navigate(
       {
         pathname: '/ticket',
-        search: `?code=${ticketCode}`,
+        // eslint-disable-next-line no-underscore-dangle
+        search: `?code=${ticket._id}`,
       },
       {
         state: {

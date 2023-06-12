@@ -5,8 +5,92 @@ import { useLocation, useNavigate } from 'react-router';
 import { InfoCard } from 'components/TripRouteCard/index';
 
 // TODO: add new type bus (now has limousine)
-// display seat in one side
+// display seat in one side for bus 34, 24 , 40 seats
 const oneSideSeats = (
+  start: number,
+  end: number,
+  keyword: string,
+  handleSelected: (seatId: number, seatName: string) => void,
+  seatStatuses: string[],
+): JSX.Element[] => {
+  const boxes: JSX.Element[] = [];
+  const amount = end - start;
+  console.log('🚀 ~ file: selectSeats.tsx:18 ~ amount:', amount);
+  if (amount === 20) end -= 5;
+
+  for (let i = start; i < end; i++) {
+    const boxNumber = i + 1;
+    const boxkeyword = `${keyword}${String(boxNumber - start).padStart(2, '0')}`;
+
+    if (i === start && amount === 14) {
+      boxes.push(
+        <>
+          <Item amount={3}>
+            <Box
+              onClick={() => handleSelected(start, boxkeyword)}
+              disabled={seatStatuses[start] === 'booked'}
+              selected={seatStatuses[start] === 'selected'}
+            >
+              {boxkeyword}
+            </Box>
+          </Item>
+          <Item amount={3} />
+          <Item amount={3}>
+            <Box
+              onClick={() => handleSelected(start + 1, `${keyword}${String(boxNumber + 1 - start).padStart(2, '0')}`)}
+              disabled={seatStatuses[start + 1] === 'booked'}
+              selected={seatStatuses[start + 1] === 'selected'}
+            >{`${keyword}${String(boxNumber + 1 - start).padStart(2, '0')}`}</Box>
+          </Item>
+        </>,
+      );
+    } else if ((i !== start + 1 && amount === 14) || amount === 20 || amount === 12) {
+      boxes.push(
+        <Item key={`group-${i}`} amount={amount !== 12 ? 3 : 2}>
+          <Box
+            onClick={() => handleSelected(i, boxkeyword)}
+            disabled={seatStatuses[i] === 'booked'}
+            selected={seatStatuses[i] === 'selected'}
+          >
+            {boxkeyword}
+          </Box>
+        </Item>,
+      );
+    }
+  }
+  return boxes;
+};
+
+// add 5 seats in bus 40 seats
+const addPlusSeats = (
+  start: number,
+  end: number,
+  keyword: string,
+  handleSelected: (seatId: number, seatName: string) => void,
+  seatStatuses: string[],
+): JSX.Element[] => {
+  const boxes: JSX.Element[] = [];
+
+  for (let i = start; i < end; i++) {
+    const boxNumber = i + 1;
+    const boxkeyword = `${keyword}${String(boxNumber - start + 14).padStart(2, '0')}`; // plus 14 to get seat 15
+
+    boxes.push(
+      <Item key={`group-${i}`} amount={5}>
+        <Box
+          onClick={() => handleSelected(i, boxkeyword)}
+          disabled={seatStatuses[i] === 'booked'}
+          selected={seatStatuses[i] === 'selected'}
+        >
+          {boxkeyword}
+        </Box>
+      </Item>,
+    );
+  }
+  return boxes;
+};
+
+const posSeatsBus16 = (
   start: number,
   end: number,
   keyword: string,
@@ -22,7 +106,9 @@ const oneSideSeats = (
     if (i === start) {
       boxes.push(
         <>
-          <Item>
+          <Item amount={4} />
+          <Item amount={4} />
+          <Item amount={4}>
             <Box
               onClick={() => handleSelected(start, boxkeyword)}
               disabled={seatStatuses[start] === 'booked'}
@@ -31,8 +117,7 @@ const oneSideSeats = (
               {boxkeyword}
             </Box>
           </Item>
-          <Item />
-          <Item>
+          <Item amount={4}>
             <Box
               onClick={() => handleSelected(start + 1, `${keyword}${String(boxNumber + 1 - start).padStart(2, '0')}`)}
               disabled={seatStatuses[start + 1] === 'booked'}
@@ -42,8 +127,11 @@ const oneSideSeats = (
         </>,
       );
     } else if (i !== start + 1) {
+      if ((i + 1) % 3 === 0 && i + 1 !== 3 && i + 1 !== 15) {
+        boxes.push(<Item amount={4} />);
+      }
       boxes.push(
-        <Item key={`group-${i}`}>
+        <Item key={`group-${i}`} amount={4}>
           <Box
             onClick={() => handleSelected(i, boxkeyword)}
             disabled={seatStatuses[i] === 'booked'}
@@ -57,44 +145,6 @@ const oneSideSeats = (
   }
   return boxes;
 };
-
-// list seat mock
-const seats = [
-  true,
-  false,
-  true,
-  false,
-  true,
-  true,
-  false,
-  true,
-  false,
-  true,
-  true,
-  false,
-  true,
-  false,
-  true,
-  true,
-  false,
-  true,
-  false,
-  true,
-  true,
-  false,
-  true,
-  false,
-  true,
-  true,
-  false,
-  true,
-  false,
-  true,
-  true,
-  false,
-  true,
-  false,
-];
 
 // convert input into type appropriate
 type SeatStatus = 'booked' | 'empty' | 'selected';
@@ -119,10 +169,11 @@ interface Props {
 }
 
 const SeatSelection: React.FC<Props> = ({ infoCard, seatsSelected, seatsId }) => {
+  console.log('🚀 ~ file: selectSeats.tsx:122 ~ infoCard:', infoCard);
   const navigate = useNavigate();
   const location = useLocation();
   // edit status seats from input
-  const seatStatuses = useMemo(() => getSeatStatuses(seats, seatsId), [seats]);
+  const seatStatuses = useMemo(() => getSeatStatuses(infoCard.bookedSeat, seatsId), [infoCard.bookedSeat]);
 
   const [selectedSeatsId, setSelectedSeatsId] = useState<number[]>(seatsId);
   const [selectedSeatsArray, setSelectedSeatsArray] = useState<string[]>(seatsSelected);
@@ -173,22 +224,59 @@ const SeatSelection: React.FC<Props> = ({ infoCard, seatsSelected, seatsId }) =>
               borderBottom: '1px solid #ebedee',
               backgroundColor: '#fff',
               alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            <Col span={12}>
-              <Title style={{ textAlign: 'center' }}>Tầng dưới</Title>
-            </Col>
-            <Col span={12}>
-              <Title style={{ textAlign: 'center' }}>Tầng trên</Title>
-            </Col>
+            {infoCard.capacity === 16 ? (
+              <Col span={12}>
+                <Title style={{ textAlign: 'center' }}>Chỗ ngồi</Title>
+              </Col>
+            ) : (
+              <>
+                <Col span={12}>
+                  <Title style={{ textAlign: 'center' }}>Tầng dưới</Title>
+                </Col>
+                <Col span={12}>
+                  <Title style={{ textAlign: 'center' }}>Tầng trên</Title>
+                </Col>
+              </>
+            )}
           </Row>
-          <Row style={{ width: '100%', backgroundColor: 'rgb(248, 249, 249)' }}>
-            <Col span={12}>
-              <Group>{oneSideSeats(0, 17, 'A', handleSeatClick, seatStatuses)}</Group>
-            </Col>
-            <Col span={12}>
-              <Group>{oneSideSeats(17, 34, 'B', handleSeatClick, seatStatuses)}</Group>
-            </Col>
+          <Row style={{ width: '100%', backgroundColor: 'rgb(248, 249, 249)', justifyContent: 'center' }}>
+            {infoCard.capacity === 16 ? (
+              <Col span={12}>
+                <Group>{posSeatsBus16(0, infoCard.capacity - 1, '', handleSeatClick, seatStatuses)}</Group>
+              </Col>
+            ) : (
+              <>
+                <Col span={12} style={{ borderRight: '5px solid lightgray' }}>
+                  <Group>{oneSideSeats(0, infoCard.capacity / 2, 'A', handleSeatClick, seatStatuses)}</Group>
+                  {infoCard.capacity === 40 && (
+                    <Group style={{ margin: '0 26px' }}>
+                      {infoCard.capacity / 2 === 20 &&
+                        addPlusSeats(
+                          infoCard.capacity / 2 - 5,
+                          infoCard.capacity / 2,
+                          'A',
+                          handleSeatClick,
+                          seatStatuses,
+                        )}
+                    </Group>
+                  )}
+                </Col>
+                <Col span={12}>
+                  <Group>
+                    {oneSideSeats(infoCard.capacity / 2, infoCard.capacity, 'B', handleSeatClick, seatStatuses)}
+                  </Group>
+                  {infoCard.capacity === 40 && (
+                    <Group style={{ margin: '0 26px' }}>
+                      {infoCard.capacity / 2 === 20 &&
+                        addPlusSeats(infoCard.capacity - 5, infoCard.capacity, 'B', handleSeatClick, seatStatuses)}
+                    </Group>
+                  )}
+                </Col>
+              </>
+            )}
             <Row style={{ width: '100%', padding: '14px' }}>
               <Col span={8} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Square selected={false} disabled={false} />
@@ -256,12 +344,12 @@ const Group = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 20px 10px 8px;
-  justify-content: center;
+  justify-content: space-between;
 `;
 
-const Item = styled.div`
-  width: 28.33%;
-  padding: 8px 16px;
+const Item = styled.div<{ amount: number }>`
+  width: ${({ amount }) => (amount === 5 ? '15%' : amount === 2 ? '40%' : amount === 4 ? '23.33%' : '25.33%')};
+  padding: ${({ amount }) => (amount === 5 ? '' : amount === 4 ? '8px 8px' : '8px 16px')};
 `;
 
 const Box = styled.div<{ selected: boolean; disabled: boolean }>`

@@ -68,6 +68,7 @@ const BookingPage: React.FC = () => {
   };
 
   const { tripRoutes, loading } = useSelector(appSelector);
+  console.log('🚀 ~ file: BookingPage.tsx:71 ~ tripRoutes:', tripRoutes);
 
   const content = 0;
 
@@ -88,7 +89,7 @@ const BookingPage: React.FC = () => {
           (tripRoute) =>
             LocationCommon.isSubstring(tripRoute.origin, infoSearch.departure) &&
             LocationCommon.isSubstring(tripRoute.destination, infoSearch.destination) &&
-            tripRoute.arrivalTime.includes(infoSearch.date.trim()),
+            tripRoute.departureTime.includes(infoSearch.date.trim()),
         )
         .map((item) => ({
           ...item,
@@ -99,7 +100,7 @@ const BookingPage: React.FC = () => {
           arrival: item.destination,
           type: item.model,
           distance: '200km',
-          duration: 9,
+          duration: item.duration,
         }));
       setRoutesRender([...tripRoutesResults]);
       setAllTripRoute([...tripRoutesResults]);

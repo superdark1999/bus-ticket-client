@@ -99,7 +99,8 @@ const ConfirmingPage: React.FC = () => {
                 <LocationIcon />
                 {infoCard.departure}
                 <Distance>
-                  Xe tuyến: {infoCard.distance} = {infoCard.duration}
+                  Thời gian dự kiến: {Math.floor(infoCard.duration / 60)} giờ{' '}
+                  {infoCard.duration % 60 === 0 ? '' : `${infoCard.duration % 60} phút`}
                 </Distance>
               </RouteLine>
               <RouteLine>
