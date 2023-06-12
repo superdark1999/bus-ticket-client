@@ -29,12 +29,12 @@ export const getConfig = async () => {
 
 const createTripRoute = async (data: any) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { seatNumber, tripRoute_id, customerName, customerPhone, customerEmail } = data;
+  const { seatNumberList, tripRoute_id, customerName, customerPhone, customerEmail } = data;
   try {
     const query = `
-    mutation AddTicket($seatNumber: Int!, $tripRoute_id: String!, 
+    mutation AddTicket($seatNumberList: [Int!]!, $tripRoute_id: String!, 
       $customerName: String!, $customerPhone: String!, $customerEmail: String) {
-      addTicket(seatNumber: $seatNumber, tripRoute_id: $tripRoute_id, 
+      addTicket(seatNumberList: $seatNumberList, tripRoute_id: $tripRoute_id, 
         customerName: $customerName, customerPhone: $customerPhone, customerEmail: $customerEmail) {
         _id
         seatNumber
@@ -49,7 +49,7 @@ const createTripRoute = async (data: any) => {
   `;
 
     const variables = {
-      seatNumber,
+      seatNumberList,
       tripRoute_id,
       customerName,
       customerPhone,
