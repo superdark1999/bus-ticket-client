@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-import { Form, Select, DatePicker, Button } from 'antd';
-import type { RangePickerProps } from 'antd/es/date-picker';
-import dayjs from 'dayjs';
+import { Form, Select, DatePicker, Button, Col, FormInstance } from 'antd';
+import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { RxCalendar } from 'react-icons/rx';
 import { useNavigate } from 'react-router';
@@ -14,8 +11,15 @@ import { appSelector } from 'state/app/reducer';
 import { useAppDispatch } from 'state';
 import { fetchAllTripRoutes } from 'state/app/action';
 import { LocationCommon } from 'utils/appData';
+import { v4 } from 'uuid';
+
+const DATE_FORMAT = 'DD/MM/YYYY';
 
 const SearchStyle = styled.div`
+  .ant-picker {
+    width: 100%;
+  }
+
   .sectionContainer {
     width: 100%;
     padding: 1.5rem;
@@ -120,9 +124,27 @@ const SearchStyle = styled.div`
   }
 `;
 
+const CustomLabel = styled.div`
+  display: inline-flex;
+  font-size: 20px;
+  font-weight: 500;
+  align-items: flex-start;
+  gap: 5px;
+  transform: translateY(6px);
+  svg {
+    font-size: 30px;
+  }
+`;
+
 interface SearchOption {
   label: string;
   value: string;
+}
+
+interface FormValue {
+  start: string;
+  end: string;
+  date: Dayjs;
 }
 
 const Search = () => {
@@ -130,14 +152,17 @@ const Search = () => {
   const { loading, tripRoutes, locationData } = useSelector(appSelector);
   const [originOptions, setOriginOptions] = useState<SearchOption[]>([]);
   const [desOptions, setDesOptions] = useState<SearchOption[]>([]);
+  const [dateOptions, setDateOptions] = useState<string[]>([]);
+  const formRef = React.useRef<FormInstance<FormValue>>(null);
+
+  const [refreshKey, setRefreshKey] = useState(v4());
 
   const navigate = useNavigate();
 
   dayjs.extend(customParseFormat);
-  const { Option } = Select;
 
   const config = {
-    rules: [{ type: 'object' as const, required: true, message: 'Please select time!' }],
+    rules: [{ type: 'object' as const, required: true, message: 'Vui lòng chọn ngày đi!' }],
   };
 
   const onFinish = (values: any) => {
@@ -146,31 +171,9 @@ const Search = () => {
     // link to booking
     navigate({
       pathname: '/booking',
-      search: `?departure=${values.start}&destination=${values.end}&date=${values.date}`,
+      search: `?departure=${values.start}&destination=${values.end}&date=${(values.date as Dayjs).format(DATE_FORMAT)}`,
     });
   };
-
-  // const { RangePicker } = DatePicker;
-
-  const range = (start: number, end: number) => {
-    const result = [];
-    for (let i = start; i < end; i++) {
-      result.push(i);
-    }
-    return result;
-  };
-
-  // eslint-disable-next-line arrow-body-style
-  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-    // Can not select days before today and today
-    return current && current < dayjs().startOf('day');
-  };
-
-  const disabledDateTime = () => ({
-    disabledHours: () => range(0, 24).splice(4, 20),
-    disabledMinutes: () => range(30, 60),
-    disabledSeconds: () => [55, 56],
-  });
 
   useEffect(() => {
     if (loading === 'idle') {
@@ -183,25 +186,49 @@ const Search = () => {
       const listOrigin = locationData.filter((city) =>
         tripRoutes.some((tripRoute) => tripRoute.origin.toLocaleLowerCase().includes(city.Name.toLocaleLowerCase())),
       );
-      const listDes = locationData.filter((city) =>
-        tripRoutes.some((tripRoute) =>
-          tripRoute.destination.toLocaleLowerCase().includes(city.Name.toLocaleLowerCase()),
-        ),
-      );
       setOriginOptions(
         listOrigin.map((item) => ({
           value: item.Name,
           label: item.Name,
         })),
       );
-      setDesOptions(
-        listDes.map((item) => ({
-          value: item.Name,
-          label: item.Name,
-        })),
-      );
     }
   }, [loading, tripRoutes, locationData]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (!formRef.current) return;
+      const { start, end, date } = formRef.current.getFieldsValue();
+      let newDesOptions: SearchOption[] = [];
+      if (start)
+        newDesOptions = locationData
+          .filter((city) =>
+            tripRoutes.some(
+              (tripRoute) =>
+                LocationCommon.isSubstring(tripRoute.origin, start) &&
+                LocationCommon.isSubstring(tripRoute.destination, city.Name),
+            ),
+          )
+          .map((city) => ({
+            label: city.Name,
+            value: city.Name,
+          }));
+      setDesOptions(newDesOptions);
+      if (!newDesOptions.some((option) => option.value === end)) formRef.current.setFieldValue('end', null);
+
+      let newDateOptions: string[] = [];
+      if (start && end)
+        newDateOptions = tripRoutes
+          .filter(
+            (tripRoute) =>
+              LocationCommon.isSubstring(tripRoute.origin, start) &&
+              LocationCommon.isSubstring(tripRoute.destination, end),
+          )
+          .map((tripRoute) => tripRoute.arrivalTime.split(' ').at(1)?.trim() || '');
+
+      setDateOptions(newDateOptions);
+    }, 100);
+  }, [refreshKey]);
 
   return (
     <SearchStyle className="container section">
@@ -214,65 +241,108 @@ const Search = () => {
             display: 'flex',
             flexDirection: 'row',
           }}
+          layout="vertical"
+          ref={formRef}
         >
-          {/* Single Input */}
-          <div className="singleInput flex">
-            <div className="iconDiv">
-              <HiOutlineLocationMarker className="icon" />
-            </div>
+          <Col span={4}>
+            <Form.Item
+              name="start"
+              rules={[{ required: true, message: 'Vui lòng chọn điểm đi!' }]}
+              label={
+                <CustomLabel>
+                  <HiOutlineLocationMarker />
+                  <span>Điểm đi</span>
+                </CustomLabel>
+              }
+              required={false}
+            >
+              <Select
+                placeholder="Bạn muốn đi từ đâu?"
+                showSearch
+                filterOption={(inputValue: string, option?: SearchOption) =>
+                  LocationCommon.isSubstring(option?.value || '', inputValue)
+                }
+                options={originOptions}
+                onSelect={() => {
+                  setRefreshKey(v4());
+                }}
+                key={refreshKey}
+              />
+            </Form.Item>
+          </Col>
 
-            <div className="text">
-              <h4>Điểm đi</h4>
-              <Form.Item name="start" rules={[{ required: true, message: 'Vui lòng chọn điểm đi!' }]}>
-                <Select
-                  placeholder="Bạn muốn đi từ đâu?"
-                  showSearch
-                  filterOption={(inputValue: string, option?: SearchOption) =>
-                    LocationCommon.isSubstring(option?.value || '', inputValue)
+          <Col span={4}>
+            <Form.Item
+              name="end"
+              rules={[{ required: true, message: 'Vui lòng chọn điểm đến!' }]}
+              label={
+                <CustomLabel>
+                  <HiOutlineLocationMarker />
+                  <span>Điểm đến</span>
+                </CustomLabel>
+              }
+              required={false}
+            >
+              <Select
+                placeholder="Bạn muốn đi đến đâu?"
+                showSearch
+                filterOption={(inputValue: string, option?: SearchOption) =>
+                  LocationCommon.isSubstring(option?.value || '', inputValue)
+                }
+                options={desOptions}
+                onFocus={(e) => {
+                  if (!formRef.current) return;
+                  const { start } = formRef.current.getFieldsValue();
+                  if (!start) {
+                    e.target.blur();
+                    formRef.current?.validateFields(['start']);
                   }
-                  options={originOptions}
-                />
-              </Form.Item>
-            </div>
-          </div>
-          {/* Single Input */}
-          <div className="singleInput flex">
-            <div className="iconDiv">
-              <HiOutlineLocationMarker className="icon" />
-            </div>
+                }}
+                onSelect={() => {
+                  setRefreshKey(v4());
+                }}
+                key={refreshKey}
+              />
+            </Form.Item>
+          </Col>
 
-            <div className="text">
-              <h4>Điểm đến</h4>
-              <Form.Item name="end" hasFeedback rules={[{ required: true, message: 'Vui lòng chọn điểm đến!' }]}>
-                <Select
-                  placeholder="Bạn muốn đi đến đâu?"
-                  showSearch
-                  filterOption={(inputValue: string, option?: SearchOption) =>
-                    LocationCommon.isSubstring(option?.value || '', inputValue)
+          <Col span={4}>
+            <Form.Item
+              name="date"
+              {...config}
+              label={
+                <CustomLabel>
+                  <RxCalendar />
+                  <span> Ngày đi</span>
+                </CustomLabel>
+              }
+              required={false}
+            >
+              <DatePicker
+                disabledDate={(date) => {
+                  if (date.toISOString() < dayjs().startOf('day').toISOString()) return true;
+                  return !dateOptions.includes(date.format(DATE_FORMAT).trim());
+                }}
+                placeholder="Bạn muốn đi vào ngày nào?"
+                key={refreshKey}
+                format={DATE_FORMAT}
+                onFocus={(e) => {
+                  if (!formRef.current) return;
+                  const { start, end } = formRef.current.getFieldsValue();
+                  if (!start) {
+                    e.target.blur();
+                    e.currentTarget.blur();
+                    formRef.current?.validateFields(['start']);
+                    return;
                   }
-                  options={desOptions}
-                />
-              </Form.Item>
-            </div>
-          </div>
-          {/* Single Input */}
-          <div className="singleInput flex">
-            <div className="iconDiv">
-              <RxCalendar className="icon" />
-            </div>
-
-            <div className="text">
-              <h4>Ngày đi</h4>
-              <Form.Item name="date" {...config}>
-                <DatePicker
-                  disabledDate={disabledDate}
-                  disabledTime={disabledDateTime}
-                  placeholder="Bạn muốn đi vào ngày nào?"
-                />
-              </Form.Item>
-              {/* <input type="text" placeholder="Bạn muốn đi vào ngày nào?" /> */}
-            </div>
-          </div>
+                  if (!end) {
+                    e.target.blur();
+                    formRef.current?.validateFields(['end']);
+                  }
+                }}
+              />
+            </Form.Item>
+          </Col>
 
           <Button className="btn btnBlock flex" type="primary" htmlType="submit">
             Tìm chuyến xe

@@ -22,6 +22,7 @@ const ForgotPasswordPage = lazy(() => import('views/auth/ForgotPassword/ForgotPa
 
 /* eslint-disable  @typescript-eslint/naming-convention  */
 export enum ROUTER_PATH {
+  'HOMEPAGE' = '/',
   'LOGIN' = '/login',
   'MYTICKET' = '/myticket',
   'BOOKING' = '/booking',
