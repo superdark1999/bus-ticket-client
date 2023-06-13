@@ -46,7 +46,7 @@ const TripRoute = () => {
   const [isAddingtripRouteOpen, setIsAddingRripRouteOpen] = useState(false);
   const [tripRouteList, settripRouteList] = useState<TripRouteData[]>([]);
   const [tripList, setTripList] = useState<ITrip[]>([]);
-  const [stationList, setStationList] = useState<string[]>([]);
+  const [stationList, setStationList] = useState<{ id: string; label: string }[]>([]);
   const [coachList, setCoachList] = useState<ICoach[]>([]);
   const [registrationList, setRegistrationList] = useState<string[]>([]);
 
@@ -68,7 +68,10 @@ const TripRoute = () => {
     adminTripApi.getListTrip(1, 1000).then((res) => {
       const { results, totalResults } = res;
       // split into 2 tables to choose the departure and arrival points
-      const trip = results.map(({ origin, destination }) => `${origin} --> ${destination}`);
+      const trip = results.map(({ origin, destination, id }) => ({
+        id,
+        label: `${origin} --> ${destination}`,
+      }));
       setStationList(trip);
       setTripList(results);
     });
@@ -228,8 +231,8 @@ const TripRoute = () => {
                   showSearch
                   defaultValue="Điểm Đi --> Điểm đến"
                   options={stationList.map((station) => ({
-                    value: station,
-                    label: station,
+                    value: station.id,
+                    label: station.label,
                   }))}
                   filterSort={(optA, optB) =>
                     (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
