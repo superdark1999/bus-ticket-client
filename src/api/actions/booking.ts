@@ -1,17 +1,15 @@
-import axiosClient from "api/apiClient";
+import axiosClient from 'api/apiClient';
 import axios from 'axios';
 
-const baseRoute = "/booking";
+const baseRoute = '/booking';
 const subRoutes = {
-  searchTicket: "/search-ticket",
-  register: "/payment",
+  searchTicket: '/search-ticket',
+  register: '/payment',
 };
 
 Object.keys(subRoutes).forEach(
   // eslint-disable-next-line no-return-assign
-  (key) =>
-    (subRoutes[key as keyof typeof subRoutes] =
-      baseRoute + subRoutes[key as keyof typeof subRoutes])
+  (key) => (subRoutes[key as keyof typeof subRoutes] = baseRoute + subRoutes[key as keyof typeof subRoutes]),
 );
 
 // eslint-disable-next-line import/prefer-default-export, consistent-return
@@ -20,12 +18,9 @@ export const getConfig = async () => {
     const response = await axiosClient.get(subRoutes.searchTicket);
     return response.data;
   } catch (error) {
-    console.log("error getConfig", error);
+    console.log('error getConfig', error);
   }
 };
-
-
-
 
 const createTripRoute = async (data: any) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -53,10 +48,10 @@ const createTripRoute = async (data: any) => {
       tripRoute_id,
       customerName,
       customerPhone,
-      customerEmail
+      customerEmail,
     };
 
-    const response = await axios.post('http://localhost:8082/graphql', { query, variables });
+    const response = await axios.post('http://www.busticket.net.eu.org/graphql', { query, variables });
     return response.data.data.addTicket;
   } catch (error) {
     console.log('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
@@ -64,9 +59,8 @@ const createTripRoute = async (data: any) => {
   }
 };
 
-
 const bookingApi = {
   createTripRoute,
-}
+};
 
 export default bookingApi;

@@ -1,7 +1,7 @@
 export const BASE_URL = {
-  adminTrip: 'http://localhost:8081/trip', // resful API
-  adminTripRoute: 'http://localhost:8085',
-  adminCoach: 'http://localhost:8083',
+  adminTrip: 'http://www.busticket.net.eu.org/trip', // resful API
+  adminTripRoute: 'http://www.busticket.net.eu.org',
+  adminCoach: 'http://www.busticket.net.eu.org',
   user: '',
   booking: '',
 };
