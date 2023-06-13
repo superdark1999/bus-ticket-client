@@ -2,13 +2,13 @@ import axios from 'axios';
 import { BASE_URL } from './utils/constant';
 
 const axiosAdminTrip = axios.create({
-  baseURL: BASE_URL.adminTrip,
+  baseURL: BASE_URL().adminTrip,
 });
 const axiosAdminTripRoute = axios.create({
-  baseURL: BASE_URL.adminTripRoute,
+  baseURL: BASE_URL().adminTripRoute,
 });
 const axiosAdminCoach = axios.create({
-  baseURL: BASE_URL.adminCoach,
+  baseURL: BASE_URL().adminCoach,
 });
 
 axios.interceptors.request.use(async (config) => {
