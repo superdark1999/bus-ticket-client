@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Layout, Menu } from 'antd';
-import { UserOutlined, CarOutlined, DashboardOutlined } from '@ant-design/icons';
+import { CarOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import LogoApp from 'components/LogoApp';
 import { ItemType } from 'antd/es/menu/hooks/useItems';

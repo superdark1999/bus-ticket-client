@@ -71,7 +71,7 @@ const TripRoute = () => {
 
     // get trip list to select, get 1000 because it maybe include all item
     adminTripApi.getListTrip(1, 1000).then((res) => {
-      const { results, totalResults } = res;
+      const { results } = res;
       // split into 2 tables to choose the departure and arrival points
       const trip = results.map(({ origin, destination, id, price }) => ({
         id,

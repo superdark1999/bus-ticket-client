@@ -6,7 +6,6 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { InfoCard } from 'components/TripRouteCard/index';
 import { useLocation, useNavigate } from 'react-router';
-import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { appSelector } from 'state/app/reducer';
 import { useAppDispatch } from 'state';
