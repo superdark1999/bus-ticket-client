@@ -332,7 +332,7 @@ const Coach = () => {
                 ]}
               >
                 <Select
-                  options={[16, 32, 40].map((value) => ({
+                  options={[16, 24, 34, 40].map((value) => ({
                     label: value.toString(),
                     value,
                   }))}
