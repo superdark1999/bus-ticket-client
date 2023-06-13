@@ -1,7 +1,7 @@
 import { Button, Col, Row, Select } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 import StepLine from 'components/StepLine';
-import BookingInfo from 'components/TripRouteCard';
+import TripRouteCard from 'components/TripRouteCard';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { InfoCard } from 'components/TripRouteCard/index';
@@ -55,9 +55,8 @@ const timeRanges = {
 
 const BookingPage: React.FC = () => {
   // get info from param
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
+  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const infoSearch: InfoSearch = {
@@ -153,6 +152,22 @@ const BookingPage: React.FC = () => {
     label: sortDefaulLabel[item],
   }));
 
+  const handleContinueButton = (infoCard: InfoCard) => {
+    navigate(
+      {
+        pathname: '/booking/confirming',
+        search: `${location.search}`,
+      },
+      {
+        state: {
+          infoCard: { ...infoCard },
+          seats: [],
+          seatsId: [],
+        },
+      },
+    );
+  };
+
   return (
     <Container>
       <Row style={{ fontSize: '24px', fontWeight: 'bold' }}>
@@ -192,7 +207,13 @@ const BookingPage: React.FC = () => {
         Chọn giờ lên xe đi {infoSearch.destination} từ {infoSearch.departure} phù hợp
       </Row>
       {routesRender.map((route) => (
-        <BookingInfo key={route.id} {...route} />
+        <TripRouteCard
+          key={route.id}
+          {...route}
+          onClick={() => {
+            handleContinueButton(route);
+          }}
+        />
       ))}
       <Row>
         <BackButton onClick={() => navigate(-1)}>
