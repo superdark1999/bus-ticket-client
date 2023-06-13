@@ -53,16 +53,16 @@ export enum TabKey {
 }
 
 const menuItems: ItemType[] = [
-  {
-    key: TabKey.DASHBOARD,
-    icon: <DashboardOutlined />,
-    label: 'Tổng quan',
-  },
-  {
-    key: TabKey.USER,
-    icon: <UserOutlined />,
-    label: 'Người dùng',
-  },
+  // {
+  //   key: TabKey.DASHBOARD,
+  //   icon: <DashboardOutlined />,
+  //   label: 'Tổng quan',
+  // },
+  // {
+  //   key: TabKey.USER,
+  //   icon: <UserOutlined />,
+  //   label: 'Người dùng',
+  // },
   {
     key: TabKey.ASSETS,
     icon: <CarOutlined />,
