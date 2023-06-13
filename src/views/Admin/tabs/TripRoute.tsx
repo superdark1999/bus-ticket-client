@@ -130,7 +130,7 @@ const TripRoute = () => {
     console.log(values);
 
     // get id trip and coach
-    const trip = tripList[stationList.indexOf(values.trip)];
+    const trip = tripList[stationList.findIndex((station) => station.id === values.trip)];
     const coach = coachList[registrationList.indexOf(values.bus)];
     const numberSeat = coachList[registrationList.indexOf(values.bus)].capacity || 0;
     const bookedSeat = new Array(numberSeat);

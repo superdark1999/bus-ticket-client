@@ -258,7 +258,9 @@ function Footer() {
               <a href="/">Liên hệ</a>
             </li>
             <li>
-              <a href="/">Hóa đơn</a>
+              <a href="/myticket" target="_self">
+                Hóa đơn
+              </a>
             </li>
           </div>
 
