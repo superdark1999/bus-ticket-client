@@ -198,7 +198,7 @@ const Search = () => {
   useEffect(() => {
     setTimeout(() => {
       if (!formRef.current) return;
-      const { start, end, date } = formRef.current.getFieldsValue();
+      const { start, end } = formRef.current.getFieldsValue();
       let newDesOptions: SearchOption[] = [];
       if (start)
         newDesOptions = locationData

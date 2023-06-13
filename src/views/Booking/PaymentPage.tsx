@@ -4,7 +4,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { LeftOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router';
-import moment from 'moment';
 import { InfoCard } from 'components/TripRouteCard/index';
 import bookingApi from 'api/actions/booking';
 import { InfoSearch } from './BookingPage';
@@ -32,7 +31,7 @@ const PaymentPage: React.FC = () => {
     infoSearch: {
       departure: searchParams.get('departure') || '',
       destination: searchParams.get('destination') || '',
-      date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
+      date: searchParams.get('date') || '',
     },
     infoCard: location.state?.infoCard || '',
     infoSeat: {

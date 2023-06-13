@@ -1,21 +1,13 @@
-import { Button, Row, Divider, Select } from 'antd';
+import { Button, Row, Divider } from 'antd';
 import StepLine from 'components/StepLine';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { LeftOutlined, EnvironmentOutlined, EditOutlined, RightOutlined } from '@ant-design/icons';
+import { LeftOutlined, EnvironmentOutlined, RightOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { InfoSearch } from 'views/Booking/BookingPage';
 import { InfoCard } from 'components/TripRouteCard/index';
 import SeatSelection from 'components/TripRouteCard/selectSeats';
-
-const { Option } = Select;
-
-const options = [
-  { value: 'option1', label: 'Option 1' },
-  { value: 'option2', label: 'Option 2' },
-  { value: 'option3', label: 'Option 3' },
-];
 
 const ConfirmingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,10 +19,7 @@ const ConfirmingPage: React.FC = () => {
     seats: location.state?.seats,
     seatsId: location.state?.seatsId,
   });
-  // pick shuttle
-  const [optionPicked, setOptionPicked] = useState<string>('');
-  // check pick select seats
-  const [showSelectedSeats, setShowSelectedSeats] = useState(false);
+
   // check path to navigate booking when reload page by path
   useEffect(() => {
     if (!location.state) {
@@ -52,12 +41,6 @@ const ConfirmingPage: React.FC = () => {
   // content in step
   const content = 1;
 
-  // hanle when click btn "Chọn ghế" then hidden btn "Tiếp tục" in selectSeats component
-  const handleSelectSeats = () => {
-    infoCard.hiddenBtn = true;
-    setShowSelectedSeats(true);
-  };
-
   const handleContinue = () => {
     navigate(
       {
@@ -69,7 +52,6 @@ const ConfirmingPage: React.FC = () => {
           infoCard: { ...infoCard },
           seats: infoSeat.seats,
           seatsId: infoSeat.seatsId,
-          shuttle: optionPicked,
         },
       },
     );
@@ -110,33 +92,11 @@ const ConfirmingPage: React.FC = () => {
               </RouteLine>
             </RouterInfo>
           </RouteContainer>
+
+          <div style={{ padding: '0 20px 20px' }}>
+            <SeatSelection infoCard={infoCard} seatsId={infoSeat.seatsId} seatsSelected={infoSeat.seats} />
+          </div>
           <StyledDivider />
-          {!showSelectedSeats ? (
-            <ContainerChooseSeat>
-              <TitleSeat>
-                Chon ghế
-                <InfoSeat>{infoSeat.seats?.join(', ')}</InfoSeat>
-              </TitleSeat>
-              <ButtonSeat onClick={handleSelectSeats}>
-                CHỌN GHẾ <EditOutlined />
-              </ButtonSeat>
-            </ContainerChooseSeat>
-          ) : (
-            <div style={{ padding: '0 20px 20px' }}>
-              <SeatSelection infoCard={infoCard} seatsId={infoSeat.seatsId} seatsSelected={infoSeat.seats} />
-            </div>
-          )}
-          <StyledDivider />
-          <Row style={{ padding: '20px', flexDirection: 'column' }}>
-            <Label>Điểm lên xe</Label>
-            <Select defaultValue="Chọn điểm lên xe" onChange={(value) => setOptionPicked(value)}>
-              {options.map((option) => (
-                <Option key={option.value} value={option.label}>
-                  {option.label}
-                </Option>
-              ))}
-            </Select>
-          </Row>
         </Content>
       </Row>
       <Row style={{ flexFlow: 'row' }}>
@@ -146,7 +106,7 @@ const ConfirmingPage: React.FC = () => {
         <StyledButton
           type="primary"
           style={{ marginLeft: '16px' }}
-          disabled={Boolean(!optionPicked)}
+          // disabled={Boolean(!optionPicked)}
           onClick={handleContinue}
         >
           Tiếp tục <RightOutlined />
@@ -258,39 +218,6 @@ const StyledDivider = styled(Divider)`
   border-bottom: 1px solid #dde2e8;
   background-color: #f7f7f7;
   margin: 0;
-`;
-
-const ContainerChooseSeat = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-`;
-
-const TitleSeat = styled.div`
-  flex: 1;
-  font-size: 13px;
-  color: #637280;
-`;
-
-const InfoSeat = styled.div`
-  font-size: 18px;
-  font-weight: 500;
-  color: #111;
-`;
-
-const ButtonSeat = styled.div`
-  font-size: 11px;
-  font-weight: 700;
-  color: #ef5222;
-  text-transform: uppercase;
-  line-height: 20px;
-  cursor: pointer;
-`;
-
-const Label = styled.div`
-  font-size: 13px;
-  color: #637280;
-  margin-bottom: 4px;
 `;
 
 export default ConfirmingPage;

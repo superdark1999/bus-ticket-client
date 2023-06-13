@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { Checkbox } from 'antd';
 import { EnvironmentOutlined, SwapRightOutlined, WifiOutlined, RestOutlined } from '@ant-design/icons';
 import { TripRouteData } from 'views/Admin/tabs/TripRoute';
-import SeatSelection from './selectSeats';
 
 export interface InfoCard extends TripRouteData {
   timeDeparture: string;
@@ -14,67 +12,61 @@ export interface InfoCard extends TripRouteData {
   departure: string;
   arrival: string;
   hiddenBtn?: boolean;
+  onClick?: () => void;
 }
 
-const BookingInfo: React.FC<InfoCard> = ({ ...props }) => {
-  useEffect(() => {});
-  const [selected, setSelected] = useState<boolean>(false);
-
-  const handleCheckbox = () => {
-    setSelected(!selected);
-
-    // TODO: call API to get list seat
-    // Transmitting the seating list, and price to SeatSelection component.
-  };
-  return (
-    <Container selected={selected}>
-      <FirstRow>
-        {props.timeDeparture}
-        <SwapRightOutlined />
-        {props.timeArrival}
-        <Amenities>
-          <WifiOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
-          <RestOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
-        </Amenities>
-      </FirstRow>
-      <SecondRow>
-        {props.price.toLocaleString()}đ
-        <Dot />
-        {props.type}
-        <Dot />
-        {props.seatsAvailable} chỗ
-      </SecondRow>
-      <RouteContainer>
-        <RouterInfo>
-          <RouteLine>
-            <LocationIcon />
-            {props.departure}
-            <Distance>
-              Thời gian dự kiến: {Math.floor(props.duration / 60)} giờ{' '}
-              {props.duration % 60 === 0 ? '' : `${props.duration % 60} phút`}
-            </Distance>
-            {/* Xe tuyến: {props.distance} = {props.duration} */}
-          </RouteLine>
-          <RouteLine>
-            <LocationIcon />
-            {props.arrival}
-          </RouteLine>
-        </RouterInfo>
-        <CheckboxContainer>
-          <Checkbox checked={selected} onChange={handleCheckbox} />
-          Chọn
-        </CheckboxContainer>
-      </RouteContainer>
-      {selected && <SeatSelection infoCard={props} seatsSelected={[]} seatsId={[]} />}
-    </Container>
-  );
-};
-
-const Container = styled.div<{ selected: boolean }>`
+const TripRouteCard: React.FC<InfoCard> = ({ ...props }) => (
+  <Container
+    onClick={() => {
+      if (props.onClick) props.onClick();
+    }}
+  >
+    <FirstRow>
+      {props.timeDeparture}
+      <SwapRightOutlined />
+      {props.timeArrival}
+      <Amenities>
+        <WifiOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
+        <RestOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
+      </Amenities>
+    </FirstRow>
+    <SecondRow>
+      {props.price.toLocaleString()}đ
+      <Dot />
+      {props.type}
+      <Dot />
+      {props.seatsAvailable} chỗ
+    </SecondRow>
+    <RouteContainer>
+      <RouterInfo>
+        <RouteLine>
+          <LocationIcon />
+          {props.departure}
+          <Distance>
+            Thời gian dự kiến: {Math.floor(props.duration / 60)} giờ{' '}
+            {props.duration % 60 === 0 ? '' : `${props.duration % 60} phút`}
+          </Distance>
+          {/* Xe tuyến: {props.distance} = {props.duration} */}
+        </RouteLine>
+        <RouteLine>
+          <LocationIcon />
+          {props.arrival}
+        </RouteLine>
+      </RouterInfo>
+    </RouteContainer>
+    {/* {selected && <SeatSelection infoCard={props} seatsSelected={[]} seatsId={[]} />} */}
+  </Container>
+);
+const Container = styled.div`
   padding: 20px;
   border-radius: 8px;
-  border: ${({ selected }) => (selected ? '2px solid #1677ff' : '1px solid #dde2e8')};
+  box-sizing: border-box;
+  border: 2px solid #dde2e8;
   margin-bottom: 20px;
+  cursor: pointer;
+  &:hover {
+    border: 2px solid #1677ff;
+  }
 `;
 
 const FirstRow = styled.div`
@@ -142,14 +134,4 @@ const Distance = styled.div`
   height: 30px;
 `;
 
-const CheckboxContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  color: #01613d;
-  font-size: 13px;
-  width: 34px;
-`;
-
-export default BookingInfo;
+export default TripRouteCard;

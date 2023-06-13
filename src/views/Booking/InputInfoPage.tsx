@@ -103,17 +103,20 @@ const InputInfoPage: React.FC = () => {
           <RuleContainer>
             <TitleText>ĐIỀU KHOẢN & LƯU Ý</TitleText>
             <Typography.Paragraph>
-              (*) Quý khách vui lòng mang mã vé đến văn phòng để đổi vé lên xe trước giờ xuất bến ít nhất 60 phút
+              <RequiredMard>*</RequiredMard> Quý khách vui lòng mang mã vé đến văn phòng để đổi vé lên xe trước giờ xuất
+              bến ít nhất 60 phút
             </Typography.Paragraph>
             <Typography.Paragraph>
-              (*) Thông tin hành khách phải chính xác, nếu không sẽ không thể lên xe hoặc hủy/đổi vé.
+              <RequiredMard>*</RequiredMard> Thông tin hành khách phải chính xác, nếu không sẽ không thể lên xe hoặc
+              hủy/đổi vé.
             </Typography.Paragraph>
             <Typography.Paragraph>
-              (*) Quý khách không được đổi/trả vé vào các ngày Lễ Tết (ngày thường quý khách được quyền chuyển đổi hoặc
-              hủy vé duy nhất trước giờ xe chạy 24 giờ), phí hủy vé 10%.
+              <RequiredMard>*</RequiredMard> Quý khách không được đổi/trả vé vào các ngày Lễ Tết (ngày thường quý khách
+              được quyền chuyển đổi hoặc hủy vé duy nhất trước giờ xe chạy 24 giờ), phí hủy vé 10%.
             </Typography.Paragraph>
             <Typography.Paragraph>
-              (*) Nếu quý khách có cách yêu cầu khác xin vui lòng liên hệ số hotline trước khi đặt vé.
+              <RequiredMard>*</RequiredMard> Nếu quý khách có cách yêu cầu khác xin vui lòng liên hệ số hotline trước
+              khi đặt vé.
             </Typography.Paragraph>
           </RuleContainer>
         </Col>
@@ -129,6 +132,10 @@ const InputInfoPage: React.FC = () => {
     </Wrapper>
   );
 };
+
+const RequiredMard = styled.span`
+  color: red;
+`;
 
 const Wrapper = styled.div`
   max-width: 936px;
