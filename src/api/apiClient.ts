@@ -1,11 +1,11 @@
-import axios from "axios";
+import axios from 'axios';
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: 'http://www.busticket.net.eu.org',
 });
 
 axios.interceptors.request.use(async (config) => {
-  console.log("config", config);
+  console.log('config', config);
   return config;
 });
 
@@ -17,7 +17,7 @@ axiosClient.interceptors.response.use(
     // }
     console.error(res);
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosClient;
