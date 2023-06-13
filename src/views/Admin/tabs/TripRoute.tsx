@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Row, Col, Button, Modal, Form, Select, DatePicker, message } from 'antd';
 import { ColumnsType, TableProps } from 'antd/es/table';
-// import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import dayjs from 'dayjs';
 import moment from 'moment';
@@ -10,7 +9,7 @@ import adminTripApi from 'api/actions/trip';
 import adminCoach from 'api/actions/coachAPI';
 import adminTripRoute from 'api/actions/tripRouteAPI';
 import styled from 'styled-components';
-
+import { ArrowRightOutlined } from '@ant-design/icons';
 import { ITrip } from './Trip';
 import { ICoach } from './Assets';
 
@@ -30,6 +29,12 @@ export interface ITripRoute {
 //   destination: string;
 // }
 
+const CustomItemLabel = styled.div`
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+`;
+
 export type TripRouteData = ITripRoute & ICoach & ITrip;
 
 function sortedTripRouteList(tripRouteList: TripRouteData[]) {
@@ -46,7 +51,7 @@ const TripRoute = () => {
   const [isAddingtripRouteOpen, setIsAddingRripRouteOpen] = useState(false);
   const [tripRouteList, settripRouteList] = useState<TripRouteData[]>([]);
   const [tripList, setTripList] = useState<ITrip[]>([]);
-  const [stationList, setStationList] = useState<string[]>([]);
+  const [stationList, setStationList] = useState<{ id: string; label: React.ReactNode; info: string }[]>([]);
   const [coachList, setCoachList] = useState<ICoach[]>([]);
   const [registrationList, setRegistrationList] = useState<string[]>([]);
 
@@ -68,7 +73,18 @@ const TripRoute = () => {
     adminTripApi.getListTrip(1, 1000).then((res) => {
       const { results, totalResults } = res;
       // split into 2 tables to choose the departure and arrival points
-      const trip = results.map(({ origin, destination }) => `${origin} --> ${destination}`);
+      const trip = results.map(({ origin, destination, id, price }) => ({
+        id,
+        label: (
+          <CustomItemLabel>
+            <span>{origin}</span>
+            <ArrowRightOutlined />
+            <span>{destination}</span>
+            <span>{`(${price.toLocaleString()}VNĐ)`}</span>
+          </CustomItemLabel>
+        ),
+        info: `${origin} --> ${destination}`,
+      }));
       setStationList(trip);
       setTripList(results);
     });
@@ -226,13 +242,14 @@ const TripRoute = () => {
               <Form.Item name="trip" label="Tuyến đường" rules={[{ required: true, message: 'Chưa chọn tuyến đường' }]}>
                 <Select
                   showSearch
-                  defaultValue="Điểm Đi --> Điểm đến"
+                  placeholder="Điểm Đi --> Điểm đến"
                   options={stationList.map((station) => ({
-                    value: station,
-                    label: station,
+                    value: station.id,
+                    label: station.label,
+                    info: station.info,
                   }))}
                   filterSort={(optA, optB) =>
-                    (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
+                    (optA?.info || '').toLowerCase().localeCompare((optB?.info || '').toLowerCase())
                   }
                 />
               </Form.Item>

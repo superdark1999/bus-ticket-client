@@ -25,6 +25,7 @@ if something goes wrong:
   yarn start
   ...
 
+Deployed at: http://busticket.net.eu.org/
 AdminPage: http://localhost:3000/admin
 
 ## Recommended vscode extension
