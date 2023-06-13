@@ -155,7 +155,7 @@ const TripRoute = () => {
       .then((result) => {
         const tripRoute: TripRouteData = {
           ...coachList[registrationList.indexOf(values.bus)],
-          ...tripList[stationList.indexOf(values.trip)],
+          ...tripList[stationList.findIndex((station) => station.id === values.trip)],
           ...result,
         };
         const newtripRouteList = [tripRoute, ...tripRouteList];
