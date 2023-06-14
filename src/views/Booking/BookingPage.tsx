@@ -87,7 +87,7 @@ const BookingPage: React.FC = () => {
           (tripRoute) =>
             LocationCommon.isSubstring(tripRoute.origin, infoSearch.departure) &&
             LocationCommon.isSubstring(tripRoute.destination, infoSearch.destination) &&
-            tripRoute.arrivalTime.includes(infoSearch.date.trim()),
+            tripRoute.departureTime.includes(infoSearch.date.trim()),
         )
         .map((item) => ({
           ...item,

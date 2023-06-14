@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
 import { HiOutlineLocationMarker } from 'react-icons/hi';
+import { Input, Spin } from 'antd';
+import bookingApi, { ITicket } from 'api/actions/booking';
+import { useSelector } from 'react-redux';
+import { appSelector } from 'state/app/reducer';
+import { useAppDispatch } from 'state';
+import { fetchAllTripRoutes } from 'state/app/action';
+
+const { Search } = Input;
 
 const MainDefaultStyle = styled.div`
   a {
@@ -432,44 +439,149 @@ const Image = [
   },
 ];
 
-const MyTicketPage = () => (
-  <MainDefaultStyle>
-    <MyTicketStyle className="container section" style={{ paddingTop: '10rem' }}>
-      <div className="secTitle">
-        <h1 className="title">Vé của tôi</h1>
-      </div>
+function containsOnlyNumbers(str: string) {
+  return /^\d+$/.test(str);
+}
 
-      <div className="secContent grid">
-        {Data.map(({ id, destTitle, location, time, seatNumber, fees }, index) => {
-          const image = Image[index] ? Image[index].imgSrc : null;
+interface IDataCard {
+  id: string;
+  destTitle: string;
+  location: string;
+  time: string;
+  seatNumber: string;
+  fees: string;
+}
 
-          return (
-            <div key={id} className="singleDestination">
-              <div className="imageDiv">{image && <img src={image} alt={destTitle} />}</div>
+const MyTicketPage = () => {
+  const { tripRoutes, loading } = useSelector(appSelector);
+  const dispatch = useAppDispatch();
 
-              <div className="cardInfo">
-                <h4 className="destTitle">Điểm đến: {destTitle}</h4>
-                <span className="continent flex">
-                  <HiOutlineLocationMarker className="icon" />
-                  <span className="name">Xuất phát: {location}</span>
-                </span>
+  const [tickets, setTickets] = useState<ITicket[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-                <div className="fees flex">
-                  <div className="grade">
-                    <p>Thời gian: {time}</p>
-                    <p>Vị trí ghế: {seatNumber}</p>
-                  </div>
-                  <div className="price">
-                    <h5>{fees}</h5>
+  console.log('🚀 ~ file: MyTicketPage.tsx ~ line 456 ~ MyTicketPage ~ tripRoutes', tripRoutes);
+
+  const getTickets = async (textSearch: string) => {
+    setIsLoading(true);
+    const isNumber = containsOnlyNumbers(textSearch);
+    const email = isNumber ? undefined : textSearch;
+    const phone = isNumber ? textSearch : undefined;
+    const newTickets = await bookingApi.getTicketsByEmailOrPhone(email, phone);
+    console.log('🚀 ~ file: MyTicketPage.tsx ~ line 461 ~ getTickets ~ newTickets', newTickets);
+    setTickets(newTickets);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (loading === 'idle') dispatch(fetchAllTripRoutes());
+  }, []);
+
+  const getSeatName = (num: number): string => {
+    console.log('🚀 ~ file: MyTicketPage.tsx ~ line 480 ~ getSeatName ~ num', num);
+    return '';
+  };
+
+  const convertTicketToData = (ticket: ITicket): IDataCard => {
+    const tripRoute = tripRoutes.find((item) => item.id === ticket.tripRoute_id);
+    return {
+      destTitle: tripRoute?.destination || '',
+      fees: tripRoute?.price.toLocaleString() || '',
+      id: ticket._id,
+      location: tripRoute?.origin || '',
+      seatNumber: getSeatName(ticket.seatNumber),
+      time: tripRoute?.arrivalTime || '',
+    };
+  };
+
+  return (
+    <MainDefaultStyle>
+      <MyTicketStyle className="container section" style={{ paddingTop: '10rem' }}>
+        <div className="secTitle">
+          <h1 className="title">Tìm kiếm vé xe</h1>
+        </div>
+
+        <ContainerSearch>
+          <CustomSearch>
+            <div className="label">Nhập thông tin vé xe:</div>
+            <CustomInput
+              placeholder="Số điện thoại hoặc email"
+              onSearch={(value: string) => {
+                getTickets(value || '');
+                console.log('🚀 ~ file: MyTicketPage.tsx ~ line 450 ~ value', value);
+              }}
+            />
+          </CustomSearch>
+        </ContainerSearch>
+
+        {isLoading && (
+          <ContainerSpin>
+            <Spin />
+          </ContainerSpin>
+        )}
+
+        {!isLoading && tickets.length > 0 && (
+          <div className="secContent grid">
+            {tickets.map((ticket, index) => {
+              const { id, destTitle, location, time, seatNumber, fees } = convertTicketToData(ticket);
+              const image = Image[index] ? Image[index].imgSrc : null;
+
+              return (
+                <div key={id} className="singleDestination">
+                  <div className="imageDiv">{image && <img src={image} alt={destTitle} />}</div>
+
+                  <div className="cardInfo">
+                    <h4 className="destTitle">Điểm đến: {destTitle}</h4>
+                    <span className="continent flex">
+                      <HiOutlineLocationMarker className="icon" />
+                      <span className="name">Xuất phát: {location}</span>
+                    </span>
+
+                    <div className="fees flex">
+                      <div className="grade">
+                        <p>Thời gian: {time}</p>
+                        <p>Vị trí ghế: {seatNumber}</p>
+                      </div>
+                      <div className="price">
+                        <h5>{fees}</h5>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </MyTicketStyle>
-  </MainDefaultStyle>
-);
+              );
+            })}
+          </div>
+        )}
+      </MyTicketStyle>
+    </MainDefaultStyle>
+  );
+};
+
+const ContainerSpin = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 200px;
+`;
+
+const CustomInput = styled(Search)`
+  width: 400px;
+`;
+const ContainerSearch = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100px;
+`;
+const CustomSearch = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  .label {
+    font-size: 16px;
+    font-weight: 400;
+  }
+`;
 
 export default MyTicketPage;
