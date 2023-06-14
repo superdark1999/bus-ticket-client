@@ -307,7 +307,7 @@ function Footer() {
           <p>
             Bản quyền thuộc về Công ty Cổ phần Xe Khách Bus Lines |{' '}
             <a target="_blank" href="/">
-              www.busline.vn{' '}
+              busticket.net.eu.org{' '}
             </a>
           </p>
         </div>
