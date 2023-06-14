@@ -238,7 +238,7 @@ const Coach = () => {
               <Form.Item name="id" label="coachId" hidden />
               <Form.Item name="model" label="Loại xe" rules={[{ required: true, message: 'Chưa chọn loại xe' }]}>
                 <Select
-                  options={Object.keys(ICoachModel).map((modelKey) => ({
+                  options={[ICoachModel.GHE, ICoachModel.GIUONG_NAM, ICoachModel.PHONG_NAM].map((modelKey) => ({
                     label: CoachModelLabel[modelKey as ICoachModel],
                     value: CoachModelLabel[modelKey as ICoachModel],
                   }))}
