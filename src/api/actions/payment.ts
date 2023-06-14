@@ -3,7 +3,7 @@ import qs from 'qs';
 
 const createPayment = (amount: number) =>
   axios.post(
-    'http://localhost:8086/create_payment_url',
+    'http://www.busticket.net.eu.org:8086/create_payment_url',
     qs.stringify({
       amount,
       bankCode: '',
