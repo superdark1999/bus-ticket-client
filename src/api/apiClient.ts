@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+export const isLocalHost = (): boolean => window.location.origin.includes('localhost');
+
 const axiosClient = axios.create({
   baseURL: 'http://www.busticket.net.eu.org',
 });

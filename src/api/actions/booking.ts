@@ -1,4 +1,4 @@
-import axiosClient from 'api/apiClient';
+import axiosClient, { isLocalHost } from 'api/apiClient';
 import axios from 'axios';
 
 const baseRoute = '/booking';
@@ -50,8 +50,9 @@ const createTripRoute = async (data: any) => {
       customerPhone,
       customerEmail,
     };
+    const url = isLocalHost() ? 'http://localhost:8082/graphql' : 'http://www.busticket.net.eu.org/graphql';
 
-    const response = await axios.post('http://www.busticket.net.eu.org/graphql', { query, variables });
+    const response = await axios.post(url, { query, variables });
     return response.data.data.addTicket;
   } catch (error) {
     console.log('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
