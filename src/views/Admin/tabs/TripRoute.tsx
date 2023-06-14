@@ -35,6 +35,13 @@ const CustomItemLabel = styled.div`
   align-items: center;
 `;
 
+const ERROR_COACH: ICoach = {
+  capacity: 0,
+  id: '#',
+  model: '#',
+  registrationNumber: '#',
+};
+
 export type TripRouteData = ITripRoute & ICoach & ITrip;
 
 function sortedTripRouteList(tripRouteList: TripRouteData[]) {
@@ -53,7 +60,6 @@ const TripRoute = () => {
   const [tripList, setTripList] = useState<ITrip[]>([]);
   const [stationList, setStationList] = useState<{ id: string; label: React.ReactNode; info: string }[]>([]);
   const [coachList, setCoachList] = useState<ICoach[]>([]);
-  const [registrationList, setRegistrationList] = useState<string[]>([]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [highlightType, setHighlightType] = useState<'update' | 'delete'>('update');
@@ -89,11 +95,8 @@ const TripRoute = () => {
       setTripList(results);
     });
     // get coach list to select
-    adminCoach.getCoachList().then((res) => {
-      const coach = res.map((e: any) => `${e.registrationNumber}`);
-      console.log(coach);
+    adminCoach.getCoachList().then((res: ICoach[]) => {
       setCoachList(res);
-      setRegistrationList(coach);
     });
   }, []);
 
@@ -131,8 +134,8 @@ const TripRoute = () => {
 
     // get id trip and coach
     const trip = tripList[stationList.findIndex((station) => station.id === values.trip)];
-    const coach = coachList[registrationList.indexOf(values.bus)];
-    const numberSeat = coachList[registrationList.indexOf(values.bus)].capacity || 0;
+    const coach: ICoach = coachList.find((item) => item.id === values.bus) || ERROR_COACH;
+    const numberSeat = coach?.capacity || 0;
     const bookedSeat = new Array(numberSeat);
     for (let i = 0; i < numberSeat; i++) {
       bookedSeat[i] = false;
@@ -147,17 +150,17 @@ const TripRoute = () => {
       arrivalTime: date.format('HH:mm DD/MM/YYYY'),
       bookedSeat,
       tripId: trip.id,
-      coachId: coach.id,
+      coachId: coach?.id,
     };
     // call API
     await adminTripRoute
       .createTripRoute(newtripRoute)
       .then((result) => {
         const tripRoute: TripRouteData = {
-          ...coachList[registrationList.indexOf(values.bus)],
-          ...tripList[stationList.findIndex((station) => station.id === values.trip)],
+          ...(coachList.find((item) => item.id === values.bus) || {}),
+          ...(tripList.find((item) => item.id === values.trip) || {}),
           ...result,
-        };
+        } as any;
         const newtripRouteList = [tripRoute, ...tripRouteList];
         // Update data/ui
         settripRouteList(sortedTripRouteList(newtripRouteList));
@@ -279,13 +282,13 @@ const TripRoute = () => {
                   <Form.Item name="bus" label="Xe Sử Dụng" rules={[{ required: true, message: 'Chưa chọn xe' }]}>
                     <Select
                       showSearch
-                      defaultValue="Biển Số"
-                      options={registrationList.map((bus) => ({
-                        value: bus,
-                        label: bus,
+                      placeholder="Biển Số"
+                      options={coachList.map((bus) => ({
+                        value: bus.id,
+                        label: `${bus.registrationNumber} - ${bus.model} - ${bus.capacity} chỗ`,
                       }))}
                       filterSort={(optA, optB) =>
-                        (optA?.label ?? '').toLowerCase().localeCompare((optB?.label ?? '').toLowerCase())
+                        (optA?.label || '').toLowerCase().localeCompare((optB?.label || '').toLowerCase())
                       }
                     />
                   </Form.Item>

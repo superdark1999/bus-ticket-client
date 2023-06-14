@@ -84,8 +84,32 @@ function AdminNavigation({ isExpand, setIsExpand }: SelfProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const getPath = (key: string): string => {
+    switch (key) {
+      case TabKey.DASHBOARD:
+        return ROUTER_PATH.ADMIN_DASHBOARD;
+      case TabKey.TRIP_ROUTES:
+        return ROUTER_PATH.ADMIN_TRIP_ROUTES;
+      case TabKey.USER:
+        return ROUTER_PATH.ADMIN_USER;
+      case TabKey.ASSETS:
+        return ROUTER_PATH.ADMIN_ASSETS;
+      case TabKey.TRIPS:
+        return ROUTER_PATH.ADMIN_TRIPS;
+      default:
+        break;
+    }
+    return '';
+  };
+
+  const getSelectedKeys = (pathName: string): string[] => {
+    const itemSelected = menuItems.find((item) => getPath(item?.key?.toString() || '') === pathName);
+    if (itemSelected) return [itemSelected.key?.toString() || ''];
+    return [];
+  };
+
   useEffect(() => {
-    console.log('🚀 ~ file: index.tsx ~ line 51 ~ useEffect ~ location', location);
+    if (location.pathname === '/admin') navigate('/admin/assets');
   }, [location]);
 
   return (
@@ -98,28 +122,12 @@ function AdminNavigation({ isExpand, setIsExpand }: SelfProps) {
         theme="light"
         mode="inline"
         multiple={false}
-        defaultSelectedKeys={[]}
+        defaultSelectedKeys={[location.pathname]}
+        selectedKeys={getSelectedKeys(location.pathname)}
         items={menuItems}
         onSelect={({ key }) => {
-          switch (key) {
-            case TabKey.DASHBOARD:
-              navigate(ROUTER_PATH.ADMIN_DASHBOARD);
-              break;
-            case TabKey.TRIP_ROUTES:
-              navigate(ROUTER_PATH.ADMIN_TRIP_ROUTES);
-              break;
-            case TabKey.USER:
-              navigate(ROUTER_PATH.ADMIN_USER);
-              break;
-            case TabKey.ASSETS:
-              navigate(ROUTER_PATH.ADMIN_ASSETS);
-              break;
-            case TabKey.TRIPS:
-              navigate(ROUTER_PATH.ADMIN_TRIPS);
-              break;
-            default:
-              break;
-          }
+          const path = getPath(key);
+          if (path) navigate(path);
         }}
       />
     </CustomSider>

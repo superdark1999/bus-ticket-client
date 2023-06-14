@@ -343,11 +343,25 @@ const Header = () => {
           {/* className ở đây là navBarMenu */}
           <div className="navBarMenu">
             <ul className="menu flex">
-              <li className="listItem">Trang chủ</li>
+              <li
+                className="listItem"
+                onClick={() => {
+                  navigate('/');
+                }}
+              >
+                Trang chủ
+              </li>
               <li className="listItem">Lịch trình</li>
               <li className="listItem">Tin tức</li>
               <li className="listItem">Liên hệ</li>
-              <li className="listItem">Hóa đơn</li>
+              <li
+                className="listItem"
+                onClick={() => {
+                  navigate('/myticket');
+                }}
+              >
+                Hóa đơn
+              </li>
             </ul>
           </div>
           <button type="button" className="toggleIcon">

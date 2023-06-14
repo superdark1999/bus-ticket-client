@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 const HomeStyle = styled.div`
-  padding-top: 10rem;
+  padding-top: 5rem;
   text-align: center;
   gap: 2rem;
   flex-direction: column;
@@ -36,7 +36,7 @@ const HomeStyle = styled.div`
   }
 
   @media screen and (min-width: 480px) {
-    padding-top: 12rem;
+    padding-top: 6rem;
   }
 
   @media screen and (min-width: 570px) {
@@ -70,7 +70,7 @@ const HomeStyle = styled.div`
   }
 
   @media screen and (min-width: 960px) {
-    padding-top: 13rem;
+    padding-top: 7rem;
 
     .mainText {
       width: 70%;
