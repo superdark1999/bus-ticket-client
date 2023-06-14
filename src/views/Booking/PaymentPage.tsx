@@ -28,6 +28,7 @@ const PaymentPage: React.FC = () => {
   const content = 3;
   const [result, setResult] = useState(null);
   function onHaveResultEvent(value: any) {
+    console.log('🚀 ~ file: PaymentPage.tsx:31 ~ onHaveResultEvent ~ value:', value);
     setResult(value);
   }
   // get data form location
