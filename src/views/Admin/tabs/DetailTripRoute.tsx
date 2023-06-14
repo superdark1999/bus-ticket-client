@@ -132,7 +132,6 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
     // set id_trip
     const tripId = tList.filter((value) => `${value.origin} --> ${value.destination}` === values.trip);
 
-    console.log('🚀 ~ file: DetailTripRoute.tsx:135 ~ handleSubmit ~ tripId:', tripId);
     await adminTripRoute
       .updateTripRoute(id || '', {
         trip_id: tripId[0].id,
@@ -147,7 +146,6 @@ const RouteTripDetails = ({ coachId }: DetailsProps) => {
           destination: tripId[0].destination,
         };
         settripRouteDetail(newCoachDetail);
-        console.log('🚀 ~ file: DetailTripRoute.tsx:149 ~ .then ~ newCoachDetail:', newCoachDetail);
       })
       .catch((e) => {
         console.error(e);

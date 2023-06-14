@@ -55,7 +55,7 @@ const createTripRoute = async (data: any) => {
     const response = await axios.post(url, { query, variables });
     return response.data.data.addTicket;
   } catch (error) {
-    console.log('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
+    console.error('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
     throw new Error('Create failed!');
   }
 };
@@ -102,7 +102,7 @@ const getTicketsByEmailOrPhone = async (email?: string, phone?: string): Promise
     const tickets: ITicket[] = [...response.data.data.tickets];
     return tickets;
   } catch (error) {
-    console.log('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
+    console.error('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
     throw new Error('Create failed!');
   }
 };

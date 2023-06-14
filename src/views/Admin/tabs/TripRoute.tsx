@@ -47,7 +47,6 @@ export type TripRouteData = ITripRoute & ICoach & ITrip;
 function sortedTripRouteList(tripRouteList: TripRouteData[]) {
   return tripRouteList.sort((a, b) => {
     const aTime = moment(a.departureTime, 'HH:mm DD/MM/YYYY');
-    console.log('🚀 ~ file: TripRoute.tsx:218 ~ sortedTripRouteList ~ aTime:', aTime);
     const bTime = moment(b.departureTime, 'HH:mm DD/MM/YYYY');
     return bTime.diff(aTime);
   });
@@ -71,7 +70,6 @@ const TripRoute = () => {
 
     // get trip route
     adminTripRoute.getTripRouteList().then((res) => {
-      console.log('🚀 ~ file: TripRoute.tsx:199 ~ adminTripRoute.getTripRouteList ~ res:', res);
       settripRouteList(sortedTripRouteList(res));
     });
 

@@ -287,75 +287,6 @@ const MyTicketStyle = styled.section`
   }
 `;
 
-const Data = [
-  {
-    id: 1,
-
-    destTitle: 'Ha noi',
-    location: 'TP.HCM',
-    time: '10:00 13/06/2023',
-    seatNumber: 'B15',
-    fees: '$700',
-  },
-  {
-    id: 2,
-
-    destTitle: 'Dien bien',
-    location: 'Son La',
-    time: '8:00 15/06/2023',
-    seatNumber: 'B9',
-    fees: '$50',
-  },
-  {
-    id: 3,
-    destTitle: 'Phu quoc',
-    location: 'Cat ba',
-    time: '10:00 13/06/2023',
-    seatNumber: 'B10, B12, B15',
-    fees: '$700',
-  },
-  {
-    id: 4,
-    destTitle: 'Gia LAi',
-    location: 'Pleiku',
-    time: '10:00 13/06/2023',
-    seatNumber: 'B10, B12, B15',
-    fees: '$700',
-  },
-  {
-    id: 5,
-    destTitle: 'Tuy Hoa',
-    location: 'Phu Yen',
-    time: '10:00 13/06/2023',
-    seatNumber: 'B10, B12, B15',
-    fees: '$700',
-  },
-  {
-    id: 6,
-    destTitle: 'Dien Khanh',
-    location: 'Khanh Hoa',
-    time: '10:00 13/06/2023',
-    seatNumber: 'B10, B12, B15',
-    fees: '$700',
-  },
-  {
-    id: 7,
-    destTitle: 'Kon tum',
-    location: 'Dak Lak',
-    time: '10:00 13/06/2023',
-    seatNumber: 'B10, B12, B15',
-    fees: '$700',
-  },
-  {
-    id: 8,
-    destTitle: 'Tan Tien',
-    location: 'Ca mau',
-    time: '10:00 13/06/2023',
-    seatNumber: 'B10, B12, B15',
-    fees: '$700',
-  },
-];
-
 const Image = [
   {
     id: 1,
@@ -459,15 +390,12 @@ const MyTicketPage = () => {
   const [tickets, setTickets] = useState<ITicket[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log('🚀 ~ file: MyTicketPage.tsx ~ line 456 ~ MyTicketPage ~ tripRoutes', tripRoutes);
-
   const getTickets = async (textSearch: string) => {
     setIsLoading(true);
     const isNumber = containsOnlyNumbers(textSearch);
     const email = isNumber ? undefined : textSearch;
     const phone = isNumber ? textSearch : undefined;
     const newTickets = await bookingApi.getTicketsByEmailOrPhone(email, phone);
-    console.log('🚀 ~ file: MyTicketPage.tsx ~ line 461 ~ getTickets ~ newTickets', newTickets);
     setTickets(newTickets);
     setIsLoading(false);
   };
@@ -476,9 +404,11 @@ const MyTicketPage = () => {
     if (loading === 'idle') dispatch(fetchAllTripRoutes());
   }, []);
 
-  const getSeatName = (num: number): string => {
-    console.log('🚀 ~ file: MyTicketPage.tsx ~ line 480 ~ getSeatName ~ num', num);
-    return '';
+  const seatName = (num: number) => `${Math.round(num / 10)}${num % 10}`;
+
+  const getSeatName = (seatNumber: number, capacity: number): string => {
+    if (capacity === 16) return seatName(seatNumber + 1);
+    return seatNumber < capacity / 2 ? `A${seatName(seatNumber + 1)}` : `B${seatName(seatNumber - capacity / 2 + 1)}`;
   };
 
   const convertTicketToData = (ticket: ITicket): IDataCard => {
@@ -488,8 +418,8 @@ const MyTicketPage = () => {
       fees: tripRoute?.price.toLocaleString() || '',
       id: ticket._id,
       location: tripRoute?.origin || '',
-      seatNumber: getSeatName(ticket.seatNumber),
-      time: tripRoute?.arrivalTime || '',
+      seatNumber: getSeatName(ticket.seatNumber, tripRoute?.capacity || 16),
+      time: tripRoute?.departureTime || '',
     };
   };
 
@@ -507,7 +437,6 @@ const MyTicketPage = () => {
               placeholder="Số điện thoại hoặc email"
               onSearch={(value: string) => {
                 getTickets(value || '');
-                console.log('🚀 ~ file: MyTicketPage.tsx ~ line 450 ~ value', value);
               }}
             />
           </CustomSearch>

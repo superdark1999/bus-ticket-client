@@ -75,7 +75,6 @@ const Coach = () => {
 
   const onFinish = async (values: any, type: 'create' | 'edit') => {
     // Call api to add one schedule bus
-    console.log('🚀 ~ file: Assets.tsx ~ line 152 ~ onFinish ~ values', values);
     const { capacity, model, registrationNumber } = values;
     const id = values.id || uuidv4();
     // Fake call api
@@ -91,14 +90,12 @@ const Coach = () => {
           ? await coachAPI.createNewCoach(model, capacity, registrationNumber)
           : await coachAPI.updateCoach(id, capacity, model, registrationNumber);
 
-      console.log('🚀 ~ file: Assets.tsx ~ line 143 ~ onFinish ~ api');
       setTableStatus('loading');
       // const res = await api;
       await delay(500);
 
       let newCoachList: ICoach[] = [];
 
-      console.log('🚀 ~ file: Assets.tsx ~ line 175 ~ onFinish ~ newCoach', newCoach);
       if (type === 'create') newCoachList = [...coachList, newCoach];
       else
         newCoachList = coachList.map((coach) => {
@@ -109,7 +106,6 @@ const Coach = () => {
           };
         });
 
-      console.log('🚀 ~ file: Assets.tsx ~ line 187 ~ onFinish ~ newCoachList', newCoachList);
       // Update data/ui
       setCoachList(newCoachList);
 
@@ -136,7 +132,6 @@ const Coach = () => {
       const newCoachList = coachList.filter((item) => item.id !== coach.id);
       setCoachList(newCoachList);
     } catch (error) {
-      console.log('🚀 ~ file: Assets.tsx ~ line 185 ~ handleDeleteCoach ~ error', error);
       message.error(`Có lỗi xảy ra, vui lòng thử lại!`);
     } finally {
       setTableStatus('none');

@@ -66,7 +66,6 @@ const BookingPage: React.FC = () => {
   };
 
   const { tripRoutes, loading } = useSelector(appSelector);
-  console.log('🚀 ~ file: BookingPage.tsx:71 ~ tripRoutes:', tripRoutes);
 
   const content = 0;
 

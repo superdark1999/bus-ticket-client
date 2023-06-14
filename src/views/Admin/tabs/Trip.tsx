@@ -113,7 +113,6 @@ const Routes = () => {
 
       setTableStatus('loading');
       const res = await api;
-      console.log('🚀 ~ file: Trip.tsx ~ line 138 ~ onFinish ~ res', res);
       if (type === 'create') newTrip.id = res?.id || newTrip.id;
       message.success(type === 'create' ? 'Thêm dữ liệu thành công!' : 'Chỉnh sửa dữ liệu thành công!');
     } catch (error) {
@@ -217,7 +216,6 @@ const Routes = () => {
               type="link"
               onClick={() => {
                 setModalType('edit');
-                console.log('🚀 ~ file: Trip.tsx ~ line 294 ~ Routes ~ trip', trip);
                 const { price, duration, origin, destination, id } = trip;
                 form.setFieldsValue({
                   id,

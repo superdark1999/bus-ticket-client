@@ -12,6 +12,8 @@ import { useAppDispatch } from 'state';
 import { fetchAllTripRoutes } from 'state/app/action';
 import { LocationCommon } from 'utils/appData';
 import { v4 } from 'uuid';
+import moment from 'moment';
+import { TripRouteData } from 'views/Admin/tabs/TripRoute';
 
 const DATE_FORMAT = 'DD/MM/YYYY';
 
@@ -165,6 +167,13 @@ const Search = () => {
     rules: [{ type: 'object' as const, required: true, message: 'Vui lòng chọn ngày đi!' }],
   };
 
+  const getValidTripRoutes = (data: TripRouteData[]): TripRouteData[] =>
+    data.filter((tripRoute) => {
+      const tripDepartureTime = moment(tripRoute.departureTime, 'hh:mm DD/MM/YYYY');
+      const current = moment(new Date());
+      return tripDepartureTime.isAfter(current);
+    });
+
   const onFinish = (values: any) => {
     console.log('Received values of form: ', values);
 
@@ -184,7 +193,9 @@ const Search = () => {
   useEffect(() => {
     if (loading === 'succeeded' && locationData.length && tripRoutes.length) {
       const listOrigin = locationData.filter((city) =>
-        tripRoutes.some((tripRoute) => tripRoute.origin.toLocaleLowerCase().includes(city.Name.toLocaleLowerCase())),
+        getValidTripRoutes(tripRoutes).some((tripRoute) =>
+          tripRoute.origin.toLocaleLowerCase().includes(city.Name.toLocaleLowerCase()),
+        ),
       );
       setOriginOptions(
         listOrigin.map((item) => ({
@@ -203,7 +214,7 @@ const Search = () => {
       if (start)
         newDesOptions = locationData
           .filter((city) =>
-            tripRoutes.some(
+            getValidTripRoutes(tripRoutes).some(
               (tripRoute) =>
                 LocationCommon.isSubstring(tripRoute.origin, start) &&
                 LocationCommon.isSubstring(tripRoute.destination, city.Name),
@@ -218,13 +229,13 @@ const Search = () => {
 
       let newDateOptions: string[] = [];
       if (start && end)
-        newDateOptions = tripRoutes
+        newDateOptions = getValidTripRoutes(tripRoutes)
           .filter(
             (tripRoute) =>
               LocationCommon.isSubstring(tripRoute.origin, start) &&
               LocationCommon.isSubstring(tripRoute.destination, end),
           )
-          .map((tripRoute) => tripRoute.arrivalTime.split(' ').at(1)?.trim() || '');
+          .map((tripRoute) => tripRoute.departureTime.split(' ').at(1)?.trim() || '');
 
       setDateOptions(newDateOptions);
     }, 100);

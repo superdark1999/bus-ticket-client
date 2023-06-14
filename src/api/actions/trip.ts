@@ -50,10 +50,9 @@ const createTrip = async (data: ITrip): Promise<ITrip> => {
       origin,
       price,
     });
-    console.log('🚀 ~ file: trip.ts ~ line 70 ~ createTrip ', response);
     return response.data;
   } catch (error) {
-    console.log('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
+    console.error('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
   }
   throw new Error('Create failed!');
 };
@@ -61,10 +60,9 @@ const createTrip = async (data: ITrip): Promise<ITrip> => {
 const updateTrip = async (id: string, dataUpdate: { [key: string]: any }): Promise<ITrip> => {
   try {
     const response = await axiosAdminTrip.put(`/${id}`, dataUpdate);
-    console.log('🚀 ~ file: trip.ts ~ line 70 ~ updateTrip ', response);
     return response.data;
   } catch (error) {
-    console.log('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
+    console.error('🚀 ~ file: trip.ts ~ line 77 ~ createTrip ~ error', error);
   }
   throw new Error('Update failed!');
 };
@@ -72,7 +70,6 @@ const updateTrip = async (id: string, dataUpdate: { [key: string]: any }): Promi
 const deleteTrip = async (id: string): Promise<string> => {
   try {
     const response = await axiosAdminTrip.delete(`/${id}`);
-    console.log('🚀 ~ file: trip.ts ~ line 56 ~ deleteTrip ~ response', response);
     return response.data;
   } catch (error) {
     console.error('🚀 ~ file: trip.ts ~ line 78 ~ deleteTrip ~ error', error);
