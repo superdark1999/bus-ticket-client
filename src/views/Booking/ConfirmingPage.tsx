@@ -7,7 +7,7 @@ import { LeftOutlined, EnvironmentOutlined, RightOutlined } from '@ant-design/ic
 import moment from 'moment';
 import { InfoSearch } from 'views/Booking/BookingPage';
 import { InfoCard } from 'components/TripRouteCard/index';
-import SeatSelection from 'components/TripRouteCard/selectSeats';
+import SeatSelection, { SeatStatus } from 'components/TripRouteCard/selectSeats';
 
 const ConfirmingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,9 +15,12 @@ const ConfirmingPage: React.FC = () => {
 
   // get data from location state
   const [infoCard] = useState<InfoCard>(location.state?.infoCard || '');
-  const [infoSeat] = useState({
-    seats: location.state?.seats,
-    seatsId: location.state?.seatsId,
+  const [infoSeat, setInfoSeat] = useState<{
+    seats: string[];
+    seatsId: number[];
+  }>({
+    seats: location.state?.seats || [],
+    seatsId: location.state?.seatsId || [],
   });
 
   // check path to navigate booking when reload page by path
@@ -35,7 +38,7 @@ const ConfirmingPage: React.FC = () => {
   const infoSearch: InfoSearch = {
     departure: searchParams.get('departure') || '',
     destination: searchParams.get('destination') || '',
-    date: moment(searchParams.get('date')).format('DD/MM/YYYY') || '',
+    date: searchParams.get('date') || '',
   };
 
   // content in step
@@ -58,6 +61,24 @@ const ConfirmingPage: React.FC = () => {
   };
 
   if (!location.state) return null;
+
+  const handleSeatClick = (seatId: number, seatName: string, seatStatuses: SeatStatus[]) => {
+    if (seatStatuses[seatId] === 'empty') {
+      // add a check for the status property
+      seatStatuses[seatId] = 'selected';
+      setInfoSeat((old) => ({
+        seats: [...old.seats, seatName],
+        seatsId: [...old.seatsId, seatId],
+      }));
+    } else if (seatStatuses[seatId] === 'selected') {
+      // add a check for the status property
+      seatStatuses[seatId] = 'empty';
+      setInfoSeat((old) => ({
+        seats: old.seats.filter((name) => name !== seatName),
+        seatsId: old.seatsId.filter((id) => id !== seatId),
+      }));
+    }
+  };
 
   return (
     <Container>
@@ -94,7 +115,12 @@ const ConfirmingPage: React.FC = () => {
           </RouteContainer>
 
           <div style={{ padding: '0 20px 20px' }}>
-            <SeatSelection infoCard={infoCard} seatsId={infoSeat.seatsId} seatsSelected={infoSeat.seats} />
+            <SeatSelection
+              infoCard={infoCard}
+              seatsId={infoSeat.seatsId}
+              seatsSelected={infoSeat.seats}
+              handleUpdateState={handleSeatClick}
+            />
           </div>
           <StyledDivider />
         </Content>
@@ -106,7 +132,7 @@ const ConfirmingPage: React.FC = () => {
         <StyledButton
           type="primary"
           style={{ marginLeft: '16px' }}
-          // disabled={Boolean(!optionPicked)}
+          disabled={!infoSeat.seatsId.length}
           onClick={handleContinue}
         >
           Tiếp tục <RightOutlined />
