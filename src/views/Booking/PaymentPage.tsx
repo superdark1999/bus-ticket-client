@@ -78,11 +78,13 @@ const PaymentPage: React.FC = () => {
     );
   };
   useEffect(() => {
-    if (result !== 97) {
-      handleSuccess();
+    if (result) {
+      if (result !== 97) {
+        handleSuccess();
+      }
+      socket.off('payment', onHaveResultEvent);
+      socket.disconnect();
     }
-    socket.off('payment', onHaveResultEvent);
-    socket.disconnect();
   }, [result]);
 
   return (
