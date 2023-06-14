@@ -489,7 +489,7 @@ const MyTicketPage = () => {
       id: ticket._id,
       location: tripRoute?.origin || '',
       seatNumber: getSeatName(ticket.seatNumber),
-      time: tripRoute?.arrivalTime || '',
+      time: tripRoute?.departureTime || '',
     };
   };
 
