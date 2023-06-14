@@ -17,6 +17,7 @@ const InputInfoPage: React.FC = () => {
   const [form] = Form.useForm();
   useEffect(() => {});
   const content = 2;
+  console.log('🚀 ~ file: InputInfoPage.tsx ~ line 24 ~ onFinish ~ location.state', location.state);
 
   const onFinish = (values: any) => {
     console.log('inputInfoPage', values, location.state);

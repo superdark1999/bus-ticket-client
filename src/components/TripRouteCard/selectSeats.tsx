@@ -146,7 +146,7 @@ const posSeatsBus16 = (
 };
 
 // convert input into type appropriate
-type SeatStatus = 'booked' | 'empty' | 'selected';
+export type SeatStatus = 'booked' | 'empty' | 'selected';
 
 function getSeatStatuses(seatss: boolean[], seatsSelectedId: number[]): SeatStatus[] {
   return seatss.map((seat, index) => {
@@ -165,28 +165,30 @@ interface Props {
   infoCard: InfoCard;
   seatsSelected: string[];
   seatsId: number[];
+  handleUpdateState: (seatId: number, seatName: string, seatStatuses: SeatStatus[]) => void;
 }
 
-const SeatSelection: React.FC<Props> = ({ infoCard, seatsSelected, seatsId }) => {
+const SeatSelection: React.FC<Props> = ({ infoCard, seatsSelected, seatsId, handleUpdateState }) => {
   // edit status seats from input
   const seatStatuses = useMemo(() => getSeatStatuses(infoCard.bookedSeat, seatsId), [infoCard.bookedSeat]);
 
-  const [selectedSeatsId, setSelectedSeatsId] = useState<number[]>(seatsId);
-  const [selectedSeatsArray, setSelectedSeatsArray] = useState<string[]>(seatsSelected);
+  const selectedSeatsId = seatsId;
+  const selectedSeatsArray = seatsSelected;
   console.log('minh2 ', infoCard);
 
   const handleSeatClick = (seatId: number, seatName: string) => {
-    if (seatStatuses[seatId] === 'empty') {
-      // add a check for the status property
-      seatStatuses[seatId] = 'selected';
-      setSelectedSeatsId([...selectedSeatsId, seatId]);
-      setSelectedSeatsArray([...selectedSeatsArray, seatName]);
-    } else if (seatStatuses[seatId] === 'selected') {
-      // add a check for the status property
-      seatStatuses[seatId] = 'empty';
-      setSelectedSeatsId(selectedSeatsId.filter((id) => id !== seatId));
-      setSelectedSeatsArray(selectedSeatsArray.filter((name) => name !== seatName));
-    }
+    handleUpdateState(seatId, seatName, seatStatuses);
+    // if (seatStatuses[seatId] === 'empty') {
+    //   // add a check for the status property
+    //   seatStatuses[seatId] = 'selected';
+    //   setSelectedSeatsId([...selectedSeatsId, seatId]);
+    //   setSelectedSeatsArray([...selectedSeatsArray, seatName]);
+    // } else if (seatStatuses[seatId] === 'selected') {
+    //   // add a check for the status property
+    //   seatStatuses[seatId] = 'empty';
+    //   setSelectedSeatsId(selectedSeatsId.filter((id) => id !== seatId));
+    //   setSelectedSeatsArray(selectedSeatsArray.filter((name) => name !== seatName));
+    // }
   };
 
   const totalPrice = selectedSeatsId.length * infoCard.price;
