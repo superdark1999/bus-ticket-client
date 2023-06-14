@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Col, Row } from 'antd';
 import { InfoCard } from 'components/TripRouteCard/index';
@@ -14,7 +14,6 @@ const oneSideSeats = (
 ): JSX.Element[] => {
   const boxes: JSX.Element[] = [];
   const amount = end - start;
-  console.log('🚀 ~ file: selectSeats.tsx:18 ~ amount:', amount);
   if (amount === 20) end -= 5;
 
   for (let i = start; i < end; i++) {
