@@ -4,6 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { LeftOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router';
+import createPayment from 'api/actions/payment';
 import { InfoCard } from 'components/TripRouteCard/index';
 import bookingApi from 'api/actions/booking';
 import { InfoSearch } from './BookingPage';
@@ -45,7 +46,8 @@ const PaymentPage: React.FC = () => {
 
   const handlePaymentBtn = async () => {
     // TODO: call API to create a ticket, return ticket code
-
+    const res = await createPayment(data.infoCard.price * data.infoSeat.seatsId.length);
+    window.open(res.data);
     const ticket = await bookingApi.createTripRoute({
       seatNumberList: data.infoSeat.seatsId,
       tripRoute_id: data.infoCard.id,
