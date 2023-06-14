@@ -21,7 +21,7 @@ const oneSideSeats = (
     const boxNumber = i + 1;
     const boxkeyword = `${keyword}${String(boxNumber - start).padStart(2, '0')}`;
 
-    if (i === start && amount === 14) {
+    if (i === start && amount === 17) {
       boxes.push(
         <>
           <Item amount={3}>
