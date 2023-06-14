@@ -115,7 +115,7 @@ const Home = () => {
     <HomeStyle className="flex container">
       <div className="mainText">
         <h1 data-aos="fade-up" data-aos-duration="2500">
-          Create Ever-lasting Memories With <span style={{display: 'block'}}> --------- Bus Lines --------- </span>
+          Create Ever-lasting Memories With <span style={{display: 'block', fontSize: '3rem'}}> -------- Bus Lines -------- </span>
         </h1>
       </div>
 
