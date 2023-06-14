@@ -284,21 +284,21 @@ function Footer() {
           </div>
 
           <div className="footerLinks">
-            <span className="linkTitle">Hướng dẫn</span>
+            <span className="linkTitle">Hỗ trợ</span>
             <li>
-              <a href="/">Điều khoản sử dụng</a>
+              <a href="/">Hướng dẫn thanh toán</a>
             </li>
             <li>
-              <a href="/">Hỏi đáp</a>
+              <a href="/">Chính sách bảo mật thông tin</a>
             </li>
             <li>
-              <a href="/">Hướng dẫn đặt vé trên Web</a>
+              <a href="/">Chính sách bảo mật thanh toán</a>
             </li>
             <li>
-              <a href="/">Hướng dẫn đặt vé trên App</a>
+              <a href="/">Quy chế hoạt động</a>
             </li>
             <li>
-              <a href="/">Mạng lưới văn phòng</a>
+              <a href="/">Liên hệ quảng cáo</a>
             </li>
           </div>
         </div>
@@ -307,7 +307,7 @@ function Footer() {
           <p>
             Bản quyền thuộc về Công ty Cổ phần Xe Khách Bus Lines |{' '}
             <a target="_blank" href="/">
-              www.busline.vn{' '}
+              busticket.net.eu.org{' '}
             </a>
           </p>
         </div>
