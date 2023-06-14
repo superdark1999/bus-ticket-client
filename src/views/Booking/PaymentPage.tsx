@@ -7,6 +7,8 @@ import { useLocation, useNavigate } from 'react-router';
 import createPayment from 'api/actions/payment';
 import { InfoCard } from 'components/TripRouteCard/index';
 import bookingApi from 'api/actions/booking';
+import { fetchAllTripRoutes } from 'state/app/action';
+import { useAppDispatch } from 'state';
 import { InfoSearch } from './BookingPage';
 import { InfoCus } from './InputInfoPage';
 import socket from '../../socket.js';
@@ -23,6 +25,7 @@ export interface InfoPayment {
 }
 
 const PaymentPage: React.FC = () => {
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const content = 3;
@@ -64,6 +67,7 @@ const PaymentPage: React.FC = () => {
       customerPhone: data.infoCus.phone,
       customerEmail: data.infoCus.email,
     });
+    dispatch(fetchAllTripRoutes());
     message.success('Submit success!');
     navigate(
       {
