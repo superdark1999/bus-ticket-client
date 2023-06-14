@@ -1,6 +1,6 @@
 import { Button, Col, Row, Typography, message } from 'antd';
 import StepLine from 'components/StepLine';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { LeftOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router';
@@ -9,6 +9,7 @@ import { InfoCard } from 'components/TripRouteCard/index';
 import bookingApi from 'api/actions/booking';
 import { InfoSearch } from './BookingPage';
 import { InfoCus } from './InputInfoPage';
+import socket from '../../socket.js';
 
 export interface InfoPayment {
   infoSearch: InfoSearch;
@@ -25,7 +26,10 @@ const PaymentPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const content = 3;
-
+  const [result, setResult] = useState(null);
+  function onHaveResultEvent(value: any) {
+    setResult(value);
+  }
   // get data form location
   const searchParams = new URLSearchParams(location.search);
   const data: InfoPayment = {
@@ -47,7 +51,11 @@ const PaymentPage: React.FC = () => {
   const handlePaymentBtn = async () => {
     // TODO: call API to create a ticket, return ticket code
     const res = await createPayment(data.infoCard.price * data.infoSeat.seatsId.length);
+    socket.connect();
+    socket.on('payment', onHaveResultEvent);
     window.open(res.data);
+  };
+  const handleSuccess = async () => {
     const ticket = await bookingApi.createTripRoute({
       seatNumberList: data.infoSeat.seatsId,
       tripRoute_id: data.infoCard.id,
@@ -55,7 +63,6 @@ const PaymentPage: React.FC = () => {
       customerPhone: data.infoCus.phone,
       customerEmail: data.infoCus.email,
     });
-    console.log('🚀 ~ file: PaymentPage.tsx:59 ~ handlePaymentBtn ~ ticket:', ticket);
     message.success('Submit success!');
     navigate(
       {
@@ -70,6 +77,13 @@ const PaymentPage: React.FC = () => {
       },
     );
   };
+  useEffect(() => {
+    if (result !== 97) {
+      handleSuccess();
+    }
+    socket.off('payment', onHaveResultEvent);
+    socket.disconnect();
+  }, [result]);
 
   return (
     <Wrapper>
